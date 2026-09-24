@@ -30,8 +30,6 @@
         .btn:hover { background: var(--primary-dark); }
         .btn-secondary { background: var(--secondary); }
         .btn-danger { background: #ef4444; margin-top: 10px; }
-        .btn-admin-trigger { background: #f59e0b; color: #0f172a; font-weight: 600; margin-bottom: 15px; }
-        .btn-admin-trigger:hover { background: #d97706; color: white; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 8px; font-size: 14px; outline: none; }
         input:focus, select:focus { border-color: var(--primary); }
         .hidden { display: none !important; }
@@ -59,18 +57,15 @@
 
     <div class="container">
         
-        <!-- 🔑 Alag se Admin Panel Kholne ka Button -->
-        <button class="btn btn-admin-trigger" onclick="toggleAdminPanelSection()"><i class="fa-solid fa-lock"></i> Admin Panel Login / Open Karein</button>
-
-        <!-- 🔒 Admin Login Card -->
-        <div class="card hidden" id="loginCard">
-            <h3><i class="fa-solid fa-lock"></i> Admin Portal (Abhishek Thakur Sir)</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">गुप्त पासवर्ड दर्ज करें (Default: drishti123):</p>
+        <!-- 🔑 Admin Login Card (Ab yeh hamesha upar dikhega jab tak login na ho) -->
+        <div class="card" id="loginCard">
+            <h3><i class="fa-solid fa-lock" style="color: var(--accent);"></i> Admin Portal Login (Abhishek Thakur Sir)</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">गुप्त पासवर्ड दर्ज करें (Default: <code>drishti123</code>):</p>
             <input type="password" id="adminPassword" placeholder="Admin Password डालें">
             <button class="btn" onclick="loginAdmin()">Login to Admin Panel</button>
         </div>
 
-        <!-- 🛡️ Admin Dashboard (Protected) -->
+        <!-- 🛡️ Admin Dashboard (Protected - Login ke baad khulega) -->
         <div class="card hidden" id="adminDashboard">
             <h3><i class="fa-solid fa-user-shield"></i> स्वागत है, अभिषेक सर! (Admin Panel)</h3>
             <p style="font-size: 12px; color: var(--secondary); margin-bottom: 15px;"><i class="fa-solid fa-circle-check"></i> एडमिन पैनल सक्रिय है।</p>
@@ -230,8 +225,9 @@
         }
 
         window.onload = function() {
+            // Agar pehle se login hain, toh login box chhipa do aur dashboard dikha do
             if(localStorage.getItem("is_admin_logged") === "true") {
-                document.getElementById("loginCard").classList.remove("hidden");
+                document.getElementById("loginCard").classList.add("hidden");
                 document.getElementById("adminDashboard").classList.remove("hidden");
             }
             loadCustomData();
@@ -240,22 +236,9 @@
             loadNotice();
         }
 
-        function toggleAdminPanelSection() {
-            let loginCard = document.getElementById("loginCard");
-            let dashCard = document.getElementById("adminDashboard");
-            
-            if(localStorage.getItem("is_admin_logged") === "true") {
-                dashCard.classList.toggle("hidden");
-            } else {
-                loginCard.classList.toggle("hidden");
-            }
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
         function loginAdmin() {
             let pass = document.getElementById("adminPassword").value;
             if(pass === getSavedPassword()) {
-                localStorage.getItem("is_admin_logged", "true");
                 localStorage.setItem("is_admin_logged", "true");
                 document.getElementById("loginCard").classList.add("hidden");
                 document.getElementById("adminDashboard").classList.remove("hidden");
@@ -279,7 +262,8 @@
         function logoutAdmin() {
             localStorage.removeItem("is_admin_logged");
             document.getElementById("adminDashboard").classList.add("hidden");
-            document.getElementById("loginCard").classList.add("hidden");
+            document.getElementById("loginCard").classList.remove("hidden"); // Logout par login card wapas dikhega
+            document.getElementById("adminPassword").value = "";
             alert("Logged out successfully.");
         }
 
@@ -341,7 +325,7 @@
             document.getElementById("bannerUrlInput").value = "";
         }
 
-        function saveStudentRecord() {
+    function saveStudentRecord() {
             let name = document.getElementById("stName").value;
             let course = document.getElementById("stCourse").value;
             let mobile = document.getElementById("stMobile").value;
@@ -351,4 +335,15 @@
 
             if(!name || !course) { alert("छात्र का नाम और कोर्स भरें!"); return; }
 
-            let student = { na
+            let student = { name, course, mobile, paid, total, expiry };
+            let students = JSON.parse(localStorage.getItem("drishti_students") || "[]");
+            students.push(student);
+            localStorage.setItem("drishti_students", JSON.stringify(students));
+
+            alert("स्टूडेंट रिकॉर्ड सेव हो गया है!");
+            document.getElementById("stName").value = "";
+            document.getElementById("stCourse").value = "";
+            document.getElementById("stMobile").value = "";
+            document.getElementById("stPaid").value = "";
+            document.getElementById("stTotal").value = "";
+            document.getElement
