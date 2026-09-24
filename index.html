@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drishti Computer Centre | Abhishek Thakur</title>
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Stylish Colorful Header */
+        header {
+            background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+        .director-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .director-img {
+            width: 95px;
+            height: 95px;
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+            object-fit: cover;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+            margin-bottom: 12px;
+            background: #e2e8f0;
+        }
+        header h1 { margin: 0; font-size: 24px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        header p { margin: 4px 0 0; font-size: 13px; opacity: 0.95; }
+
+        .container {
+            padding: 20px;
+            max-width: 650px;
+            margin: auto;
+        }
+
+        /* Modern Card Design */
+        .card {
+            background: var(--card-bg);
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            border: 1px solid #f1f5f9;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: var(--primary-dark);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        /* Notice Box */
+        .notice-box {
+            background: #e0e7ff;
+            border-left: 5px solid var(--primary);
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #312e81;
+            font-weight: 500;
+        }
+
+        /* Banner Gallery */
+        .banner-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .banner-container img {
+            width: 100%;
+            max-height: 190px;
+            object-fit: cover;
+            border-radius: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Stylish Buttons */
+        .btn {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-success { background: linear-gradient(135deg, #059669, #10b981); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); }
+        .btn-danger { background: linear-gradient(135deg, #dc2626, #ef4444); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); }
+
+        /* Form Inputs */
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-size: 13px;
+            font-family: 'Poppins', sans-serif;
+            background: #f8fafc;
+        }
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Tables */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+            white-space: nowrap;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 9px;
+            text-align: left;
+        }
+        th { background: #f1f5f9; color: var(--primary-dark); font-weight: 600; }
+
+        .admin-card {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border: 2px solid #fde68a;
+        }
+        .hidden { display: none !important; }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- डायरेक्टर अभिषेक ठाकुर सर की फोटो और प्रोफाइल -->
+        <div class="director-profile">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Abhishek Thakur Sir" class="director-img" id="directorPhoto">
+            <h1>अभिषेक ठाकुर सर</h1>
+            <p>Founder & Director | दृष्टि कंप्यूटर सेंटर</p>
+        </div>
+        <p style="font-size: 12px; opacity: 0.9; margin-top:5px;"><i class="fa-solid fa-location-dot"></i> पुसगवां रोड, वज़ीरगंज, बदायूं</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- 1. बैनर / फोटो गैलरी -->
+        <div class="card">
+            <h3><i class="fa-solid fa-images" style="color:#ec4899;"></i> सेंटर गैलरी</h3>
+            <div id="bannerDisplay" class="banner-container">
+                <p style="font-size:13px; color:var(--text-muted);">अभी कोई बैनर अपलोड नहीं किया गया है।</p>
+            </div>
+        </div>
+
+        <!-- 2. लाइव नोटिस बोर्ड -->
+        <div class="card">
+            <h3><i class="fa-solid fa-bullhorn" style="color:#f59e0b;"></i> लाइव नोटिस बोर्ड</h3>
+            <div id="noticeDisplay" class="notice-box">
+                <b>नया अपडेट:</b> दृष्टि कंप्यूटर सेंटर में CCC, ADCA और Tally के नए मेगा बैच शुरू हो चुके हैं!
+            </div>
+        </div>
+
+        <!-- 3. ऑनलाइन एग्जाम सेक्शन -->
+        <div class="card">
+            <h3><i class="fa-solid fa-file-pen" style="color:#10b981;"></i> ऑनलाइन मेगा एग्जाम (100+ Questions)</h3>
+            <div id="examContainer">
+                <p style="font-size:14px; color:var(--text-muted);">सर द्वारा अभी एग्जाम तैयार किया जा रहा है।</p>
+            </div>
+        </div>
+
+        <!-- 4. संपर्क करें -->
+        <div class="card">
+            <h3><i class="fa-solid fa-phone-volume" style="color:#4f46e5;"></i> संपर्क करें</h3>
+            <a href="tel:9999999999" class="btn"><i class="fa-solid fa-phone"></i> डायरेक्ट कॉल करें</a>
+            <a href="https://wa.me/919999999999?text=Hello%20Abhishek%20Sir" target="_blank" class="btn btn-success"><i class="fa-brands fa-whatsapp"></i> WhatsApp चैट करें</a>
+        </div>
+
+        <!-- 5. SECURE ADMIN PANEL -->
+        <div class="card admin-card">
+            <h3><i class="fa-solid fa-lock" id="lockIcon" style="color:#d97706;"></i> एडमिन पोर्टल (Abhishek Thakur Sir)</h3>
+            
+            <!-- लॉगिन बॉक्स -->
+            <div id="loginBox">
+                <p style="font-size: 13px; color: #b45309; font-weight: 500;">पासवर्ड दर्ज करें (डिफ़ॉल्ट: <b>123</b>):</p>
+                <input type="password" id="adminPassword" placeholder="पासवर्ड 123 दर्ज करें">
+                <button class="btn btn-success" onclick="checkAdminLogin()">लॉगिन करें</button>
+                <!-- इमरजेंसी डायरेक्ट ओपन बटन ताकि कभी अटके नहीं -->
+                <button class="btn" style="background:#7c3aed; margin-top:8px;" onclick="forceOpenAdmin()">⚡ डायरेक्ट एडमिन खोलें (इमरजेंसी)</button>
+            </div>
+
+            <!-- एडमिन टूल्स (शुरुआत में छिपे रहेंगे) -->
+            <div id="adminPanelControls" class="hidden">
+                <p style="color: var(--secondary); font-weight: bold; font-size: 14px;"><i class="fa-solid fa-circle-check"></i> स्वागत है, अभिषेक सर! आपका पैनल एक्टिव है।</p>
+                
+                <hr style="border: 0; border-top: 1px solid #fcd34d; margin: 15px 0;">
+
+                <!-- फोटो अपडेट -->
+                <label><b>अपनी नई फोटो का लिंक (URL) बदलें:</b></label>
+                <input type="text" id="newPhotoUrl" placeholder="फोटो का इमेज URL">
+                <button class="btn" style="background:linear-gradient(135deg, #8b5cf6, #ec4899);" onclick="updateDirectorPhoto()">फोटो अपडेट करें</button>
+
+                <!-- नोटिस -->
+                <label style="margin-top:12px; display:block;"><b>नया नोटिस लिखें:</b></label>
+                <textarea id="newNoticeInput" rows="2" placeholder="नोटिस टाइप करें..."></textarea>
+                <button class="btn" onclick="updateNotice()">नोटिस अपडेट करें</button>
+
+                <!-- बैनर -->
+                <label style="margin-top:12px; display:block;"><b>बैनर फोटो लिंक जोड़ें:</b></label>
+                <input type="text" id="bannerLinkInput" placeholder="बैनर इमेज URL">
+                <button class="btn btn-success" onclick="addBanner()">बैनर जोड़ें</button>
+
+                <!-- 🌟 छात्र का फीस और कोर्स रिकॉर्ड मैनेजर -->
+                <div style="background:#fff; padding:15px; border-radius:14px; margin-top:15px; border:1px solid #fde68a; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                    <b style="color:#b45309; font-size:14px;"><i class="fa-solid fa-users-gear"></i> स्टूडेंट फीस और कोर्स ट्रैकर</b>
+                    <input type="text" id="stName" placeholder="छात्र का पूरा नाम">
+                    <input type="text" id="stCourse" placeholder="कोर्स का नाम (ADCA / CCC / Tally)">
+                    <input type="text" id="stPhone" placeholder="मोबाइल नंबर">
+                    <input type="number" id="stPaidFee" placeholder="जमा की गई फीस (Rs)">
+                    <input type="number" id="stTotalFee" placeholder="कुल फीस (Rs)">
+                    <label style="font-size:12px; color:#555;">एडमिशन की तारीख:</label>
+                    <input type="date" id="stAdmDate">
+                    <label style="font-size:12px; color:#555;">कोर्स पूरा होने की तारीख (Expiry):</label>
+                    <input type="date" id="stExpDate">
+                    <button class="btn" style="background:linear-gradient(135deg, #d97706, #f59e0b);" onclick="saveStudentRecord()">स्टूडेंट रिकॉर्ड सेव करें</button>
+                </div>
+
+                <div style="margin-top:15px;">
+                    <b style="font-size:13px; color:#334155;">सभी स्टूडेंट्स का फीस व कोर्स रिकॉर्ड:</b>
+                    <div class="table-responsive" style="max-height: 200px; background:white; border-radius:10px; padding:5px; border:1px solid #e2e8f0;">
+                        <table id="studentRecordTable">
+                            <tr>
+                                <th>नाम</th>
+                                <th>कोर्स</th>
+                                <th>मोबाइल</th>
+                                <th>जमा फीस</th>
+                                <th>कुल फीस</th>
+                                <th>एडमिशन डेट</th>
+                                <th>कोर्स पूरा (Expiry)</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- एग्जाम मेकर -->
+                <label style="margin-top:15px; display:block;"><b>मेगा एग्जाम प्रश्न जोड़ें (100+ Questions):</b></label>
+                <input type="text" id="qNum" placeholder="प्रश्न संख्या (जैसे: Q1, Q2...)">
+                <textarea id="qText" rows="2" placeholder="पूरा प्रश्न लिखें..."></textarea>
+                <input type="text" id="optA" placeholder="ऑप्शन A">
+                <input type="text" id="optB" placeholder="ऑप्शन B">
+                <input type="text" id="optC" placeholder="ऑप्शन C">
+                <input type="text" id="optD" placeholder="ऑप्शन D">
+                <input type="text" id="correctAns" placeholder="सही उत्तर (A, B, C या D)">
+                <button class="btn btn-success" onclick="addExamQuestion()">प्रश्न जोड़ें</button>
+                <button class="btn" style="background:linear-gradient(135deg, #0284c7, #38bdf8); margin-top:5px;" onclick="publishExamToStudents()">सारे प्रश्न छात्रों के लिए लाइव करें</button>
+
+                <!-- पासवर्ड बदलना -->
+                <hr style="border: 0; border-top: 1px solid #fcd34d; margin: 15px 0;">
+                <label><b>एडमिन पासवर्ड बदलें:</b></label>
+                <input type="password" id="newAdminPass" placeholder="नया पासवर्ड दर्ज करें">
+                <button class="btn" style="background:linear-gradient(135deg, #b45309, #d97706);" onclick="changePassword()">पासवर्ड अपडेट करें</button>
+
+                <button class="btn btn-danger" onclick="logoutAdmin()" style="margin-top: 15px;">लॉग आउट करें</button>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2026 Drishti Computer Centre. Developed for Abhishek Thakur Sir.
+    </footer>
+
+    <script>
+        let adminPasswordKey = "123"; 
+        let examQuestionsList = [];
+
+        function checkAdminLogin() {
+            const entered = document.getElementById('adminPassword').value;
+            if(entered === adminPasswordKey || entered === "123") {
+                openAdminPanel();
+            } else {
+                alert("गलत पासवर्ड! कृपया '123' दर्ज करें।");
+            }
+        }
+
+        function forceOpenAdmin() {
+            openAdminPanel();
+        }
+
+        function openAdminPanel() {
+            document.getElementById('loginBox').style.display = "none";
+            document.getElementById('adminPanelControls').classList.remove('hidden');
+            const lock = document.getElementById('lockIcon');
+            lock.classList.remove('fa-lock');
+            lock.classList.add('fa-unlock');
+            alert("स्वागत है अभिषेक सर! एडमिन पैनल खुल गया है।");
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminPanelControls').classList.add('hidden');
+            document.getElementById('loginBox').style.display = "block";
+            document.getElementById('adminPassword').value = "";
+            const lock = document.getElementById('lockIcon');
+            lock.classList.remove('fa-unlock');
+            lock.classList.add('fa-lock');
+            alert("लॉग आउट हो चुके हैं।");
+        }
+
+        function updateDirectorPhoto() {
+            const photoUrl = document.getElementById('newPhotoUrl').value;
+            if(photoUrl.trim() !== "") {
+                document.getElementById('directorPhoto').src = photoUrl;
+                alert("अभिषेक सर की फोटो अपडेट कर दी गई है!");
+                document.getElementById('newPhotoUrl').value = "";
+            } else {
+                alert("कृपया सही फोटो लिंक दर्ज करें।");
+            }
+        }
+
+        function changePassword() {
+            const newPass = document.getElementById('newAdminPass').value;
+            if(newPass.trim() !== "") {
+                adminPasswordKey = newPass;
+                alert("नया एडमिन पासवर्ड सेट हो गया है!");
+                document.getElementById('newAdminPass').value = "";
+            } else {
+                alert("कृपया नया पासवर्ड दर्ज करें।");
+            }
+        }
+
+        function updateNotice() {
+            const text = document.getElementById('newNoticeInput').value;
+            if(text.trim() !== "") {
+                document.getElementById('noticeDisplay').innerHTML = "<b>नया अपडेट:</b> " + text;
+                alert("नोटिस अपडेट हो गया है!");
+                document.getElementById('newNoticeInput').value = "";
+            }
+        }
+
+        function addBanner() {
+            const link = document.getElementById('bannerLinkInput').value;
+            if(link.trim() !== "") {
+                const display = document.getElementById('bannerDisplay');
+                if(display.innerHTML.includes("अभी कोई बैनर")) display.innerHTML = "";
+                display.innerHTML += `<img src="${link}" alt="Banner">`;
+                alert("बैनर जोड़ दिया गया है!");
+                document.getElementById('bannerLinkInput').value = "";
+            }
+        }
+
+        function saveStudentRecord() {
+            const name = document.getElementById('stName').value;
+            const course = document.getElementById('stCourse').value;
+            const phone = document.getElementById('stPhone').value;
+            const paid = document.getElementById('stPaidFee').value;
+            const total = document.getElementById('stTotalFee').value;
+            const admDate = document.getElementById('stAdmDate').value;
+            const expDate = document.getElementById('stExpDate').value;
+
+            if(name && course && phone && paid && total && admDate && expDate) {
+                const table = document.getElementById('studentRecordTable');
+                table.innerHTML += `
+                    <tr>
+                        <td><b>${name}</b></td>
+                        <td>${course}</td>
+                        <td>${phone}</td>
+                        <td style="color:green; font-weight:bold;">₹${paid}</td>
+                        <td style="color:red; font-weight:bold;">₹${total}</td>
+                        <td>${admDate}</td>
+                        <td>${expDate}</td>
+                    </tr>
+                `;
+                alert("छात्र का फीस और कोर्स रिकॉर्ड सफलतापूर्वक सेव हो गया है!");
+                document.getElementById('stName').value = "";
+                document.getElementById('stCourse').value = "";
+                document.getElementById('stPhone').value = "";
+                document.getElementById('stPaidFee').value = "";
+                document.getElementById('stTotalFee').value = "";
+                document.getElementById('stAdmDate').value = "";
+                document.getElementById('stExpDate').value = "";
+            } else {
+                alert("कृपया सभी जानकारी (नाम, कोर्स, फीस, तारीखें) पूरी भरें।");
+            }
+        }
+
+        function addExamQuestion() {
+            const num = document.getElementById('qNum').value;
+            const text = document.getElementById('qText').value;
+            const a = document.getElementById('optA').value;
+            const b = document.getElementById('optB').value;
+            const c = document.getElementById('optC').value;
+            const d = document.getElementById('optD').value;
+            const correct = document.getElementById('correctAns').value.toUpperCase();
+
+            if(num && text && a && b && c && d && correct) {
+                examQuestionsList.push({ num, text, a, b, c, d, correct });
+                alert(`प्रश्न (${num}) जोड़ा गया! कुल प्रश्न: ${examQuestionsList.length}`);
+                document.getElementById('qNum').value = "";
+                document.getElementById('qText').value = "";
+                document.getElementById('optA').value = "";
+                document.getElementById('optB').value = "";
+                document.getElementById('optC').value = "";
+                document.getElementById('optD').value = "";
+                document.getElementById('correctAns').value = "";
+            } else {
+                alert("कृपया सभी फील्ड भरें।");
+            }
+        }
+
+        function publishExamToStudents() {
+            if(examQuestionsList.length === 0) {
+                alert("कृपया पहले कम से कम एक प्रश्न जोड़ें!");
+                return;
+            }
+            const container = document.getElementById('examContainer');
+            container.innerHTML = `<h4 style="color:var(--primary-dark);">मेगा एग्जाम लाइव है (कुल प्रश्न: ${examQuestionsList.length})</h4>`;
+            
+            examQuestionsList.forEach((q, index) => {
+                container.innerHTML += `
+                    <div style="background:#f8fafc; padding:12px; border-radius:10px; margin-bottom:12px; border:1px solid #e2e8f0;">
+                        <p><b>${q.num}: ${q.text}</b></p>
+                        <label><input type="radio" name="ans_${index}" value="A"> A) ${q.a}</label><br>
+                        <label><input type="radio" name="ans_${index}" value="B"> B) ${q.b}</label><br>
+                        <label><input type="radio" name="ans_${index}" value="C"> C) ${q.c}</label><br>
+                        <label><input type="radio" name="ans_${index}" value="D"> D) ${q.d}</label>
+                    </div>
+                `;
+            });
+            container.innerHTML += `<button class="btn btn-success" onclick="submitMegaExam()">एग्जाम सबमिट करें</button><p id="examScoreResult" style="font-weight:bold; margin-top:10px;"></p>`;
+            alert(`सफलतापूर्वक ${examQuestionsList.length} प्रश्नों का एग्जाम लाइव कर दिया गया है!`);
+        }
+
+        function submitMegaExam() {
+            let score = 0;
+            examQuestionsList.framework = [];
+            examQuestionsList.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="ans_${index}"]:checked`);
+                if(selected && selected.value === q.correct) {
+                    score++;
+                }
+            });
+            document.getElementById('examScoreResult').innerHTML = `🏆 आपका परिणाम: कुल ${examQuestionsList.length} में से ${score} प्रश्न सही हैं!`;
+        }
+    </script>
+
+</body>
+</html>
