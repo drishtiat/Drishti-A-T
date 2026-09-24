@@ -37,6 +37,9 @@
         .contact-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px; border-radius: 8px; color: white; font-weight: 500; margin-bottom: 10px; width: 100%; text-align: center; }
         .call-btn { background: var(--primary); }
         .wa-btn { background: #22c55e; }
+        table { width: 100%; font-size: 12px; margin-top: 10px; border-collapse: collapse; color: white; }
+        table, th, td { border: 1px solid #475569; padding: 8px; text-align: center; }
+        th { background: var(--primary-dark); }
     </style>
 </head>
 <body>
@@ -103,6 +106,28 @@
             <input type="text" id="newPhotoUrl" placeholder="Photo filename ya URL dalein">
             <button class="btn" onclick="updatePhoto()">फोटो अपडेट करें</button>
 
+            <!-- बैनर जोड़े -->
+            <label style="font-size: 12px; color: var(--text-muted); margin-top: 10px; display: block;">सेंटर बैनर इमेज URL:</label>
+            <input type="text" id="bannerUrlInput" placeholder="Banner image URL dalein">
+            <button class="btn btn-secondary" onclick="addBanner()">बैनर जोड़ें</button>
+
+            <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
+
+            <!-- स्टूडेंट फीस और कोर्स ट्रैकर -->
+            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-users"></i> स्टूडेंट फीस और कोर्स ट्रैकर</h4>
+            <input type="text" id="studentName" placeholder="छात्र का पूरा नाम">
+            <input type="text" id="studentCourse" placeholder="कोर्स का नाम (ADCA / CCC / Tally)">
+            <input type="text" id="studentMobile" placeholder="मोबाइल नंबर">
+            <input type="text" id="studentPaid" placeholder="जमा की गई फीस (Rs)">
+            <input type="text" id="studentTotal" placeholder="कुल फीस (Rs)">
+            <button class="btn" onclick="saveStudentData()">स्टूडेंट रिकॉर्ड सेव करें</button>
+
+            <div style="overflow-x: auto;">
+                <table id="studentTable">
+                    <tr><th>नाम</th><th>कोर्स</th><th>मोबाइल</th><th>जमा</th><th>कुल</th></tr>
+                </table>
+            </div>
+
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
             <!-- टेस्ट जारी करें -->
@@ -129,7 +154,6 @@
     <script>
         const SECRET_PASS = "drishti123";
 
-        // Check if admin was already logged in during session
         window.onload = function() {
             if(localStorage.getItem("is_admin_logged") === "true") {
                 document.getElementById("loginCard").classList.add("hidden");
@@ -137,6 +161,7 @@
             }
             loadCustomData();
             loadTests();
+            loadStudents();
         }
 
         function loginAdmin() {
@@ -161,14 +186,53 @@
 
         function updatePhoto() {
             let photoUrl = document.getElementById("newPhotoUrl").value;
-            if(!photoUrl) {
-                alert("कृपया फोटो का लिंक या नाम दर्ज करें!");
-                return;
-            }
+            if(!photoUrl) { alert("कृपया फोटो का लिंक दर्ज करें!"); return; }
             localStorage.setItem("drishti_photo", photoUrl);
             document.getElementById("headerPhoto").src = photoUrl;
             alert("फोटो सफलतापूर्वक अपडेट हो गई है!");
             document.getElementById("newPhotoUrl").value = "";
+        }
+
+        function addBanner() {
+            let bUrl = document.getElementById("bannerUrlInput").value;
+            if(!bUrl) { alert("कृपया बैनर का लिंक दर्ज करें!"); return; }
+            localStorage.setItem("drishti_banner", bUrl);
+            document.getElementById("bannerDisplay").innerHTML = `<img src="${bUrl}" style="width:100%; border-radius:10px; max-height:200px; object-fit:cover;">`;
+            alert("बैनर सफलतापूर्वक जोड़ दिया गया है!");
+            document.getElementById("bannerUrlInput").value = "";
+        }
+
+        function saveStudentData() {
+            let name = document.getElementById("studentName").value;
+            let course = document.getElementById("studentCourse").value;
+            let mobile = document.getElementById("studentMobile").value;
+            let paid = document.getElementById("studentPaid").value;
+            let total = document.getElementById("studentTotal").value;
+
+            if(!name || !course) { alert("कृपया छात्र का नाम और कोर्स भरें!"); return; }
+
+            let student = { name, course, mobile, paid, total };
+            let students = JSON.parse(localStorage.getItem("drishti_students") || "[]");
+            students.push(student);
+            localStorage.setItem("drishti_students", JSON.stringify(students));
+
+            alert("स्टूडेंट रिकॉर्ड सेव हो गया है!");
+            document.getElementById("studentName").value = "";
+            document.getElementById("studentCourse").value = "";
+            document.getElementById("studentMobile").value = "";
+            document.getElementById("studentPaid").value = "";
+            document.getElementById("studentTotal").value = "";
+            loadStudents();
+        }
+
+        function loadStudents() {
+            let students = JSON.parse(localStorage.getItem("drishti_students") || "[]");
+            let table = document.getElementById("studentTable");
+            let html = `<tr><th>नाम</th><th>कोर्स</th><th>मोबाइल</th><th>जमा</th><th>कुल</th></tr>`;
+            students.forEach(s => {
+                html += `<tr><td>${s.name}</td><td>${s.course}</td><td>${s.mobile}</td><td>${s.paid}</td><td>${s.total}</td></tr>`;
+            });
+            table.innerHTML = html;
         }
 
         function publishTest() {
@@ -176,10 +240,7 @@
             let title = document.getElementById("testTitle").value;
             let details = document.getElementById("testDetails").value;
 
-            if(!title || !details) {
-                alert("कृपया सभी जानकारी भरें!");
-                return;
-            }
+            if(!title || !details) { alert("कृपया सभी जानकारी भरें!"); return; }
 
             let testData = { course, title, details };
             let tests = JSON.parse(localStorage.getItem("drishti_tests") || "[]");
@@ -195,10 +256,7 @@
         function loadTests() {
             let tests = JSON.parse(localStorage.getItem("drishti_tests") || "[]");
             let listDiv = document.getElementById("studentTestList");
-            
-            if(tests.length === 0) {
-                return; // Default message dikhega agar test nahi hai
-            }
+            if(tests.length === 0) return;
 
             let html = "";
             tests.forEach((t) => {
@@ -212,8 +270,11 @@
 
         function loadCustomData() {
             let savedPhoto = localStorage.getItem("drishti_photo");
-            if(savedPhoto) {
-                document.getElementById("headerPhoto").src = savedPhoto;
+            if(savedPhoto) document.getElementById("headerPhoto").src = savedPhoto;
+
+            let savedBanner = localStorage.getItem("drishti_banner");
+            if(savedBanner) {
+                document.getElementById("bannerDisplay").innerHTML = `<img src="${savedBanner}" style="width:100%; border-radius:10px; max-height:200px; object-fit:cover;">`;
             }
         }
     </script>
