@@ -20,8 +20,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 40px; }
         header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 25px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); position: relative; }
-        .director-profile img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s; }
-        .director-profile img:active { transform: scale(0.95); }
+        .director-profile img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .director-profile h1 { font-size: 20px; font-weight: 600; margin-bottom: 2px; }
         .director-profile p { font-size: 12px; opacity: 0.9; }
         .container { padding: 20px; max-width: 600px; margin: auto; }
@@ -31,6 +30,8 @@
         .btn:hover { background: var(--primary-dark); }
         .btn-secondary { background: var(--secondary); }
         .btn-danger { background: #ef4444; margin-top: 10px; }
+        .btn-admin-trigger { background: #f59e0b; color: #0f172a; font-weight: 600; margin-bottom: 15px; }
+        .btn-admin-trigger:hover { background: #d97706; color: white; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 8px; font-size: 14px; outline: none; }
         input:focus, select:focus { border-color: var(--primary); }
         .hidden { display: none !important; }
@@ -48,8 +49,7 @@
 
     <header>
         <div class="director-profile">
-            <!-- 👆 Sir ki photo par click karte hi Admin Panel khulega -->
-            <img id="headerPhoto" src="abhishek_photo.jpg" alt="Abhishek Thakur Sir" onclick="toggleAdminPanelSection()" title="Click here for Admin Panel">
+            <img id="headerPhoto" src="abhishek_photo.jpg" alt="Abhishek Thakur Sir">
             <h1>अभिषेक ठाकुर सर</h1>
             <p>Founder & Director | दृष्टि कंप्यूटर सेंटर</p>
         </div>
@@ -59,10 +59,13 @@
 
     <div class="container">
         
+        <!-- 🔑 Alag se Admin Panel Kholne ka Button -->
+        <button class="btn btn-admin-trigger" onclick="toggleAdminPanelSection()"><i class="fa-solid fa-lock"></i> Admin Panel Login / Open Karein</button>
+
         <!-- 🔒 Admin Login Card -->
         <div class="card hidden" id="loginCard">
             <h3><i class="fa-solid fa-lock"></i> Admin Portal (Abhishek Thakur Sir)</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">गुप्त पासवर्ड दर्ज करें:</p>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">गुप्त पासवर्ड दर्ज करें (Default: drishti123):</p>
             <input type="password" id="adminPassword" placeholder="Admin Password डालें">
             <button class="btn" onclick="loginAdmin()">Login to Admin Panel</button>
         </div>
@@ -116,7 +119,7 @@
 
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
-            <!-- टेस्ट / प्रश्न बैंक (100+ Questions & 4 Options) -->
+            <!-- टेस्ट / प्रश्न बैंक -->
             <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;">कोर्स के अनुसार टेस्ट प्रश्न जोड़ें (4 विकल्पों सहित):</h4>
             <select id="testCourseSelect">
                 <option value="CCC">CCC Test</option>
@@ -252,6 +255,7 @@
         function loginAdmin() {
             let pass = document.getElementById("adminPassword").value;
             if(pass === getSavedPassword()) {
+                localStorage.getItem("is_admin_logged", "true");
                 localStorage.setItem("is_admin_logged", "true");
                 document.getElementById("loginCard").classList.add("hidden");
                 document.getElementById("adminDashboard").classList.remove("hidden");
@@ -347,7 +351,4 @@
 
             if(!name || !course) { alert("छात्र का नाम और कोर्स भरें!"); return; }
 
-            let student = { name, course, mobile, paid, total, expiry };
-            let students = JSON.parse(localStorage.getItem("drishti_students") || "[]");
-            students.push(student);
-            localStorage.s
+            let student = { na
