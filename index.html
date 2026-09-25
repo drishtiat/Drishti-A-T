@@ -50,7 +50,7 @@
     <!-- Admin Dashboard -->
     <div class="card hidden" id="adminDashboard">
         <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (लाइव)</h3>
-        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">ऑनलाइन डेटाबेस सक्रिय है। यहाँ से जो जोड़ेंगे वो सभी छात्रों को दिखेगा।</p>
+        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">ऑनलाइन डेटाबेस सक्रिय है। यहाँ से जो जोड़ेंगे वो सभी छात्रों को दिखेगा।</p>
         
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">एडमिन पासवर्ड बदलें</h4>
         <input type="password" id="newAdminPassword" placeholder="नया पासवर्ड (min 4)">
@@ -152,7 +152,6 @@
         let p = prompt("एडमिन पासवर्ड दर्ज करें:");
         if(p === null) return;
         
-        // Trim karke match karna taki extra spaces ki problem na ho
         if(p.trim() === currentAdminPassword.trim()){
             document.getElementById("adminDashboard").classList.remove("hidden");
             alert("Admin Panel खुल गया!");
@@ -166,9 +165,11 @@
         let n = document.getElementById("newAdminPassword").value.trim();
         if(n.length < 4){ alert("कम से कम 4 अक्षर का पासवर्ड होना चाहिए!"); return; }
         
-        db.ref('adminPassword').set(n).then(() => {
+        db.ref().update({
+            adminPassword: n
+        }).then(() => {
             currentAdminPassword = n;
-            alert("पासवर्ड सफलतापूर्वक ऑनलाइन अपडेट हो गया है!");
+            alert("पासवर्ड सफलतापूर्वक ऑनलाइन अपडेट हो गया है! नया पासवर्ड: " + n);
             document.getElementById("newAdminPassword").value = "";
         }).catch((error) => {
             alert("त्रुटि: " + error.message);
