@@ -62,9 +62,16 @@
         <!-- 🔑 गुप्त एडमिन लॉगिन कार्ड -->
         <div class="card hidden" id="loginCard" style="border: 2px solid var(--accent);">
             <h3><i class="fa-solid fa-lock" style="color: var(--accent);"></i> गुप्त एडमिन पोर्टल (Abhishek Thakur Sir)</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">सुरक्षित पासवर्ड दर्ज करें:</p>
-            <input type="password" id="adminPassword" placeholder="गुप्त पासवर्ड डालें">
-            <button class="btn" onclick="loginAdmin()">Login to Admin Panel</button>
+            <div id="setupPassBox" class="hidden">
+                <p style="font-size: 12px; color: var(--accent); margin-bottom: 8px;">पहली बार सेटअप: अपना नया गुप्त पासवर्ड बनाएं:</p>
+                <input type="password" id="firstTimePass" placeholder="नया गुप्त पासवर्ड सेट करें">
+                <button class="btn btn-secondary" onclick="setFirstTimePassword()">पासवर्ड सेट करें और लॉगिन करें</button>
+            </div>
+            <div id="normalLoginBox">
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">अपना गुप्त पासवर्ड दर्ज करें:</p>
+                <input type="password" id="adminPassword" placeholder="गुप्त पासवर्ड डालें">
+                <button class="btn" onclick="loginAdmin()">Login to Admin Panel</button>
+            </div>
             <button class="btn btn-danger" onclick="hideLoginCard()">बंद करें (Cancel)</button>
         </div>
 
@@ -80,7 +87,7 @@
 
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
-            <!-- 📝 ऑनलाइन टेस्ट क्रिएटर (नया) -->
+            <!-- 📝 ऑनलाइन टेस्ट क्रिएटर -->
             <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-pen-to-square"></i> ऑनलाइन टेस्ट प्रश्न बनाएँ</h4>
             <select id="testCourseSelect">
                 <option value="CCC">CCC Test</option>
@@ -102,7 +109,6 @@
             </select>
             <button class="btn btn-secondary" onclick="saveAdminTest()">टेस्ट प्रश्न जोड़ें</button>
 
-            <!-- एडमिन द्वारा टेस्ट डिलीट करने की लिस्ट -->
             <div id="adminTestList" style="margin-top: 15px;"></div>
 
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
@@ -243,11 +249,10 @@
 
     <script>
         function getSavedPassword() {
-            return localStorage.getItem("drishti_admin_pass") || "drishti123";
+            return localStorage.getItem("drishti_admin_pass");
         }
 
         window.onload = function() {
-            // सुरक्षा जाँच: यदि एडमिन पहले से लॉग-इन है तभी डैशबोर्ड दिखाएं
             if(localStorage.getItem("is_admin_logged") === "true") {
                 document.getElementById("loginCard").classList.add("hidden");
                 document.getElementById("adminDashboard").classList.remove("hidden");
@@ -266,7 +271,31 @@
             let loginCard = document.getElementById("loginCard");
             loginCard.classList.remove("hidden");
             window.scrollTo({top: 0, behavior: 'smooth'});
-            document.getElementById("adminPassword").focus();
+
+            let savedPass = getSavedPassword();
+            if(!savedPass) {
+                // अगर पासवर्ड पहले से सेट नहीं है, तो नया पासवर्ड बनाने का बॉक्स दिखाएं
+                document.getElementById("setupPassBox").classList.remove("hidden");
+                document.getElementById("normalLoginBox").classList.add("hidden");
+                document.getElementById("firstTimePass").focus();
+            } else {
+                document.getElementById("setupPassBox").classList.add("hidden");
+                document.getElementById("normalLoginBox").classList.remove("hidden");
+                document.getElementById("adminPassword").focus();
+            }
+        }
+
+        function setFirstTimePassword() {
+            let newPass = document.getElementById("firstTimePass").value;
+            if(!newPass || newPass.length < 4) {
+                alert("पासवर्ड कम से कम 4 अंकों का होना चाहिए!");
+                return;
+            }
+            localStorage.setItem("drishti_admin_pass", newPass);
+            localStorage.setItem("is_admin_logged", "true");
+            document.getElementById("loginCard").classList.add("hidden");
+            document.getElementById("adminDashboard").classList.remove("hidden");
+            alert("गुप्त पासवर्ड सफलतापूर्वक सेट हो गया है और आप लॉगिन हो गए हैं!");
         }
 
         function hideLoginCard() {
@@ -275,14 +304,21 @@
 
         function loginAdmin() {
             let pass = document.getElementById("adminPassword").value;
-            if(pass === getSavedPassword()) {
+            let savedPass = getSavedPassword();
+            
+            if(!savedPass) {
+                alert("पहिले एडमिन पासवर्ड सेट किया जाना चाहिए। कृपया पेज रिफ्रेश करें।");
+                return;
+            }
+
+            if(pass === savedPass) {
                 localStorage.setItem("is_admin_logged", "true");
                 document.getElementById("loginCard").classList.add("hidden");
                 document.getElementById("adminDashboard").classList.remove("hidden");
                 alert("Admin Login Successful!");
                 loadAdminTests();
             } else {
-                alert("गलत पासवर्ड! कृपया सही पासवर्ड दर्ज करें।");
+                alert("गलत पासवर्ड! छात्र एडमिन पैनल नहीं खोल सकते।");
             }
         }
 
@@ -293,7 +329,7 @@
                 return;
             }
             localStorage.setItem("drishti_admin_pass", newPass);
-            alert("नया पासवर्ड सफलतापूर्वक सेट हो गया है!");
+            alert("नया पासवर्ड सफलतापूर्वक अपडेट कर दिया गया है!");
             document.getElementById("newAdminPass").value = "";
         }
 
@@ -305,7 +341,6 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // --- ऑनलाइन टेस्ट मैनेजमेंट (Admin & User) ---
         function saveAdminTest() {
             let course = document.getElementById("testCourseSelect").value;
             let question = document.getElementById("testQuestion").value;
@@ -408,7 +443,6 @@
             }
         }
 
-        // --- PDF अपलोड और डिस्प्ले ---
         function uploadPdf() {
             let title = document.getElementById("pdfTitle").value;
             let course = document.getElementById("pdfCourseSelect").value;
@@ -464,13 +498,13 @@
 
         function loadNotice() {
             let savedNotice = localStorage.getItem("drishti_notice");
-            if(savedNotice) {
+            if(savedPass = savedNotice) {
                 document.getElementById("noticeDisplay").innerHTML = `<div class="test-item"><strong>अभिषेक ठाकुर सर संदेश:</strong> ${savedNotice}</div>`;
             }
         }
 
         function saveStudentRecord() {
-            let name = document.getElementById("stName").value;
+            let name = document.getElementById("stName", ).value;
             let course = document.getElementById("stCourse").value;
             let mobile = document.getElementById("stMobile").value;
             let paid = document.getElementById("stPaid").value;
