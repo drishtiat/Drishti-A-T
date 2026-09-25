@@ -41,6 +41,7 @@
     <p style="font-size:12px;"><i class="fa-solid fa-phone"></i> Helpline: 9258533717</p>
 </header>
 <div class="container">
+    <!-- Admin Dashboard - Yeh by default hamesha chhupa rahega -->
     <div class="card hidden" id="adminDashboard">
         <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल</h3>
         <p style="font-size:12px; color:#10b981; margin-bottom:15px;">सुरक्षित एडमिन मोड सक्रिय है।</p>
@@ -84,10 +85,37 @@
 </div>
 <script>
 function getActivePassword(){return localStorage.getItem("drishti_custom_admin_pass")||"abhishek@1234";}
-window.onload=function(){if(localStorage.getItem("is_admin_logged")==="true"){document.getElementById("adminDashboard").classList.remove("hidden");loadStudents();loadAdminTests();}loadNotice();loadPdfs();loadUserTest();loadBanner();};
-function openAdminPanel(){let p=prompt("एडमिन पासवर्ड दर्ज करें:");if(p===null)return;if(p.trim()===getActivePassword()){localStorage.setItem("is_admin_logged","true");document.getElementById("adminDashboard").classList.remove("hidden");loadStudents();loadAdminTests();alert("Admin Panel खुल गया!");window.scrollTo({top:0,behavior:'smooth'});}else{alert("गलत पासवर्ड! Access Denied.");}}
+
+// Sudhaar: Yahan se 'is_admin_logged' ko hata diya hai taaki koi bhi bachha page kholne par auto-login na ho sake.
+window.onload=function(){
+    document.getElementById("adminDashboard").classList.add("hidden");
+    loadNotice();
+    loadPdfs();
+    loadUserTest();
+    loadBanner();
+};
+
+function openAdminPanel(){
+    let p=prompt("एडमिन पासवर्ड दर्ज करें:");
+    if(p===null)return;
+    if(p.trim()===getActivePassword()){
+        document.getElementById("adminDashboard").classList.remove("hidden");
+        loadStudents();
+        loadAdminTests();
+        alert("Admin Panel खुल गया!");
+        window.scrollTo({top:0,behavior:'smooth'});
+    }else{
+        alert("गलत पासवर्ड! Access Denied.");
+    }
+}
+
 function changeAdminPassword(){let n=document.getElementById("newAdminPassword").value.trim();if(n.length<4){alert("कम से कम 4 अक्षर का पासवर्ड डालें!");return;}localStorage.setItem("drishti_custom_admin_pass",n);alert("नया पासवर्ड सेव हो गया: "+n);document.getElementById("newAdminPassword").value="";}
-function logoutAdmin(){localStorage.removeItem("is_admin_logged");document.getElementById("adminDashboard").classList.add("hidden");alert("लॉक हो गया!");}
+
+function logoutAdmin(){
+    document.getElementById("adminDashboard").classList.add("hidden");
+    alert("एडमिन पैनल बंद (Logout) हो गया!");
+}
+
 function saveBanner(){let u=document.getElementById("bannerUrlInput").value.trim();if(!u){alert("URL डालें!");return;}localStorage.setItem("drishti_banner",u);loadBanner();alert("बैनर अपडेट!");}
 function loadBanner(){let b=localStorage.getItem("drishti_banner");let i=document.getElementById("headerBannerImg");if(b){i.src=b;i.style.display="block";}}
 function saveAdminTest(){let c=document.getElementById("testCourseSelect").value,q=document.getElementById("testQuestion").value.trim(),a=document.getElementById("optA").value.trim(),b=document.getElementById("optB").value.trim(),c1=document.getElementById("optC").value.trim(),d=document.getElementById("optD").value.trim(),co=document.getElementById("correctOpt").value;if(!q||!a||!b){alert("प्रश्न और 2 विकल्प जरूरी!");return;}let t=JSON.parse(localStorage.getItem("drishti_tests")||"[]");t.push({id:Date.now(),course:c,question:q,optA:a,optB:b,optC:c1,optD:d,correct:co});localStorage.setItem("drishti_tests",JSON.stringify(t));document.getElementById("testQuestion").value="";document.getElementById("optA").value="";document.getElementById("optB").value="";document.getElementById("optC").value="";document.getElementById("optD").value="";loadAdminTests();loadUserTest();alert("सेव हो गया!");}
@@ -100,7 +128,7 @@ function loadPdfs(){let p=JSON.parse(localStorage.getItem("drishti_pdfs")||"[]")
 function deletePdf(id){let p=JSON.parse(localStorage.getItem("drishti_pdfs")||"[]");p=p.filter(x=>x.id!==id);localStorage.setItem("drishti_pdfs",JSON.stringify(p));loadPdfs();}
 function publishNotice(){let n=document.getElementById("noticeInput").value.trim();if(!n){alert("नोटिस लिखें");return;}localStorage.setItem("drishti_notice",n);loadNotice();alert("नोटिस अपडेट!");}
 function loadNotice(){let n=localStorage.getItem("drishti_notice");let d=document.getElementById("noticeDisplay");if(!n){d.innerHTML=`<div class="test-item"><strong>संदेश:</strong> CCC, ADCA, DCA, Tally के नए बैच शुरू हैं।</div>`;}else{d.innerHTML=`<div class="test-item"><strong>नोटिस:</strong> ${n}<br><span style="font-size:10px; color:#94a3b8;">${new Date().toLocaleString('hi-IN')}</span></div>`;document.getElementById("noticeInput").value=n;}}
-function saveStudentRecord(){let n=document.getElementById("stName").value.trim(),c=document.getElementById("stCourse").value.trim(),m=document.getElementById("stMobile").value.trim(),p=document.getElementById("stPaid").value.trim(),t=document.getElementById("stTotal").value.trim(),e=document.getElementById("stExpiry").value.trim();if(!n||!c){alert("नाम और कोर्स जरूरी");return;}let s=JSON.parse(localStorage.getItem("drishti_students")||"[]");s.push({id:Date.now(),name:n,course:c,mobile:m,paid:p,total:t,expiry:e});localStorage.setItem("drishti_students",JSON.stringify(s));document.getElementById("stName").value="";document.getElementById("stCourse").value="";document.getElementById("stMobile").value="";document.getElementById("stPaid").value="";document.getElementById("stTotal").value="";document.getElementById("stExpiry").value="";loadStudents();alert("रिकॉर्ड सेव!");}
+function saveStudentRecord(){let n=document.getElementById("stName").value.trim(),c=document.getElementById("stCourse").value.trim(),m=document.getElementById("stMobile").value.trim(),p=document.getElementById("st`paid`")?.value.trim()||document.getElementById("stPaid").value.trim(),t=document.getElementById("stTotal").value.trim(),e=document.getElementById("stExpiry").value.trim();if(!n||!c){alert("नाम और कोर्स जरूरी");return;}let s=JSON.parse(localStorage.getItem("drishti_students")||"[]");s.push({id:Date.now(),name:n,course:c,mobile:m,paid:document.getElementById("stPaid").value.trim(),total:t,expiry:e});localStorage.setItem("drishti_students",JSON.stringify(s));document.getElementById("stName").value="";document.getElementById("stCourse").value="";document.getElementById("stMobile").value="";document.getElementById("stPaid").value="";document.getElementById("stTotal").value="";document.getElementById("stExpiry").value="";loadStudents();alert("रिकॉर्ड सेव!");}
 function loadStudents(){let s=JSON.parse(localStorage.getItem("drishti_students")||"[]");let b=document.getElementById("studentTableBody");b.innerHTML="";if(s.length==0){b.innerHTML=`<tr><td colspan="7" style="color:#94a3b8;">कोई रिकॉर्ड नहीं</td></tr>`;return;}s.slice().reverse().forEach(x=>{let tr=document.createElement("tr");tr.innerHTML=`<td>${x.name}</td><td>${x.course}</td><td>${x.mobile}</td><td>${x.paid}</td><td>${x.total}</td><td>${x.expiry}</td><td><button onclick="deleteStudent(${x.id})" style="background:#ef4444; color:white; border:none; padding:3px 6px; border-radius:3px;">X</button></td>`;b.appendChild(tr);});}
 function deleteStudent(id){let s=JSON.parse(localStorage.getItem("drishti_students")||"[]");s=s.filter(x=>x.id!==id);localStorage.setItem("drishti_students",JSON.stringify(s));loadStudents();}
 function submitOnlineAdmission(){let n=document.getElementById("admName").value.trim(),m=document.getElementById("admMobile").value.trim(),f=document.getElementById("admFather").value.trim(),c=document.getElementById("admCourseSelect").value,a=document.getElementById("admAdvance").value.trim();if(!n||!m){alert("नाम और मोबाइल भरें");return;}let msg=`नमस्ते सर, एडमिशन चाहिए%0Aनाम: ${n}%0Aमोबाइल: ${m}%0Aपिता: ${f}%0Aकोर्स: ${c}%0Aएडवांस: ${a}`;window.open(`https://wa.me/919258533717?text=${msg}`,"_blank");}
