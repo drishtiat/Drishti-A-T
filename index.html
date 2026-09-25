@@ -31,7 +31,6 @@
         .btn-secondary { background: var(--secondary); }
         .btn-danger { background: #ef4444; margin-top: 10px; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 8px; font-size: 14px; outline: none; }
-        input:focus, select:focus { border-color: var(--primary); }
         .hidden { display: none !important; }
         .test-item, .course-box, .faculty-box, .pdf-box { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
         .contact-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px; border-radius: 8px; color: white; font-weight: 500; margin-bottom: 10px; width: 100%; text-align: center; }
@@ -40,16 +39,16 @@
         table { width: 100%; font-size: 11px; margin-top: 10px; border-collapse: collapse; color: white; }
         table, th, td { border: 1px solid #475569; padding: 6px; text-align: center; }
         th { background: var(--primary-dark); }
-        .admin-link-corner { text-align: right; padding: 15px 10px; font-size: 12px; }
-        .admin-link-corner button { background: #1e293b; color: #94a3b8; border: 1px dashed #475569; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; }
-        .admin-link-corner button:hover { color: var(--accent); border-color: var(--accent); }
+        .secret-admin-link { text-align: center; margin-top: 30px; font-size: 12px; }
+        .secret-admin-link a { color: var(--text-muted); text-decoration: none; opacity: 0.5; }
+        .secret-admin-link a:hover { opacity: 1; color: var(--accent); }
     </style>
 </head>
 <body>
 
     <header>
         <div class="director-profile">
-            <img id="headerPhoto" src="abhishek_photo.jpg" alt="Abhishek Thakur Sir">
+            <img src="abhishek_photo.jpg" alt="Abhishek Thakur Sir">
             <h1>अभिषेक ठाकुर सर</h1>
             <p>Founder & Director | दृष्टि कंप्यूटर सेंटर</p>
         </div>
@@ -59,36 +58,19 @@
 
     <div class="container">
         
-        <!-- 🔑 गुप्त एडमिन लॉगिन कार्ड -->
-        <div class="card hidden" id="loginCard" style="border: 2px solid var(--accent);">
-            <h3><i class="fa-solid fa-lock" style="color: var(--accent);"></i> गुप्त एडमिन पोर्टल (Abhishek Thakur Sir)</h3>
-            <div id="setupPassBox" class="hidden">
-                <p style="font-size: 12px; color: var(--accent); margin-bottom: 8px;">पहली बार सेटअप: अपना नया गुप्त पासवर्ड बनाएं:</p>
-                <input type="password" id="firstTimePass" placeholder="नया गुप्त पासवर्ड सेट करें">
-                <button class="btn btn-secondary" onclick="setFirstTimePassword()">पासवर्ड सेट करें और लॉगिन करें</button>
-            </div>
-            <div id="normalLoginBox">
-                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">अपना गुप्त पासवर्ड दर्ज करें:</p>
-                <input type="password" id="adminPassword" placeholder="गुप्त पासवर्ड डालें">
-                <button class="btn" onclick="loginAdmin()">Login to Admin Panel</button>
-            </div>
-            <button class="btn btn-danger" onclick="hideLoginCard()">बंद करें (Cancel)</button>
-        </div>
-
-        <!-- 🛡️ Admin Dashboard -->
+        <!-- 🛡️ Admin Dashboard (Sirf Password dalne par khulega) -->
         <div class="card hidden" id="adminDashboard">
-            <h3><i class="fa-solid fa-user-shield"></i> स्वागत है, अभिषेक सर! (Admin Panel)</h3>
-            <p style="font-size: 12px; color: var(--secondary); margin-bottom: 15px;"><i class="fa-solid fa-circle-check"></i> एडमिन पैनल सक्रिय है।</p>
+            <h3><i class="fa-solid fa-user-shield"></i> अभिषेक सर - एडमिन पैनल</h3>
+            <p style="font-size: 12px; color: var(--secondary); margin-bottom: 15px;"><i class="fa-solid fa-circle-check"></i> सुरक्षित एडमिन मोड सक्रिय है।</p>
             
-            <!-- पासवर्ड बदलें -->
-            <h4 style="font-size: 13px; color: #38bdf8; margin-bottom: 6px;">नया पासवर्ड सेट करें:</h4>
-            <input type="password" id="newAdminPass" placeholder="नया गुप्त पासवर्ड दर्ज करें">
-            <button class="btn btn-secondary" onclick="changePassword()">पासवर्ड अपडेट करें</button>
+            <h4 style="font-size: 13px; color: #38bdf8; margin-bottom: 6px;">नया पक्का पासवर्ड सेट करें (Hamesha ke liye):</h4>
+            <input type="password" id="newAdminPass" placeholder="नया मजबूत पासवर्ड दर्ज करें">
+            <button class="btn btn-secondary" onclick="changePassword()">पासवर्ड हमेशा के लिए सेव करें</button>
 
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
-            <!-- 📝 ऑनलाइन टेस्ट क्रिएटर -->
-            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-pen-to-square"></i> ऑनलाइन टेस्ट प्रश्न बनाएँ</h4>
+            <!-- 📝 टेस्ट क्रिएटर (100+ Questions) -->
+            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-pen-to-square"></i> ऑनलाइन टेस्ट प्रश्न जोड़ें (Unlimited)</h4>
             <select id="testCourseSelect">
                 <option value="CCC">CCC Test</option>
                 <option value="ADCA">ADCA Test</option>
@@ -99,23 +81,23 @@
             <input type="text" id="testQuestion" placeholder="प्रश्न (Question) लिखें">
             <input type="text" id="optA" placeholder="विकल्प A">
             <input type="text" id="optB" placeholder="विकल्प B">
-            <input type="text" id="optC" placeholder="विकल्प C">
-            <input type="text" id="optD" placeholder="विकल्प D">
+            <input type="text" id="optC" placeholder="विकल्प C (Optional)">
+            <input type="text" id="optD" placeholder="विकल्प D (Optional)">
             <select id="correctOpt">
                 <option value="A">सही उत्तर: विकल्प A</option>
                 <option value="B">सही उत्तर: विकल्प B</option>
                 <option value="C">सही उत्तर: विकल्प C</option>
                 <option value="D">सही उत्तर: विकल्प D</option>
             </select>
-            <button class="btn btn-secondary" onclick="saveAdminTest()">टेस्ट प्रश्न जोड़ें</button>
+            <button class="btn btn-secondary" onclick="saveAdminTest()">टेस्ट प्रश्न सेव करें</button>
 
-            <div id="adminTestList" style="margin-top: 15px;"></div>
+            <div id="adminTestList" style="margin-top: 15px; max-height: 200px; overflow-y: auto;"></div>
 
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
-            <!-- PDF अपलोड सेक्शन -->
-            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-file-pdf"></i> छात्रों के लिए PDF / नोट्स अपलोड करें</h4>
-            <input type="text" id="pdfTitle" placeholder="PDF/नोट्स का शीर्षक">
+            <!-- PDF अपलोड -->
+            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-file-pdf"></i> PDF / नोट्स अपलोड करें</h4>
+            <input type="text" id="pdfTitle" placeholder="PDF का शीर्षक (जैसे: CCC Notes)">
             <select id="pdfCourseSelect">
                 <option value="CCC">CCC Notes</option>
                 <option value="ADCA">ADCA Notes</option>
@@ -124,12 +106,12 @@
                 <option value="BASIC">BASIC Notes</option>
                 <option value="O Level">O Level Notes</option>
             </select>
-            <input type="text" id="pdfUrl" placeholder="Google Drive PDF Direct URL">
+            <input type="text" id="pdfUrl" placeholder="Google Drive PDF Direct Link">
             <button class="btn btn-secondary" onclick="uploadPdf()">PDF पब्लिश करें</button>
 
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
-            <!-- नोटिस बोर्ड -->
+            <!-- नोटिस -->
             <h4 style="font-size: 13px; color: #38bdf8; margin-bottom: 6px;">लाइव नोटिस जारी करें:</h4>
             <textarea id="noticeInput" placeholder="बच्चों के लिए नया संदेश लिखें..."></textarea>
             <button class="btn" onclick="publishNotice()">नोटिस अपडेट करें</button>
@@ -137,16 +119,16 @@
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
             <!-- स्टूडेंट रिकॉर्ड -->
-            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-users"></i> स्टूडेंट डेटा मैनेजर</h4>
-            <input type="text" id="stName" placeholder="छात्र का नाम">
+            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-users"></i> स्टूडेंट फीस व डेटा मैनेजर</h4>
+            <input type="text" id="stName" placeholder="छात्र का पूरा नाम">
             <input type="text" id="stCourse" placeholder="कोर्स">
             <input type="text" id="stMobile" placeholder="मोबाइल नंबर">
-            <input type="text" id="stPaid" placeholder="जमा फीस">
-            <input type="text" id="stTotal" placeholder="कुल फीस">
-            <input type="text" id="stExpiry" placeholder="वैधता / तिथि">
-            <button class="btn" onclick="saveStudentRecord()">स्टूडेंट रिकॉर्ड जोड़ें</button>
+            <input type="text" id="stPaid" placeholder="जमा फीस (Rs)">
+            <input type="text" id="stTotal" placeholder="कुल फीस (Rs)">
+            <input type="text" id="stExpiry" placeholder="कोर्स समाप्ति तिथि / वैधता">
+            <button class="btn" onclick="saveStudentRecord()">स्टूडेंट रिकॉर्ड सेव करें</button>
 
-            <div style="overflow-x: auto;">
+            <div style="overflow-x: auto; margin-top: 10px;">
                 <table id="studentTable">
                     <tr><th>नाम</th><th>कोर्स</th><th>मोबाइल</th><th>जमा</th><th>कुल</th><th>वैधता</th></tr>
                 </table>
@@ -155,8 +137,8 @@
             <button class="btn btn-danger" onclick="logoutAdmin()" style="margin-top: 20px;">Admin Logout & Lock</button>
         </div>
 
-        <!-- ✍️ ऑनलाइन टेस्ट पोर्टल (छात्रों के लिए) -->
-        <div class="card">
+        <!-- ✍️ ऑनलाइन टेस्ट पोर्टल (Students ke liye) -->
+        <div class="card" id="studentMainContent">
             <h3><i class="fa-solid fa-laptop-code" style="color:var(--accent);"></i> ऑनलाइन टेस्ट एवं क्विज़</h3>
             <label style="font-size: 12px; color: var(--text-muted);">अपना कोर्स चुनें:</label>
             <select id="userTestSelect" onchange="loadUserTest()">
@@ -240,85 +222,39 @@
             <a href="https://wa.me/919258533717" target="_blank" class="contact-btn wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp चैट करें</a>
         </div>
 
-        <!-- ⚙️ सुरक्षित एडमिन बटन -->
-        <div class="admin-link-corner">
-            <button onclick="openAdminDirect()"><i class="fa-solid fa-gear"></i> Admin Panel</button>
+        <!-- 🤫 Secret Admin Button for Sir -->
+        <div class="secret-admin-link">
+            <a href="#" onclick="openAdminPanel(); return false;"><i class="fa-solid fa-lock"></i> Admin Login</a>
         </div>
 
     </div>
 
     <script>
         function getSavedPassword() {
-            return localStorage.getItem("drishti_admin_pass");
+            return localStorage.getItem("drishti_admin_pass") || "drishti@123";
         }
 
         window.onload = function() {
             if(localStorage.getItem("is_admin_logged") === "true") {
-                document.getElementById("loginCard").classList.add("hidden");
                 document.getElementById("adminDashboard").classList.remove("hidden");
-            } else {
-                document.getElementById("loginCard").classList.add("hidden");
-                document.getElementById("adminDashboard").classList.add("hidden");
+                loadStudents();
+                loadAdminTests();
             }
-            loadStudents();
             loadNotice();
             loadPdfs();
             loadUserTest();
-            loadAdminTests();
         }
 
-        function openAdminDirect() {
-            let loginCard = document.getElementById("loginCard");
-            loginCard.classList.remove("hidden");
-            window.scrollTo({top: 0, behavior: 'smooth'});
-
-            let savedPass = getSavedPassword();
-            if(!savedPass) {
-                // अगर पासवर्ड पहले से सेट नहीं है, तो नया पासवर्ड बनाने का बॉक्स दिखाएं
-                document.getElementById("setupPassBox").classList.remove("hidden");
-                document.getElementById("normalLoginBox").classList.add("hidden");
-                document.getElementById("firstTimePass").focus();
-            } else {
-                document.getElementById("setupPassBox").classList.add("hidden");
-                document.getElementById("normalLoginBox").classList.remove("hidden");
-                document.getElementById("adminPassword").focus();
-            }
-        }
-
-        function setFirstTimePassword() {
-            let newPass = document.getElementById("firstTimePass").value;
-            if(!newPass || newPass.length < 4) {
-                alert("पासवर्ड कम से कम 4 अंकों का होना चाहिए!");
-                return;
-            }
-            localStorage.setItem("drishti_admin_pass", newPass);
-            localStorage.setItem("is_admin_logged", "true");
-            document.getElementById("loginCard").classList.add("hidden");
-            document.getElementById("adminDashboard").classList.remove("hidden");
-            alert("गुप्त पासवर्ड सफलतापूर्वक सेट हो गया है और आप लॉगिन हो गए हैं!");
-        }
-
-        function hideLoginCard() {
-            document.getElementById("loginCard").classList.add("hidden");
-        }
-
-        function loginAdmin() {
-            let pass = document.getElementById("adminPassword").value;
-            let savedPass = getSavedPassword();
-            
-            if(!savedPass) {
-                alert("पहिले एडमिन पासवर्ड सेट किया जाना चाहिए। कृपया पेज रिफ्रेश करें।");
-                return;
-            }
-
-            if(pass === savedPass) {
+        function openAdminPanel() {
+            let passPrompt = prompt("कृपया एडमिन पासवर्ड दर्ज करें:");
+            if(passPrompt === getSavedPassword()) {
                 localStorage.setItem("is_admin_logged", "true");
-                document.getElementById("loginCard").classList.add("hidden");
                 document.getElementById("adminDashboard").classList.remove("hidden");
-                alert("Admin Login Successful!");
+                loadStudents();
                 loadAdminTests();
+                alert("सफलतापूर्वक एडमिन पैनल खुल गया है!");
             } else {
-                alert("गलत पासवर्ड! छात्र एडमिन पैनल नहीं खोल सकते।");
+                alert("गलत पासवर्ड! यह केवल अभिषेक सर के लिए है।");
             }
         }
 
@@ -329,16 +265,14 @@
                 return;
             }
             localStorage.setItem("drishti_admin_pass", newPass);
-            alert("नया पासवर्ड सफलतापूर्वक अपडेट कर दिया गया है!");
+            alert("नया स्ट्रोंग पासवर्ड हमेशा के लिए सेव हो गया है!");
             document.getElementById("newAdminPass").value = "";
         }
 
         function logoutAdmin() {
             localStorage.removeItem("is_admin_logged");
             document.getElementById("adminDashboard").classList.add("hidden");
-            document.getElementById("adminPassword").value = "";
-            alert("Admin Logout हो गया है।");
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            alert("एडमिन पैनल लॉक हो गया है!");
         }
 
         function saveAdminTest() {
@@ -350,16 +284,13 @@
             let optD = document.getElementById("optD").value;
             let correct = document.getElementById("correctOpt").value;
 
-            if(!question || !optA || !optB) {
-                alert("कृपया प्रश्न और कम से कम दो विकल्प भरें!");
-                return;
-            }
+            if(!question || !optA || !optB) { alert("कृपया प्रश्न और विकल्प भरें!"); return; }
 
             let tests = JSON.parse(localStorage.getItem("drishti_tests") || "[]");
             tests.push({ id: Date.now(), course, question, optA, optB, optC, optD, correct });
             localStorage.setItem("drishti_tests", JSON.stringify(tests));
 
-            alert("टेस्ट प्रश्न सफलतापूर्वक जुड़ गया है!");
+            alert("टेस्ट प्रश्न जुड़ गया है!");
             document.getElementById("testQuestion").value = "";
             document.getElementById("optA").value = "";
             document.getElementById("optB").value = "";
@@ -372,11 +303,12 @@
         function loadAdminTests() {
             let tests = JSON.parse(localStorage.getItem("drishti_tests") || "[]");
             let listDiv = document.getElementById("adminTestList");
+            if(!listDiv) return;
             if(tests.length === 0) {
-                listDiv.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">कोई टेस्ट प्रश्न नहीं बनाया गया है।</p>`;
+                listDiv.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">कोई प्रश्न नहीं है।</p>`;
                 return;
             }
-            let html = `<h5 style="color:#38bdf8; font-size:12px; margin-bottom:5px;">बनाए गए सभी प्रश्न (डिलीट करें):</h5>`;
+            let html = `<h5 style="color:#38bdf8; font-size:12px; margin-bottom:5px;">कुल प्रश्न: ${tests.length}</h5>`;
             tests.forEach(t => {
                 html += `<div style="background:#0f172a; padding:8px; border-radius:6px; margin-bottom:5px; font-size:12px; display:flex; justify-content:space-between; align-items:center;">
                     <span><b>[${t.course}]</b> ${t.question}</span>
@@ -392,7 +324,7 @@
             localStorage.setItem("drishti_tests", JSON.stringify(tests));
             loadAdminTests();
             loadUserTest();
-            alert("प्रश्न डिलीट कर दिया गया है!");
+            alert("प्रश्न डिलीट हो गया!");
         }
 
         function loadUserTest() {
@@ -430,10 +362,7 @@
                 if(r.checked) { selectedVal = r.value; break; }
             }
             let resSpan = document.getElementById(`result_${id}`);
-            if(!selectedVal) {
-                alert("कृपया पहले कोई विकल्प चुनें!");
-                return;
-            }
+            if(!selectedVal) { alert("कृपया पहले कोई विकल्प चुनें!"); return; }
             if(selectedVal === correctOpt) {
                 resSpan.style.color = "#10b981";
                 resSpan.innerHTML = "✔ सही उत्तर!";
@@ -447,11 +376,11 @@
             let title = document.getElementById("pdfTitle").value;
             let course = document.getElementById("pdfCourseSelect").value;
             let url = document.getElementById("pdfUrl").value;
-            if(!title || !url) { alert("कृपया शीर्षक और लिंक भरें!"); return; }
+            if(!title || !url) { alert("शीर्षक और लिंक भरें!"); return; }
             let pdfs = JSON.parse(localStorage.getItem("drishti_pdfs") || "[]");
             pdfs.push({ title, course, url });
             localStorage.setItem("drishti_pdfs", JSON.stringify(pdfs));
-            alert("PDF नोट्स अपलोड हो गए हैं!");
+            alert("PDF पब्लिश हो गई है!");
             document.getElementById("pdfTitle").value = "";
             document.getElementById("pdfUrl").value = "";
             loadPdfs();
@@ -460,6 +389,7 @@
         function loadPdfs() {
             let pdfs = JSON.parse(localStorage.getItem("drishti_pdfs") || "[]");
             let listDiv = document.getElementById("studentPdfList");
+            if(!listDiv) return;
             if(pdfs.length === 0) return;
             let html = "";
             pdfs.forEach(p => {
@@ -478,7 +408,7 @@
             let paid = document.getElementById("admAdvance").value || "0";
             if(!name || !mobile) { alert("नाम और मोबाइल नंबर भरें!"); return; }
             let students = JSON.parse(localStorage.getItem("drishti_students") || "[]");
-            students.push({ name, course, mobile, paid, total: "Pending", expiry: "New" });
+            students.push({ name, course, mobile, paid, total: "Pending", expiry: "New Admission" });
             localStorage.setItem("drishti_students", JSON.stringify(students));
             alert("एडमिशन फॉर्म सफलतापूर्वक सबमिट हो गया है!");
             document.getElementById("admName").value = "";
@@ -489,38 +419,39 @@
 
         function publishNotice() {
             let notice = document.getElementById("noticeInput").value;
-            if(!notice) { alert("कृपया नोटिस लिखें!"); return; }
+            if(!notice) { alert("नोटिस लिखें!"); return; }
             localStorage.setItem("drishti_notice", notice);
             document.getElementById("noticeDisplay").innerHTML = `<div class="test-item"><strong>अभिषेक ठाकुर सर संदेश:</strong> ${notice}</div>`;
-            alert("नोटिस अपडेट कर दिया गया है!");
-            document.getElementById("noticeInput").value = "";
+            alert("नोटिस अपडेट हो गया है!");
+            document.getElementById("noticeInput", "").value = "";
         }
 
         function loadNotice() {
             let savedNotice = localStorage.getItem("drishti_notice");
-            if(savedPass = savedNotice) {
+            if(savedNotice) {
                 document.getElementById("noticeDisplay").innerHTML = `<div class="test-item"><strong>अभिषेक ठाकुर सर संदेश:</strong> ${savedNotice}</div>`;
             }
         }
 
         function saveStudentRecord() {
-            let name = document.getElementById("stName", ).value;
+            let name = document.getElementById("stName").value;
             let course = document.getElementById("stCourse").value;
             let mobile = document.getElementById("stMobile").value;
             let paid = document.getElementById("stPaid").value;
             let total = document.getElementById("stTotal").value;
             let expiry = document.getElementById("stExpiry").value;
-            if(!name) { alert("छात्र का नाम लिखें!"); return; }
+            if(!name) { alert("नाम लिखें!"); return; }
             let students = JSON.parse(localStorage.getItem("drishti_students") || "[]");
-            students.push({ name, course, mobile, paid, total, expiry });
+            students.push({name, course, mobile, paid, total, expiry});
             localStorage.setItem("drishti_students", JSON.stringify(students));
-            alert("रिकॉर्ड सेव हो गया है!");
+            alert("रिकॉर्ड सेव हो गया!");
             loadStudents();
         }
 
         function loadStudents() {
             let students = JSON.parse(localStorage.getItem("drishti_students") || "[]");
             let table = document.getElementById("studentTable");
+            if(!table) return;
             let html = `<tr><th>नाम</th><th>कोर्स</th><th>मोबाइल</th><th>जमा</th><th>कुल</th><th>वैधता</th></tr>`;
             students.forEach(s => {
                 html += `<tr><td>${s.name}</td><td>${s.course}</td><td>${s.mobile}</td><td>${s.paid}</td><td>${s.total}</td><td>${s.expiry}</td></tr>`;
