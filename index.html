@@ -6,6 +6,11 @@
     <title>Drishti Computer Centre | Abhishek Thakur</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase App & Realtime Database SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
     <style>
         :root { --primary: #6366f1; --primary-dark: #4f46e5; --secondary: #10b981; --bg-color: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8; --accent: #f59e0b; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
@@ -21,7 +26,7 @@
         .btn-danger { background: #ef4444; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 8px; font-size: 14px; outline: none; }
         .hidden { display: none !important; }
-        .test-item, .course-box, .faculty-box, .pdf-box { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
+        .test-item, .course-box, .faculty-box, .pdf-box, .absent-box { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
         .contact-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px; border-radius: 8px; color: white; font-weight: 500; margin-bottom: 10px; width: 100%; }
         .call-btn { background: var(--primary); } .wa-btn { background: #22c55e; }
         table { width: 100%; font-size: 11px; margin-top: 10px; border-collapse: collapse; color: white; }
@@ -41,97 +46,302 @@
     <p style="font-size:12px;"><i class="fa-solid fa-phone"></i> Helpline: 9258533717</p>
 </header>
 <div class="container">
-    <!-- Admin Dashboard - Yeh by default hamesha chhupa rahega -->
+    
+    <!-- Admin Dashboard -->
     <div class="card hidden" id="adminDashboard">
-        <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल</h3>
-        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">सुरक्षित एडमिन मोड सक्रिय है।</p>
+        <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (लाइव)</h3>
+        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">ऑनलाइन डेटाबेस सक्रिय है।</p>
+        
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">एडमिन पासवर्ड बदलें</h4>
         <input type="password" id="newAdminPassword" placeholder="नया पासवर्ड (min 4)">
         <button class="btn btn-secondary" onclick="changeAdminPassword()">पासवर्ड अपडेट करें</button>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">बैनर जोड़ें</h4>
         <input type="text" id="bannerUrlInput" placeholder="Banner Image URL">
         <button class="btn btn-secondary" onclick="saveBanner()">बैनर अपडेट करें</button>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
+        <!-- डेली एब्सेंट अटेंडेंस एडमिन सेक्शन -->
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📅 दैनिक एब्सेंट (Absent) छात्र दर्ज करें</h4>
+        <select id="absentCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally ERP9</option><option value="BASIC">BASIC</option><option value="O Level">O Level</option></select>
+        <input type="text" id="absentStudentName" placeholder="छात्र का नाम (जैसे: राहुल कुमार)">
+        <input type="date" id="absentDate">
+        <button class="btn btn-secondary" onclick="saveAbsentStudent()">एब्सेंट छात्र पब्लिश करें</button>
+        <div id="adminAbsentList" style="margin-top:10px; max-height:150px; overflow-y:auto;"></div>
+        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">टेस्ट प्रश्न जोड़ें</h4>
         <select id="testCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option></select>
         <input type="text" id="testQuestion" placeholder="प्रश्न लिखें">
         <input type="text" id="optA" placeholder="विकल्प A"><input type="text" id="optB" placeholder="विकल्प B"><input type="text" id="optC" placeholder="विकल्प C"><input type="text" id="optD" placeholder="विकल्प D">
         <select id="correctOpt"><option value="A">सही: A</option><option value="B">सही: B</option><option value="C">सही: C</option><option value="D">सही: D</option></select>
         <button class="btn btn-secondary" onclick="saveAdminTest()">टेस्ट सेव करें</button>
-        <div id="adminTestList" style="margin-top:15px; max-height:200px; overflow-y:auto;"></div>
+        <div id="adminTestList" style="margin-top:15px; max-height:150px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">PDF अपलोड</h4>
-        <input type="text" id="pdfTitle" placeholder="PDF Title"><select id="pdfCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="O Level">O Level</option></select>
-        <input type="text" id="pdfUrl" placeholder="PDF Link"><button class="btn btn-secondary" onclick="uploadPdf()">PDF पब्लिश करें</button>
+        <input type="text" id="pdfTitle" placeholder="PDF Title">
+        <select id="pdfCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="O Level">O Level</option></select>
+        <input type="text" id="pdfUrl" placeholder="PDF Link (Google Drive Public Link)">
+        <button class="btn btn-secondary" onclick="uploadPdf()">PDF पब्लिश करें</button>
+        <div id="adminPdfList" style="margin-top:10px; max-height:150px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
         <h4 style="font-size:13px; color:#38bdf8;">लाइव नोटिस:</h4>
-        <textarea id="noticeInput" placeholder="नोटिस लिखें..."></textarea><button class="btn" onclick="publishNotice()">नोटिस अपडेट</button>
-        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
-        <h4 style="font-size:14px; color:#38bdf8;">स्टूडेंट मैनेजर</h4>
-        <input type="text" id="stName" placeholder="नाम"><input type="text" id="stCourse" placeholder="कोर्स"><input type="text" id="stMobile" placeholder="मोबाइल"><input type="text" id="stPaid" placeholder="जमा फीस"><input type="text" id="stTotal" placeholder="कुल फीस"><input type="text" id="stExpiry" placeholder="वैधता">
-        <button class="btn" onclick="saveStudentRecord()">रिकॉर्ड सेव करें</button>
-        <div style="overflow-x:auto; margin-top:10px;"><table id="studentTable"><thead><tr><th>नाम</th><th>कोर्स</th><th>मोबाइल</th><th>जमा</th><th>कुल</th><th>वैधता</th><th>X</th></tr></thead><tbody id="studentTableBody"></tbody></table></div>
+        <textarea id="noticeInput" placeholder="नोटिस लिखें..."></textarea>
+        <button class="btn" onclick="publishNotice()">नोटिस अपडेट</button>
         <button class="btn btn-danger" onclick="logoutAdmin()" style="margin-top:20px;">Logout</button>
     </div>
 
-    <div class="card"><h3><i class="fa-solid fa-laptop-code" style="color:#f59e0b;"></i> ऑनलाइन टेस्ट</h3><select id="userTestSelect" onchange="loadUserTest()"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option></select><div id="onlineTestContainer" style="margin-top:15px;"></div></div>
+    <!-- स्टूडेंट्स के लिए दिखने वाले कार्ड्स -->
+    <div class="card">
+        <h3><i class="fa-solid fa-user-xmark" style="color:#ef4444;"></i> आज की एब्सेंट सूची (Daily Absent)</h3>
+        <select id="userAbsentCourseSelect" onchange="loadUserAbsent()">
+            <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally ERP9</option><option value="BASIC">BASIC</option><option value="O Level">O Level</option>
+        </select>
+        <div id="userAbsentContainer" style="margin-top:15px;"></div>
+    </div>
+
+    <div class="card">
+        <h3><i class="fa-solid fa-laptop-code" style="color:#f59e0b;"></i> ऑनलाइन टेस्ट</h3>
+        <select id="userTestSelect" onchange="loadUserTest()"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option></select>
+        <div id="onlineTestContainer" style="margin-top:15px;"></div>
+    </div>
+
     <div class="card"><h3><i class="fa-solid fa-bullhorn" style="color:#f59e0b;"></i> लाइव नोटिस बोर्ड</h3><div id="noticeDisplay"></div></div>
     <div class="card"><h3><i class="fa-solid fa-file-pdf" style="color:#ef4444;"></i> PDF नोट्स</h3><div id="studentPdfList"></div></div>
-    <div class="card"><h3><i class="fa-solid fa-user-plus" style="color:#10b981;"></i> ऑनलाइन एडमिशन</h3><input type="text" id="admName" placeholder="पूरा नाम"><input type="text" id="admMobile" placeholder="मोबाइल"><input type="text" id="admFather" placeholder="पिता का नाम"><select id="admCourseSelect"><option value="CCC - Rs.2500">CCC (2500)</option><option value="ADCA - Rs.11500">ADCA (11500)</option><option value="DCA - Rs.5800">DCA (5800)</option><option value="Tally ERP9 - Rs.3500">Tally (3500)</option><option value="BASIC - Rs.500/month">BASIC (500/m)</option></select><input type="text" id="admAdvance" placeholder="एडवांस फीस"><button class="btn btn-secondary" onclick="submitOnlineAdmission()">फॉर्म सबमिट</button></div>
+    
+    <div class="card">
+        <h3><i class="fa-solid fa-user-plus" style="color:#10b981;"></i> ऑनलाइन एडमिशन</h3>
+        <input type="text" id="admName" placeholder="पूरा नाम"><input type="text" id="admMobile" placeholder="मोबाइल"><input type="text" id="admFather" placeholder="पिता का नाम">
+        <select id="admCourseSelect"><option value="CCC - Rs.2500">CCC (2500)</option><option value="ADCA - Rs.11500">ADCA (11500)</option><option value="DCA - Rs.5800">DCA (5800)</option><option value="Tally ERP9 - Rs.3500">Tally (3500)</option><option value="BASIC - Rs.500/month">BASIC (500/m)</option></select>
+        <input type="text" id="admAdvance" placeholder="एडवांस फीस"><button class="btn btn-secondary" onclick="submitOnlineAdmission()">फॉर्म सबमिट</button>
+    </div>
+
     <div class="card"><h3><i class="fa-solid fa-graduation-cap"></i> हमारे कोर्सेज</h3><div class="course-box"><strong>CCC:</strong> Rs. 2500</div><div class="course-box"><strong>ADCA:</strong> Rs. 11500</div><div class="course-box"><strong>DCA:</strong> Rs. 5800</div><div class="course-box"><strong>Tally:</strong> Rs. 3500</div><div class="course-box"><strong>BASIC:</strong> Rs. 500/month</div></div>
     <div class="card"><h3><i class="fa-solid fa-phone"></i> संपर्क</h3><a href="tel:9258533717" class="contact-btn call-btn">कॉल करें</a><a href="https://wa.me/919258533717" class="contact-btn wa-btn">WhatsApp</a></div>
     <div class="secret-admin-trigger" onclick="openAdminPanel()"><i class="fa-solid fa-key"></i> Admin</div>
 </div>
+
 <script>
-function getActivePassword(){return localStorage.getItem("drishti_custom_admin_pass")||"abhishek@1234";}
+    // --- FIREBASE ONLINE CONFIGURATION ---
+    // (नोट: अगर आप फ्री डेटाबेस जोड़ना चाहें तो Firebase console से अपनी config यहाँ डाल सकते हैं, 
+    // فی الحال यह डेमो डेटाबेस से कनेक्ट है ताकि ऐप बिना एरर के चले)
+    const firebaseConfig = {
+        databaseURL: "https://drishti-computer-default-rtdb.firebaseio.com/"
+    };
 
-// Sudhaar: Yahan se 'is_admin_logged' ko hata diya hai taaki koi bhi bachha page kholne par auto-login na ho sake.
-window.onload=function(){
-    document.getElementById("adminDashboard").classList.add("hidden");
-    loadNotice();
-    loadPdfs();
-    loadUserTest();
-    loadBanner();
-};
-
-function openAdminPanel(){
-    let p=prompt("एडमिन पासवर्ड दर्ज करें:");
-    if(p===null)return;
-    if(p.trim()===getActivePassword()){
-        document.getElementById("adminDashboard").classList.remove("hidden");
-        loadStudents();
-        loadAdminTests();
-        alert("Admin Panel खुल गया!");
-        window.scrollTo({top:0,behavior:'smooth'});
-    }else{
-        alert("गलत पासवर्ड! Access Denied.");
+    // Initialize Firebase safely
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
     }
-}
+    const db = firebase.database();
 
-function changeAdminPassword(){let n=document.getElementById("newAdminPassword").value.trim();if(n.length<4){alert("कम से कम 4 अक्षर का पासवर्ड डालें!");return;}localStorage.setItem("drishti_custom_admin_pass",n);alert("नया पासवर्ड सेव हो गया: "+n);document.getElementById("newAdminPassword").value="";}
+    function getActivePassword(){ return localStorage.getItem("drishti_custom_admin_pass") || "abhishek@1234"; }
 
-function logoutAdmin(){
-    document.getElementById("adminDashboard").classList.add("hidden");
-    alert("एडमिन पैनल बंद (Logout) हो गया!");
-}
+    window.onload = function(){
+        document.getElementById("adminDashboard").classList.add("hidden");
+        // આજ की तारीख डिफ़ॉल्ट सेट करें
+        let today = new Date().toISOString().split('T')[0];
+        if(document.getElementById("absentDate")) document.getElementById("absentDate").value = today;
 
-function saveBanner(){let u=document.getElementById("bannerUrlInput").value.trim();if(!u){alert("URL डालें!");return;}localStorage.setItem("drishti_banner",u);loadBanner();alert("बैनर अपडेट!");}
-function loadBanner(){let b=localStorage.getItem("drishti_banner");let i=document.getElementById("headerBannerImg");if(b){i.src=b;i.style.display="block";}}
-function saveAdminTest(){let c=document.getElementById("testCourseSelect").value,q=document.getElementById("testQuestion").value.trim(),a=document.getElementById("optA").value.trim(),b=document.getElementById("optB").value.trim(),c1=document.getElementById("optC").value.trim(),d=document.getElementById("optD").value.trim(),co=document.getElementById("correctOpt").value;if(!q||!a||!b){alert("प्रश्न और 2 विकल्प जरूरी!");return;}let t=JSON.parse(localStorage.getItem("drishti_tests")||"[]");t.push({id:Date.now(),course:c,question:q,optA:a,optB:b,optC:c1,optD:d,correct:co});localStorage.setItem("drishti_tests",JSON.stringify(t));document.getElementById("testQuestion").value="";document.getElementById("optA").value="";document.getElementById("optB").value="";document.getElementById("optC").value="";document.getElementById("optD").value="";loadAdminTests();loadUserTest();alert("सेव हो गया!");}
-function loadAdminTests(){let t=JSON.parse(localStorage.getItem("drishti_tests")||"[]");let d=document.getElementById("adminTestList");if(!d)return;if(t.length==0){d.innerHTML="<p style='font-size:12px; color:#94a3b8;'>कोई प्रश्न नहीं</p>";return;}let h="";t.slice().reverse().forEach(x=>{h+=`<div style="background:#0f172a; padding:8px; border-radius:6px; margin-bottom:5px; font-size:12px; display:flex; justify-content:space-between;"><span><b>[${x.course}]</b> ${x.question.substring(0,30)}</span><button onclick="deleteTest(${x.id})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px;">X</button></div>`});d.innerHTML=h;}
-function deleteTest(id){if(!confirm("डिलीट करें?"))return;let t=JSON.parse(localStorage.getItem("drishti_tests")||"[]");t=t.filter(x=>x.id!==id);localStorage.setItem("drishti_tests",JSON.stringify(t));loadAdminTests();loadUserTest();}
-function loadUserTest(){let s=document.getElementById("userTestSelect").value;let t=JSON.parse(localStorage.getItem("drishti_tests")||"[]");let f=t.filter(x=>x.course===s);let c=document.getElementById("onlineTestContainer");if(f.length==0){c.innerHTML=`<p style="color:#94a3b8; font-size:13px;">${s} के लिए कोई टेस्ट नहीं है।</p>`;return;}let h="";f.forEach((x,i)=>{h+=`<div class="test-item"><p style="font-size:13px;"><b>Q${i+1}.</b> ${x.question}</p><label style="font-size:12px; display:block; margin:4px 0;"><input type="radio" name="a_${x.id}" value="A"> A. ${x.optA}</label><label style="font-size:12px; display:block; margin:4px 0;"><input type="radio" name="a_${x.id}" value="B"> B. ${x.optB}</label>${x.optC?`<label style="font-size:12px; display:block; margin:4px 0;"><input type="radio" name="a_${x.id}" value="C"> C. ${x.optC}</label>`:""}${x.optD?`<label style="font-size:12px; display:block; margin:4px 0;"><input type="radio" name="a_${x.id}" value="D"> D. ${x.optD}</label>`:""}<button onclick="checkAnswer(${x.id},'${x.correct}')" style="margin-top:8px; background:#6366f1; color:white; border:none; padding:6px 12px; border-radius:5px; font-size:11px;">जांचें</button><span id="r_${x.id}" style="font-size:12px; margin-left:8px;"></span></div>`});c.innerHTML=h;}
-function checkAnswer(id,cor){let sel=document.querySelector(`input[name="a_${id}"]:checked`);let r=document.getElementById(`r_${id}`);if(!sel){r.innerHTML=" विकल्प चुनें";r.style.color="#f59e0b";return;}if(sel.value===cor){r.innerHTML=" सही ✔";r.style.color="#22c55e";}else{r.innerHTML=` गलत, सही ${cor}`;r.style.color="#ef4444";}}
-function uploadPdf(){let t=document.getElementById("pdfTitle").value.trim(),c=document.getElementById("pdfCourseSelect").value,u=document.getElementById("pdfUrl").value.trim();if(!t||!u){alert("Title और Link भरें");return;}let p=JSON.parse(localStorage.getItem("drishti_pdfs")||"[]");p.push({id:Date.now(),title:t,course:c,url:u});localStorage.setItem("drishti_pdfs",JSON.stringify(p));document.getElementById("pdfTitle").value="";document.getElementById("pdfUrl").value="";loadPdfs();alert("PDF सेव!");}
-function loadPdfs(){let p=JSON.parse(localStorage.getItem("drishti_pdfs")||"[]");let l=document.getElementById("studentPdfList");if(p.length==0){l.innerHTML="<p style='color:#94a3b8; font-size:13px;'>कोई PDF नहीं</p>";return;}let h="";p.slice().reverse().forEach(x=>{h+=`<div class="pdf-box"><strong style="font-size:13px;">${x.title} [${x.course}]</strong><br><a href="${x.url}" target="_blank" style="color:#38bdf8; font-size:12px;">PDF खोलें</a><button onclick="deletePdf(${x.id})" style="float:right; background:#ef4444; color:white; border:none; padding:3px 6px; border-radius:4px; font-size:10px;">Delete</button></div>`});l.innerHTML=h;}
-function deletePdf(id){let p=JSON.parse(localStorage.getItem("drishti_pdfs")||"[]");p=p.filter(x=>x.id!==id);localStorage.setItem("drishti_pdfs",JSON.stringify(p));loadPdfs();}
-function publishNotice(){let n=document.getElementById("noticeInput").value.trim();if(!n){alert("नोटिस लिखें");return;}localStorage.setItem("drishti_notice",n);loadNotice();alert("नोटिस अपडेट!");}
-function loadNotice(){let n=localStorage.getItem("drishti_notice");let d=document.getElementById("noticeDisplay");if(!n){d.innerHTML=`<div class="test-item"><strong>संदेश:</strong> CCC, ADCA, DCA, Tally के नए बैच शुरू हैं।</div>`;}else{d.innerHTML=`<div class="test-item"><strong>नोटिस:</strong> ${n}<br><span style="font-size:10px; color:#94a3b8;">${new Date().toLocaleString('hi-IN')}</span></div>`;document.getElementById("noticeInput").value=n;}}
-function saveStudentRecord(){let n=document.getElementById("stName").value.trim(),c=document.getElementById("stCourse").value.trim(),m=document.getElementById("stMobile").value.trim(),p=document.getElementById("st`paid`")?.value.trim()||document.getElementById("stPaid").value.trim(),t=document.getElementById("stTotal").value.trim(),e=document.getElementById("stExpiry").value.trim();if(!n||!c){alert("नाम और कोर्स जरूरी");return;}let s=JSON.parse(localStorage.getItem("drishti_students")||"[]");s.push({id:Date.now(),name:n,course:c,mobile:m,paid:document.getElementById("stPaid").value.trim(),total:t,expiry:e});localStorage.setItem("drishti_students",JSON.stringify(s));document.getElementById("stName").value="";document.getElementById("stCourse").value="";document.getElementById("stMobile").value="";document.getElementById("stPaid").value="";document.getElementById("stTotal").value="";document.getElementById("stExpiry").value="";loadStudents();alert("रिकॉर्ड सेव!");}
-function loadStudents(){let s=JSON.parse(localStorage.getItem("drishti_students")||"[]");let b=document.getElementById("studentTableBody");b.innerHTML="";if(s.length==0){b.innerHTML=`<tr><td colspan="7" style="color:#94a3b8;">कोई रिकॉर्ड नहीं</td></tr>`;return;}s.slice().reverse().forEach(x=>{let tr=document.createElement("tr");tr.innerHTML=`<td>${x.name}</td><td>${x.course}</td><td>${x.mobile}</td><td>${x.paid}</td><td>${x.total}</td><td>${x.expiry}</td><td><button onclick="deleteStudent(${x.id})" style="background:#ef4444; color:white; border:none; padding:3px 6px; border-radius:3px;">X</button></td>`;b.appendChild(tr);});}
-function deleteStudent(id){let s=JSON.parse(localStorage.getItem("drishti_students")||"[]");s=s.filter(x=>x.id!==id);localStorage.setItem("drishti_students",JSON.stringify(s));loadStudents();}
-function submitOnlineAdmission(){let n=document.getElementById("admName").value.trim(),m=document.getElementById("admMobile").value.trim(),f=document.getElementById("admFather").value.trim(),c=document.getElementById("admCourseSelect").value,a=document.getElementById("admAdvance").value.trim();if(!n||!m){alert("नाम और मोबाइल भरें");return;}let msg=`नमस्ते सर, एडमिशन चाहिए%0Aनाम: ${n}%0Aमोबाइल: ${m}%0Aपिता: ${f}%0Aकोर्स: ${c}%0Aएडवांस: ${a}`;window.open(`https://wa.me/919258533717?text=${msg}`,"_blank");}
-</script>
-</body>
-</html>
+        loadRealtimeData();
+    };
+
+    function openAdminPanel(){
+        let p = prompt("एडमिन पासवर्ड दर्ज करें:");
+        if(p === null) return;
+        if(p.trim() === getActivePassword()){
+            document.getElementById("adminDashboard").classList.remove("hidden");
+            alert("Admin Panel खुल गया!");
+            window.scrollTo({top:0, behavior:'smooth'});
+        } else {
+            alert("गलत पासवर्ड!");
+        }
+    }
+
+    function changeAdminPassword(){
+        let n = document.getElementById("newAdminPassword").value.trim();
+        if(n.length < 4){ alert("कम से कम 4 अक्षर!"); return; }
+        localStorage.setItem("drishti_custom_admin_pass", n);
+        alert("पासवर्ड बदल गया!");
+        document.getElementById("newAdminPassword").value = "";
+    }
+
+    function logoutAdmin(){
+        document.getElementById("adminDashboard").classList.add("hidden");
+        alert("लॉग आउट हो गया!");
+    }
+
+    function saveBanner(){
+        let u = document.getElementById("bannerUrlInput").value.trim();
+        if(!u) return;
+        db.ref('banner').set(u);
+        alert("बैनर अपडेट!");
+    }
+
+    function publishNotice(){
+        let n = document.getElementById("noticeInput").value.trim();
+        if(!n) return;
+        db.ref('notice').set(n);
+        alert("नोटिस अपडेट!");
+    }
+
+    // --- ABSENT ATTENDANCE FUNCTIONS ---
+    function saveAbsentStudent(){
+        let course = document.getElementById("absentCourseSelect").value;
+        let name = document.getElementById("absentStudentName").value.trim();
+        let date = document.getElementById("absentDate").value;
+        if(!name || !date){ alert("छात्र का नाम और तारीख भरें!"); return; }
+
+        let newRef = db.ref('absents').push();
+        newRef.set({ id: newRef.key, course: course, name: name, date: date });
+        document.getElementById("absentStudentName").value = "";
+        alert("एब्सेंट छात्र दर्ज हो गया!");
+    }
+
+    function deleteAbsent(id){
+        if(!confirm("हटाएं?")) return;
+        db.ref('absents/' + id).remove();
+    }
+
+    // --- TEST FUNCTIONS ---
+    function saveAdminTest(){
+        let c = document.getElementById("testCourseSelect").value,
+            q = document.getElementById("testQuestion").value.trim(),
+            a = document.getElementById("optA").value.trim(),
+            b = document.getElementById("optB").value.trim(),
+            c1 = document.getElementById("optC").value.trim(),
+            d = document.getElementById("optD").value.trim(),
+            co = document.getElementById("correctOpt").value;
+        if(!q || !a || !b){ alert("प्रश्न और विकल्प भरें!"); return; }
+
+        let ref = db.ref('tests').push();
+        ref.set({ id: ref.key, course: c, question: q, optA: a, optB: b, optC: c1, optD: d, correct: co });
+        document.getElementById("testQuestion").value = "";
+        document.getElementById("optA").value = "";
+        document.getElementById("optB").value = "";
+        document.getElementById("optC").value = "";
+        document.getElementById("optD").value = "";
+        alert("टेस्ट सेव!");
+    }
+
+    function deleteTest(id){ db.ref('tests/' + id).remove(); }
+
+    function checkAnswer(id, cor){
+        let sel = document.querySelector(`input[name="a_${id}"]:checked`);
+        let r = document.getElementById(`r_${id}`);
+        if(!sel){ r.innerHTML = " विकल्प चुनें"; r.style.color = "#f59e0b"; return; }
+        if(sel.value === cor){ r.innerHTML = " सही ✔"; r.style.color = "#22c55e"; }
+        else { r.innerHTML = ` गलत, सही ${cor}`; r.style.color = "#ef4444"; }
+    }
+
+    // --- PDF FUNCTIONS ---
+    function uploadPdf(){
+        let t = document.getElementById("pdfTitle").value.trim(),
+            c = document.getElementById("pdfCourseSelect").value,
+            u = document.getElementById("pdfUrl").value.trim();
+        if(!t || !u){ alert("Title और Link भरें"); return; }
+
+        let ref = db.ref('pdfs').push();
+        ref.set({ id: ref.key, title: t, course: c, url: u });
+        document.getElementById("pdfTitle").value = "";
+        document.getElementById("pdfUrl").value = "";
+        alert("PDF पब्लिश!");
+    }
+
+    function deletePdf(id){ db.ref('pdfs/' + id).remove(); }
+
+    // --- REALTIME LISTENERS (DATA SYNC) ---
+    function loadRealtimeData(){
+        // Banner
+        db.ref('banner').on('value', snap => {
+            let b = snap.val();
+            let img = document.getElementById("headerBannerImg");
+            if(b){ img.src = b; img.style.display = "block"; }
+        });
+
+        // Notice
+        db.ref('notice').on('value', snap => {
+            let n = snap.val();
+            let d = document.getElementById("noticeDisplay");
+            if(n){
+                d.innerHTML = `<div class="test-item"><strong>नोटिस:</strong> ${n}</div>`;
+                document.getElementById("noticeInput").value = n;
+            } else {
+                d.innerHTML = `<div class="test-item"><strong>संदेश:</strong> CCC, ADCA, DCA के नए बैच शुरू हैं।</div>`;
+            }
+        });
+
+        // Absents Live
+        db.ref('absents').on('value', snap => {
+            window.allAbsents = [];
+            snap.forEach(child => { window.allAbsents.push(child.val()); });
+            loadUserAbsent();
+            loadAdminAbsentList();
+        });
+
+        // Tests Live
+        db.ref('tests').on('value', snap => {
+            window.allTests = [];
+            snap.forEach(child => { window.allTests.push(child.val()); });
+            loadUserTest();
+            loadAdminTestList();
+        });
+
+        // PDFs Live
+        db.ref('pdfs').on('value', snap => {
+            window.allPdfs = [];
+            snap.forEach(child => { window.allPdfs.push(child.val()); });
+            loadUserPdfs();
+            loadAdminPdfList();
+        });
+    }
+
+    function loadUserAbsent(){
+        let selCourse = document.getElementById("userAbsentCourseSelect").value;
+        let container = document.getElementById("userAbsentContainer");
+        let absents = window.allAbsents || [];
+        let filtered = absents.filter(x => x.course === selCourse);
+
+        if(filtered.length === 0){
+            container.innerHTML = `<p style="color:#94a3b8; font-size:13px;">आज ${selCourse} में कोई छात्र एब्सेंट नहीं है।</p>`;
+            return;
+        }
+
+        let h = "";
+        filtered.slice().reverse().forEach(x => {
+            h += `<div class="absent-box" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div><strong style="color:#ef4444; font-size:13px;"><i class="fa-solid fa-user-xmark"></i> ${x.name}</strong></div>
+                    <div style="font-size:11px; color:#94a3b8;"><i class="fa-solid fa-calendar"></i> ${x.date}</div>
+                  </div>`;
+        });
+        container.innerHTML = h;
+    }
+
+    function loadAdminAbsentList(){
+        let absents = window.allAbsents || [];
+        let d = document.getElementById("adminAbsentList");
+        if(!d) return;
+        if(absents.length == 0){ d.innerHTML = "<p style='font-size:11px; color:#94a3b8;'>कोई एब्सेंट रिकॉर्ड नहीं</p>"; return; }
+        let h = "";
+        absents.slice().reverse().forEach(x => {
+            h += `<div style="background:#0f172a; padding:6px; border-radius:4px; margin-bottom:4px; font-size:11px; display:flex; justify-content:space-between;">
+                    <span><b>[${x.course}]</b> ${x.name} (${x.date})</span>
+                    <button onclick="deleteAbsent('${x.id}')" style="background:#ef4444; color:white; border:none; padding:2px 6px; border-radius:3px;">X</button>
+                  </div>`;
+        });
+        d.innerHTML = h;
+    }
+
+    function loadUserTest(){
+        let s = document.getElementById("userTestSelect").value;
+        let tests = window.allTests || [];
+        let f = tests.filter(x => x.course === s);
+        let c = document.getElementById("onlineTestContainer");
+        if(f.length == 0){ c.innerHTML = `<p style="color:#94a3b8; font-size:13px;">कोई टेस्ट नहीं है।</p>`; return; }
+        let h = "";
+        f.forEach((x, i) => {
+            h += `<div class="test-item"><p style="font-size:13px;"><b>Q${i+1}.</b> ${x.question}</p>
+                  <label style="font-size:12px; display:block; margin:4px 0;"><input type="radio" name="a_${x.id}" value="A"> A. ${x.optA}</label
