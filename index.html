@@ -34,17 +34,15 @@
         input:focus, select:focus { border-color: var(--primary); }
         .hidden { display: none !important; }
         .test-item, .course-box, .faculty-box, .pdf-box { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
-        .option-box { background: #1e293b; padding: 8px 12px; margin-top: 5px; border-radius: 6px; font-size: 13px; border: 1px solid #334155; }
         .contact-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px; border-radius: 8px; color: white; font-weight: 500; margin-bottom: 10px; width: 100%; text-align: center; }
         .call-btn { background: var(--primary); }
         .wa-btn { background: #22c55e; }
         table { width: 100%; font-size: 11px; margin-top: 10px; border-collapse: collapse; color: white; }
         table, th, td { border: 1px solid #475569; padding: 6px; text-align: center; }
         th { background: var(--primary-dark); }
-        /* बिल्कुल छोटा और छिपा हुआ एडमिन बटन साइड में */
-        .admin-link-corner { text-align: right; padding: 10px 20px; font-size: 11px; }
-        .admin-link-corner a { color: #475569; text-decoration: none; background: #1e293b; padding: 4px 8px; border-radius: 4px; border: 1px dashed #334155; }
-        .admin-link-corner a:hover { color: var(--accent); }
+        .admin-link-corner { text-align: right; padding: 15px 10px; font-size: 12px; }
+        .admin-link-corner button { background: #1e293b; color: #94a3b8; border: 1px dashed #475569; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; }
+        .admin-link-corner button:hover { color: var(--accent); border-color: var(--accent); }
     </style>
 </head>
 <body>
@@ -61,13 +59,13 @@
 
     <div class="container">
         
-        <!-- 🔑 Hidden Admin Login Card (शुरुआत में पूरी तरह छिपा रहेगा) -->
-        <div class="card hidden" id="loginCard">
-            <h3><i class="fa-solid fa-lock" style="color: var(--accent);"></i> गुप्त एडमिन पोर्टल (Abhishek Thakur Sir Only)</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">सुरक्षित हार्ड पासवर्ड दर्ज करें (Default: <code>drishti123</code>):</p>
+        <!-- 🔑 गुप्त एडमिन लॉगिन कार्ड -->
+        <div class="card hidden" id="loginCard" style="border: 2px solid var(--accent);">
+            <h3><i class="fa-solid fa-lock" style="color: var(--accent);"></i> गुप्त एडमिन पोर्टल (Abhishek Thakur Sir)</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">सुरक्षित पासवर्ड दर्ज करें:</p>
             <input type="password" id="adminPassword" placeholder="गुप्त पासवर्ड डालें">
             <button class="btn" onclick="loginAdmin()">Login to Admin Panel</button>
-            <button class="btn btn-danger" onclick="hideLoginCard()" style="background:#475569; margin-top:8px;">बंद करें (Cancel)</button>
+            <button class="btn btn-danger" onclick="hideLoginCard()">बंद करें (Cancel)</button>
         </div>
 
         <!-- 🛡️ Admin Dashboard -->
@@ -75,16 +73,43 @@
             <h3><i class="fa-solid fa-user-shield"></i> स्वागत है, अभिषेक सर! (Admin Panel)</h3>
             <p style="font-size: 12px; color: var(--secondary); margin-bottom: 15px;"><i class="fa-solid fa-circle-check"></i> एडमिन पैनल सक्रिय है।</p>
             
-            <!-- हार्ड पासवर्ड बदलें -->
-            <h4 style="font-size: 13px; color: #38bdf8; margin-bottom: 6px;">मजबूत / हार्ड पासवर्ड सेट करें:</h4>
+            <!-- पासवर्ड बदलें -->
+            <h4 style="font-size: 13px; color: #38bdf8; margin-bottom: 6px;">नया पासवर्ड सेट करें:</h4>
             <input type="password" id="newAdminPass" placeholder="नया गुप्त पासवर्ड दर्ज करें">
             <button class="btn btn-secondary" onclick="changePassword()">पासवर्ड अपडेट करें</button>
 
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
-            <!-- 📚 PDF / नोट्स अपलोड करने का सेक्शन -->
+            <!-- 📝 ऑनलाइन टेस्ट क्रिएटर (नया) -->
+            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-pen-to-square"></i> ऑनलाइन टेस्ट प्रश्न बनाएँ</h4>
+            <select id="testCourseSelect">
+                <option value="CCC">CCC Test</option>
+                <option value="ADCA">ADCA Test</option>
+                <option value="DCA">DCA Test</option>
+                <option value="Tally ERP9">Tally Test</option>
+                <option value="BASIC">BASIC Test</option>
+            </select>
+            <input type="text" id="testQuestion" placeholder="प्रश्न (Question) लिखें">
+            <input type="text" id="optA" placeholder="विकल्प A">
+            <input type="text" id="optB" placeholder="विकल्प B">
+            <input type="text" id="optC" placeholder="विकल्प C">
+            <input type="text" id="optD" placeholder="विकल्प D">
+            <select id="correctOpt">
+                <option value="A">सही उत्तर: विकल्प A</option>
+                <option value="B">सही उत्तर: विकल्प B</option>
+                <option value="C">सही उत्तर: विकल्प C</option>
+                <option value="D">सही उत्तर: विकल्प D</option>
+            </select>
+            <button class="btn btn-secondary" onclick="saveAdminTest()">टेस्ट प्रश्न जोड़ें</button>
+
+            <!-- एडमिन द्वारा टेस्ट डिलीट करने की लिस्ट -->
+            <div id="adminTestList" style="margin-top: 15px;"></div>
+
+            <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
+
+            <!-- PDF अपलोड सेक्शन -->
             <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-file-pdf"></i> छात्रों के लिए PDF / नोट्स अपलोड करें</h4>
-            <input type="text" id="pdfTitle" placeholder="PDF/नोट्स का शीर्षक (जैसे: CCC Important Notes)">
+            <input type="text" id="pdfTitle" placeholder="PDF/नोट्स का शीर्षक">
             <select id="pdfCourseSelect">
                 <option value="CCC">CCC Notes</option>
                 <option value="ADCA">ADCA Notes</option>
@@ -93,39 +118,27 @@
                 <option value="BASIC">BASIC Notes</option>
                 <option value="O Level">O Level Notes</option>
             </select>
-            <input type="text" id="pdfUrl" placeholder="PDF का लिंक (Google Drive या Direct URL)">
-            <button class="btn btn-secondary" onclick="uploadPdf()">PDF / नोट्स पब्लिश करें</button>
+            <input type="text" id="pdfUrl" placeholder="Google Drive PDF Direct URL">
+            <button class="btn btn-secondary" onclick="uploadPdf()">PDF पब्लिश करें</button>
 
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
-            <!-- नोटिस बोर्ड अपडेट करें -->
-            <h4 style="font-size: 13px; color: #38bdf8; margin-bottom: 6px;">लाइव नोटिस/संदेश जारी करें:</h4>
-            <textarea id="noticeInput" placeholder="बच्चों के लिए नया संदेश यहाँ लिखें..."></textarea>
+            <!-- नोटिस बोर्ड -->
+            <h4 style="font-size: 13px; color: #38bdf8; margin-bottom: 6px;">लाइव नोटिस जारी करें:</h4>
+            <textarea id="noticeInput" placeholder="बच्चों के लिए नया संदेश लिखें..."></textarea>
             <button class="btn" onclick="publishNotice()">नोटिस अपडेट करें</button>
 
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
-            <!-- फोटो बदले -->
-            <label style="font-size: 12px; color: var(--text-muted);">हेडर फोटो (`abhishek_photo.jpg` या URL):</label>
-            <input type="text" id="newPhotoUrl" value="abhishek_photo.jpg" placeholder="abhishek_photo.jpg">
-            <button class="btn" onclick="updatePhoto()">फोटो अपडेट करें</button>
-
-            <!-- बैनर जोड़े -->
-            <label style="font-size: 12px; color: var(--text-muted); margin-top: 10px; display: block;">सेंटर बैनर इमेज URL:</label>
-            <input type="text" id="bannerUrlInput" placeholder="Banner image URL dalein">
-            <button class="btn btn-secondary" onclick="addBanner()">बैनर जोड़ें</button>
-
-            <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
-
-            <!-- स्टूडेंट एडमिशन व फीस रिकॉर्ड -->
-            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-users"></i> स्टूडेंट एडमिशन & फीस डेटा मैनेजर</h4>
+            <!-- स्टूडेंट रिकॉर्ड -->
+            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-users"></i> स्टूडेंट डेटा मैनेजर</h4>
             <input type="text" id="stName" placeholder="छात्र का नाम">
-            <input type="text" id="stCourse" placeholder="कोर्स (CCC / ADCA / Tally आदि)">
+            <input type="text" id="stCourse" placeholder="कोर्स">
             <input type="text" id="stMobile" placeholder="मोबाइल नंबर">
-            <input type="text" id="stPaid" placeholder="जमा फीस (Rs)">
-            <input type="text" id="stTotal" placeholder="कुल फीस (Rs)">
-            <input type="text" id="stExpiry" placeholder="कोर्स पूर्ण होने की तिथि / वैधता">
-            <button class="btn" onclick="saveStudentRecord()">नया स्टूडेंट रिकॉर्ड जोड़ें</button>
+            <input type="text" id="stPaid" placeholder="जमा फीस">
+            <input type="text" id="stTotal" placeholder="कुल फीस">
+            <input type="text" id="stExpiry" placeholder="वैधता / तिथि">
+            <button class="btn" onclick="saveStudentRecord()">स्टूडेंट रिकॉर्ड जोड़ें</button>
 
             <div style="overflow-x: auto;">
                 <table id="studentTable">
@@ -133,29 +146,23 @@
                 </table>
             </div>
 
-            <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
+            <button class="btn btn-danger" onclick="logoutAdmin()" style="margin-top: 20px;">Admin Logout & Lock</button>
+        </div>
 
-            <!-- टेस्ट / प्रश्न बैंक -->
-            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;">कोर्स के अनुसार टेस्ट प्रश्न जोड़ें (4 विकल्पों सहित):</h4>
-            <select id="testCourseSelect">
+        <!-- ✍️ ऑनलाइन टेस्ट पोर्टल (छात्रों के लिए) -->
+        <div class="card">
+            <h3><i class="fa-solid fa-laptop-code" style="color:var(--accent);"></i> ऑनलाइन टेस्ट एवं क्विज़</h3>
+            <label style="font-size: 12px; color: var(--text-muted);">अपना कोर्स चुनें:</label>
+            <select id="userTestSelect" onchange="loadUserTest()">
                 <option value="CCC">CCC Test</option>
                 <option value="ADCA">ADCA Test</option>
                 <option value="DCA">DCA Test</option>
                 <option value="Tally ERP9">Tally Test</option>
                 <option value="BASIC">BASIC Test</option>
-                <option value="O Level">O Level Test</option>
             </select>
-
-            <input type="text" id="testQNo" placeholder="प्रश्न संख्या या शीर्षक (जैसे: Q1)">
-            <textarea id="testQuestion" placeholder="पूरा प्रश्न यहाँ लिखें..."></textarea>
-            <input type="text" id="optA" placeholder="विकल्प A">
-            <input type="text" id="optB" placeholder="विकल्प B">
-            <input type="text" id="optC" placeholder="विकल्प C">
-            <input type="text" id="optD" placeholder="विकल्प D">
-            <input type="text" id="correctAns" placeholder="सही उत्तर (जैसे: Option A)">
-            
-            <button class="btn btn-secondary" onclick="publishTestQuestion()">टेस्ट प्रश्न पब्लिश करें</button>
-            <button class="btn btn-danger" onclick="logoutAdmin()">Admin Logout & Lock</button>
+            <div id="onlineTestContainer" style="margin-top: 15px;">
+                <p style="color: var(--text-muted); font-size: 13px;">इस कोर्स के लिए अभी कोई टेस्ट उपलब्ध नहीं है।</p>
+            </div>
         </div>
 
         <!-- लाइव नोटिस बोर्ड -->
@@ -163,22 +170,22 @@
             <h3><i class="fa-solid fa-bullhorn" style="color:var(--accent);"></i> लाइव नोटिस बोर्ड</h3>
             <div id="noticeDisplay">
                 <div class="test-item">
-                    <strong>अभिषेक ठाकुर सर संदेश:</strong> दृष्टि कंप्यूटर सेंटर में CCC, ADCA, DCA, Tally और Basic के नए बैच प्रारंभ हैं। आज ही अपना एडमिशन सुनिश्चित करें!
+                    <strong>अभिषेक ठाकुर सर संदेश:</strong> दृष्टि कंप्यूटर सेंटर में CCC, ADCA, DCA, Tally और Basic के नए बैच प्रारंभ हैं।
                 </div>
             </div>
         </div>
 
-        <!-- 📚 छात्रों के लिए PDF / स्टडी मैटेरियल डाउनलोड सेक्शन -->
+        <!-- PDF नोट्स डाउनलोड सेक्शन -->
         <div class="card">
-            <h3><i class="fa-solid fa-file-pdf" style="color:#ef4444;"></i> स्टडी मैटेरियल व PDF नोट्स (Study Notes)</h3>
+            <h3><i class="fa-solid fa-file-pdf" style="color:#ef4444;"></i> स्टडी मैटेरियल व PDF नोट्स</h3>
             <div id="studentPdfList">
                 <p style="color: var(--text-muted); font-size: 13px;">सर द्वारा अभी कोई PDF अपलोड नहीं की गई है।</p>
             </div>
         </div>
 
-        <!-- 1. Student Online Admission Portal -->
+        <!-- ऑनलाइन एडमिशन फॉर्म -->
         <div class="card">
-            <h3><i class="fa-solid fa-user-plus" style="color:var(--secondary);"></i> ऑनलाइन एडमिशन फॉर्म (Student Admission)</h3>
+            <h3><i class="fa-solid fa-user-plus" style="color:var(--secondary);"></i> ऑनलाइन एडमिशन फॉर्म</h3>
             <input type="text" id="admName" placeholder="छात्र का पूरा नाम">
             <input type="text" id="admMobile" placeholder="मोबाइल नंबर (WhatsApp)">
             <input type="text" id="admFather" placeholder="पिता का नाम">
@@ -187,55 +194,36 @@
                 <option value="ADCA - Rs.11500">ADCA (फीस: Rs. 11500)</option>
                 <option value="DCA - Rs.5800">DCA (फीस: Rs. 5800)</option>
                 <option value="Tally ERP9 - Rs.3500">Tally ERP9 (फीस: Rs. 3500)</option>
-                <option value="BASIC - Rs.500/month + 200 Reg">BASIC (Rs. 500/month + Rs. 200 Reg)</option>
-                <option value="O Level">O Level</option>
-                <option value="Other Course">Other Course</option>
+                <option value="BASIC - Rs.500/month">BASIC (Rs. 500/month)</option>
             </select>
-            <input type="text" id="admAdvance" placeholder="जमा की जाने वाली एडवांस फीस (Rs)">
-            <button class="btn btn-secondary" onclick="submitOnlineAdmission()">ऑनलाइन एडमिशन फॉर्म सबमिट करें</button>
+            <input type="text" id="admAdvance" placeholder="एडवांस फीस (Rs)">
+            <button class="btn btn-secondary" onclick="submitOnlineAdmission()">फॉर्म सबमिट करें</button>
         </div>
 
-        <!-- 2. Available Courses & Fees Structure -->
+        <!-- कोर्सेज और फीस -->
         <div class="card">
-            <h3><i class="fa-solid fa-graduation-cap"></i> हमारे प्रमुख कोर्सेज और फीस</h3>
+            <h3><i class="fa-solid fa-graduation-cap"></i> हमारे कोर्सेज और फीस</h3>
             <div class="course-box"><strong>CCC:</strong> पूर्ण कोर्स फीस मात्र <b>Rs. 2500/-</b></div>
             <div class="course-box"><strong>ADCA:</strong> एडवांस डिप्लोमा (फीस: <b>Rs. 11500/-</b>)</div>
-            <div class="course-box"><strong>DCA:</strong> डिप्लोमा इन कंप्यूटर एप्लीकेशन (फीस: <b>Rs. 5800/-</b>)</div>
-            <div class="course-box"><strong>Tally ERP9 / Prime:</strong> एकाउंटिंग कोर्स (फीस: <b>Rs. 3500/-</b>)</div>
-            <div class="course-box"><strong>BASIC Computer:</strong> <b>Rs. 500/- प्रति माह</b> + Rs. 200 रजिस्ट्रेशन चार्ज</div>
-            <div class="course-box"><strong>O Level & Other Courses:</strong> NIELIT मान्यता प्राप्त कोर्स उपलब्ध।</div>
+            <div class="course-box"><strong>DCA:</strong> डिप्लोमा (फीस: <b>Rs. 5800/-</b>)</div>
+            <div class="course-box"><strong>Tally ERP9 / Prime:</strong> एकाउंटिंग (फीस: <b>Rs. 3500/-</b>)</div>
+            <div class="course-box"><strong>BASIC Computer:</strong> <b>Rs. 500/- प्रति माह</b></div>
         </div>
 
-        <!-- 3. Faculty / Teachers Information -->
+        <!-- फैकल्टी -->
         <div class="card">
-            <h3><i class="fa-solid fa-chalkboard-user" style="color:#38bdf8;"></i> हमारे मार्गदर्शक व फैकल्टी</h3>
+            <h3><i class="fa-solid fa-chalkboard-user" style="color:#38bdf8;"></i> फैकल्टी परिचय</h3>
             <div class="faculty-box">
                 <strong>1. अभिषेक ठाकुर सर</strong>
                 <p style="font-size: 12px; color: var(--text-muted);">Founder & Director | मो: 9258533717</p>
             </div>
             <div class="faculty-box">
                 <strong>2. हरिओम सर</strong>
-                <p style="font-size: 12px; color: var(--text-muted);">(इन्होंने इस सेंटर को सन 2016 में स्थापित किया था)</p>
+                <p style="font-size: 12px; color: var(--text-muted);">(सेंटर संस्थापक - सन 2016)</p>
             </div>
             <div class="faculty-box">
                 <strong>3. अर्शी मैडम</strong>
                 <p style="font-size: 12px; color: var(--text-muted);">कंप्यूटर फैकल्टी एवं ट्रेनर</p>
-            </div>
-        </div>
-
-        <!-- 4. Online Test Portal -->
-        <div class="card">
-            <h3><i class="fa-solid fa-book-open"></i> ऑनलाइन मेगा परीक्षा पोर्टल (Test Series)</h3>
-            <div id="studentTestList">
-                <p style="color: var(--text-muted); font-size: 13px;">सर द्वारा टेस्ट अपलोड किए जा रहे हैं। छात्र यहाँ से परीक्षा दे सकेंगे।</p>
-            </div>
-        </div>
-
-        <!-- सेंटर गैलरी & बैनर -->
-        <div class="card">
-            <h3><i class="fa-solid fa-images" style="color:#ec4899;"></i> सेंटर गैलरी</h3>
-            <div id="bannerDisplay">
-                <p style="color: var(--text-muted); font-size: 13px;">अभी कोई बैनर अपलोड नहीं किया गया है।</p>
             </div>
         </div>
 
@@ -246,9 +234,9 @@
             <a href="https://wa.me/919258533717" target="_blank" class="contact-btn wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp चैट करें</a>
         </div>
 
-        <!-- 🔒 पेज के सबसे कोने में बिल्कुल छोटा और छिपा हुआ एडमिन ऑप्शन -->
+        <!-- ⚙️ सुरक्षित एडमिन बटन -->
         <div class="admin-link-corner">
-            <a href="javascript:void(0);" onclick="openAdminDirect()">⚙️ Admin</a>
+            <button onclick="openAdminDirect()"><i class="fa-solid fa-gear"></i> Admin Panel</button>
         </div>
 
     </div>
@@ -259,6 +247,7 @@
         }
 
         window.onload = function() {
+            // सुरक्षा जाँच: यदि एडमिन पहले से लॉग-इन है तभी डैशबोर्ड दिखाएं
             if(localStorage.getItem("is_admin_logged") === "true") {
                 document.getElementById("loginCard").classList.add("hidden");
                 document.getElementById("adminDashboard").classList.remove("hidden");
@@ -266,19 +255,18 @@
                 document.getElementById("loginCard").classList.add("hidden");
                 document.getElementById("adminDashboard").classList.add("hidden");
             }
-            loadCustomData();
-            loadTests();
             loadStudents();
             loadNotice();
             loadPdfs();
+            loadUserTest();
+            loadAdminTests();
         }
 
-        // कोने वाले छोटे एडमिन बटन पर क्लिक करते ही पासवर्ड बॉक्स खुलेगा
         function openAdminDirect() {
-            if(localStorage.getItem("is_admin_logged") !== "true") {
-                document.getElementById("loginCard").classList.remove("hidden");
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            }
+            let loginCard = document.getElementById("loginCard");
+            loginCard.classList.remove("hidden");
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            document.getElementById("adminPassword").focus();
         }
 
         function hideLoginCard() {
@@ -292,6 +280,7 @@
                 document.getElementById("loginCard").classList.add("hidden");
                 document.getElementById("adminDashboard").classList.remove("hidden");
                 alert("Admin Login Successful!");
+                loadAdminTests();
             } else {
                 alert("गलत पासवर्ड! कृपया सही पासवर्ड दर्ज करें।");
             }
@@ -304,7 +293,7 @@
                 return;
             }
             localStorage.setItem("drishti_admin_pass", newPass);
-            alert("आपका नया हार्ड पासवर्ड सुरक्षित रूप से बदल दिया गया है!");
+            alert("नया पासवर्ड सफलतापूर्वक सेट हो गया है!");
             document.getElementById("newAdminPass").value = "";
         }
 
@@ -312,26 +301,123 @@
             localStorage.removeItem("is_admin_logged");
             document.getElementById("adminDashboard").classList.add("hidden");
             document.getElementById("adminPassword").value = "";
-            alert("Admin Logout हो गया है। अब कोई इसे नहीं खोल पाएगा।्");
+            alert("Admin Logout हो गया है।");
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // 📚 PDF Upload Functionality
+        // --- ऑनलाइन टेस्ट मैनेजमेंट (Admin & User) ---
+        function saveAdminTest() {
+            let course = document.getElementById("testCourseSelect").value;
+            let question = document.getElementById("testQuestion").value;
+            let optA = document.getElementById("optA").value;
+            let optB = document.getElementById("optB").value;
+            let optC = document.getElementById("optC").value;
+            let optD = document.getElementById("optD").value;
+            let correct = document.getElementById("correctOpt").value;
+
+            if(!question || !optA || !optB) {
+                alert("कृपया प्रश्न और कम से कम दो विकल्प भरें!");
+                return;
+            }
+
+            let tests = JSON.parse(localStorage.getItem("drishti_tests") || "[]");
+            tests.push({ id: Date.now(), course, question, optA, optB, optC, optD, correct });
+            localStorage.setItem("drishti_tests", JSON.stringify(tests));
+
+            alert("टेस्ट प्रश्न सफलतापूर्वक जुड़ गया है!");
+            document.getElementById("testQuestion").value = "";
+            document.getElementById("optA").value = "";
+            document.getElementById("optB").value = "";
+            document.getElementById("optC").value = "";
+            document.getElementById("optD").value = "";
+            loadAdminTests();
+            loadUserTest();
+        }
+
+        function loadAdminTests() {
+            let tests = JSON.parse(localStorage.getItem("drishti_tests") || "[]");
+            let listDiv = document.getElementById("adminTestList");
+            if(tests.length === 0) {
+                listDiv.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">कोई टेस्ट प्रश्न नहीं बनाया गया है।</p>`;
+                return;
+            }
+            let html = `<h5 style="color:#38bdf8; font-size:12px; margin-bottom:5px;">बनाए गए सभी प्रश्न (डिलीट करें):</h5>`;
+            tests.forEach(t => {
+                html += `<div style="background:#0f172a; padding:8px; border-radius:6px; margin-bottom:5px; font-size:12px; display:flex; justify-content:space-between; align-items:center;">
+                    <span><b>[${t.course}]</b> ${t.question}</span>
+                    <button onclick="deleteTest(${t.id})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                </div>`;
+            });
+            listDiv.innerHTML = html;
+        }
+
+        function deleteTest(id) {
+            let tests = JSON.parse(localStorage.getItem("drishti_tests") || "[]");
+            tests = tests.filter(t => t.id !== id);
+            localStorage.setItem("drishti_tests", JSON.stringify(tests));
+            loadAdminTests();
+            loadUserTest();
+            alert("प्रश्न डिलीट कर दिया गया है!");
+        }
+
+        function loadUserTest() {
+            let selectedCourse = document.getElementById("userTestSelect").value;
+            let tests = JSON.parse(localStorage.getItem("drishti_tests") || "[]");
+            let filteredTests = tests.filter(t => t.course === selectedCourse);
+            let container = document.getElementById("onlineTestContainer");
+
+            if(filteredTests.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 13px;">इस कोर्स के लिए अभी कोई टेस्ट उपलब्ध नहीं है।</p>`;
+                return;
+            }
+
+            let html = "";
+            filteredTests.forEach((t, index) => {
+                html += `<div class="test-item">
+                    <p><b>Q${index+1}: ${t.question}</b></p>
+                    <div style="margin-top:8px; font-size:13px;">
+                        <label><input type="radio" name="q_${t.id}" value="A"> A) ${t.optA}</label><br>
+                        <label><input type="radio" name="q_${t.id}" value="B"> B) ${t.optB}</label><br>
+                        ${t.optC ? `<label><input type="radio" name="q_${t.id}" value="C"> C) ${t.optC}</label><br>` : ''}
+                        ${t.optD ? `<label><input type="radio" name="q_${t.id}" value="D"> D) ${t.optD}</label>` : ''}
+                    </div>
+                    <button class="btn btn-secondary" style="padding:6px 12px; font-size:12px; margin-top:8px;" onclick="checkAnswer(${t.id}, '${t.correct}')">उत्तर जाँचें</button>
+                    <span id="result_${t.id}" style="font-size:12px; margin-left:10px; font-weight:bold;"></span>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function checkAnswer(id, correctOpt) {
+            let radios = document.getElementsByName(`q_${id}`);
+            let selectedVal = "";
+            for(let r of radios) {
+                if(r.checked) { selectedVal = r.value; break; }
+            }
+            let resSpan = document.getElementById(`result_${id}`);
+            if(!selectedVal) {
+                alert("कृपया पहले कोई विकल्प चुनें!");
+                return;
+            }
+            if(selectedVal === correctOpt) {
+                resSpan.style.color = "#10b981";
+                resSpan.innerHTML = "✔ सही उत्तर!";
+            } else {
+                resSpan.style.color = "#ef4444";
+                resSpan.innerHTML = `✘ गलत! सही उत्तर (${correctOpt}) है।`;
+            }
+        }
+
+        // --- PDF अपलोड और डिस्प्ले ---
         function uploadPdf() {
             let title = document.getElementById("pdfTitle").value;
             let course = document.getElementById("pdfCourseSelect").value;
             let url = document.getElementById("pdfUrl").value;
-
-            if(!title || !url) {
-                alert("कृपया PDF का शीर्षक और लिंक दर्ज करें!");
-                return;
-            }
-
-            let pdfData = { title, course, url };
+            if(!title || !url) { alert("कृपया शीर्षक और लिंक भरें!"); return; }
             let pdfs = JSON.parse(localStorage.getItem("drishti_pdfs") || "[]");
-            pdfs.push(pdfData);
+            pdfs.push({ title, course, url });
             localStorage.setItem("drishti_pdfs", JSON.stringify(pdfs));
-
-            alert("PDF नोट्स सफलतापूर्वक अपलोड हो गए हैं!");
+            alert("PDF नोट्स अपलोड हो गए हैं!");
             document.getElementById("pdfTitle").value = "";
             document.getElementById("pdfUrl").value = "";
             loadPdfs();
@@ -340,13 +426,73 @@
         function loadPdfs() {
             let pdfs = JSON.parse(localStorage.getItem("drishti_pdfs") || "[]");
             let listDiv = document.getElementById("studentPdfList");
-            if(pdfs.length === 0) {
-                listDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 13px;">सर द्वारा अभी कोई PDF अपलोड नहीं की गई है।</p>`;
-                return;
-            }
-
+            if(pdfs.length === 0) return;
             let html = "";
-            pdfs.forEach((p) => {
+            pdfs.forEach(p => {
                 html += `<div class="pdf-box">
-                    <strong style="color: var(--accent);">[${p.course}] ${p.title}</strong>
-                    <br
+                    <strong style="color: var(--accent);">[${p.course}] ${p.title}</strong><br>
+                    <a href="${p.url}" target="_blank" class="btn btn-secondary" style="display:inline-block; margin-top:8px; text-decoration:none; text-align:center;"><i class="fa-solid fa-download"></i> PDF देखें / डाउनलोड करें</a>
+                </div>`;
+            });
+            listDiv.innerHTML = html;
+        }
+
+        function submitOnlineAdmission() {
+            let name = document.getElementById("admName").value;
+            let mobile = document.getElementById("admMobile").value;
+            let course = document.getElementById("admCourseSelect").value;
+            let paid = document.getElementById("admAdvance").value || "0";
+            if(!name || !mobile) { alert("नाम और मोबाइल नंबर भरें!"); return; }
+            let students = JSON.parse(localStorage.getItem("drishti_students") || "[]");
+            students.push({ name, course, mobile, paid, total: "Pending", expiry: "New" });
+            localStorage.setItem("drishti_students", JSON.stringify(students));
+            alert("एडमिशन फॉर्म सफलतापूर्वक सबमिट हो गया है!");
+            document.getElementById("admName").value = "";
+            document.getElementById("admMobile").value = "";
+            document.getElementById("admAdvance").value = "";
+            loadStudents();
+        }
+
+        function publishNotice() {
+            let notice = document.getElementById("noticeInput").value;
+            if(!notice) { alert("कृपया नोटिस लिखें!"); return; }
+            localStorage.setItem("drishti_notice", notice);
+            document.getElementById("noticeDisplay").innerHTML = `<div class="test-item"><strong>अभिषेक ठाकुर सर संदेश:</strong> ${notice}</div>`;
+            alert("नोटिस अपडेट कर दिया गया है!");
+            document.getElementById("noticeInput").value = "";
+        }
+
+        function loadNotice() {
+            let savedNotice = localStorage.getItem("drishti_notice");
+            if(savedNotice) {
+                document.getElementById("noticeDisplay").innerHTML = `<div class="test-item"><strong>अभिषेक ठाकुर सर संदेश:</strong> ${savedNotice}</div>`;
+            }
+        }
+
+        function saveStudentRecord() {
+            let name = document.getElementById("stName").value;
+            let course = document.getElementById("stCourse").value;
+            let mobile = document.getElementById("stMobile").value;
+            let paid = document.getElementById("stPaid").value;
+            let total = document.getElementById("stTotal").value;
+            let expiry = document.getElementById("stExpiry").value;
+            if(!name) { alert("छात्र का नाम लिखें!"); return; }
+            let students = JSON.parse(localStorage.getItem("drishti_students") || "[]");
+            students.push({ name, course, mobile, paid, total, expiry });
+            localStorage.setItem("drishti_students", JSON.stringify(students));
+            alert("रिकॉर्ड सेव हो गया है!");
+            loadStudents();
+        }
+
+        function loadStudents() {
+            let students = JSON.parse(localStorage.getItem("drishti_students") || "[]");
+            let table = document.getElementById("studentTable");
+            let html = `<tr><th>नाम</th><th>कोर्स</th><th>मोबाइल</th><th>जमा</th><th>कुल</th><th>वैधता</th></tr>`;
+            students.forEach(s => {
+                html += `<tr><td>${s.name}</td><td>${s.course}</td><td>${s.mobile}</td><td>${s.paid}</td><td>${s.total}</td><td>${s.expiry}</td></tr>`;
+            });
+            table.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
