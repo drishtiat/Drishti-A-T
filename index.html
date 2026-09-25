@@ -20,6 +20,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 40px; }
         header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 25px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
+        .banner-display { width: 100%; max-height: 200px; border-radius: 12px; object-fit: cover; margin-bottom: 12px; display: none; border: 2px solid white; }
         .director-profile img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .director-profile h1 { font-size: 20px; font-weight: 600; margin-bottom: 2px; }
         .director-profile p { font-size: 12px; opacity: 0.9; }
@@ -40,13 +41,16 @@
         table, th, td { border: 1px solid #475569; padding: 6px; text-align: center; }
         th { background: var(--primary-dark); }
         .secret-admin-link { text-align: center; margin-top: 30px; font-size: 12px; }
-        .secret-admin-link a { color: var(--text-muted); text-decoration: none; opacity: 0.5; }
+        .secret-admin-link a { color: var(--text-muted); text-decoration: none; opacity: 0.3; }
         .secret-admin-link a:hover { opacity: 1; color: var(--accent); }
     </style>
 </head>
 <body>
 
     <header>
+        <!-- Center Banner Image -->
+        <img id="headerBannerImg" class="banner-display" alt="Drishti Centre Banner">
+        
         <div class="director-profile">
             <img src="abhishek_photo.jpg" alt="Abhishek Thakur Sir">
             <h1>अभिषेक ठाकुर सर</h1>
@@ -58,19 +62,27 @@
 
     <div class="container">
         
-        <!-- 🛡️ Admin Dashboard (Sirf Password dalne par khulega) -->
+        <!-- 🛡️ Admin Dashboard (Sirf Sir ke Password se khulega) -->
         <div class="card hidden" id="adminDashboard">
             <h3><i class="fa-solid fa-user-shield"></i> अभिषेक सर - एडमिन पैनल</h3>
             <p style="font-size: 12px; color: var(--secondary); margin-bottom: 15px;"><i class="fa-solid fa-circle-check"></i> सुरक्षित एडमिन मोड सक्रिय है।</p>
-            
-            <h4 style="font-size: 13px; color: #38bdf8; margin-bottom: 6px;">नया पक्का पासवर्ड सेट करें (Hamesha ke liye):</h4>
-            <input type="password" id="newAdminPass" placeholder="नया मजबूत पासवर्ड दर्ज करें">
-            <button class="btn btn-secondary" onclick="changePassword()">पासवर्ड हमेशा के लिए सेव करें</button>
+
+            <!-- 🔑 Password Change Option (Sirf Admin Panel ke andar) -->
+            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-key"></i> एडमिन पासवर्ड बदलें</h4>
+            <input type="password" id="newAdminPassword" placeholder="नया गुप्त पासवर्ड दर्ज करें">
+            <button class="btn btn-secondary" onclick="changeAdminPassword()">पासवर्ड हमेशा के लिए अपडेट करें</button>
 
             <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
 
-            <!-- 📝 टेस्ट क्रिएटर (100+ Questions) -->
-            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-pen-to-square"></i> ऑनलाइन टेस्ट प्रश्न जोड़ें (Unlimited)</h4>
+            <!-- 🖼️ सेंटर बैनर / फोटो अपलोड ऑप्शन -->
+            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-image"></i> सेंटर का बैनर या फोटो जोड़ें</h4>
+            <input type="text" id="bannerUrlInput" placeholder="Banner Image Direct URL">
+            <button class="btn btn-secondary" onclick="saveBanner()">बैनर अपडेट करें</button>
+
+            <hr style="border: 0; border-top: 1px solid #334155; margin: 15px 0;">
+
+            <!-- 📝 टेस्ट क्रिएटर -->
+            <h4 style="font-size: 14px; color: #38bdf8; margin-bottom: 10px;"><i class="fa-solid fa-pen-to-square"></i> ऑनलाइन टेस्ट प्रश्न जोड़ें</h4>
             <select id="testCourseSelect">
                 <option value="CCC">CCC Test</option>
                 <option value="ADCA">ADCA Test</option>
@@ -138,7 +150,7 @@
         </div>
 
         <!-- ✍️ ऑनलाइन टेस्ट पोर्टल (Students ke liye) -->
-        <div class="card" id="studentMainContent">
+        <div class="card">
             <h3><i class="fa-solid fa-laptop-code" style="color:var(--accent);"></i> ऑनलाइन टेस्ट एवं क्विज़</h3>
             <label style="font-size: 12px; color: var(--text-muted);">अपना कोर्स चुनें:</label>
             <select id="userTestSelect" onchange="loadUserTest()">
@@ -190,7 +202,7 @@
 
         <!-- कोर्सेज और फीस -->
         <div class="card">
-            <h3><i class="fa-solid fa-graduation-cap"></i> हमारे कोर्सेज और फीस</h3>
+            ### <i class="fa-solid fa-graduation-cap"></i> हमारे कोर्सेज और फीस
             <div class="course-box"><strong>CCC:</strong> पूर्ण कोर्स फीस मात्र <b>Rs. 2500/-</b></div>
             <div class="course-box"><strong>ADCA:</strong> एडवांस डिप्लोमा (फीस: <b>Rs. 11500/-</b>)</div>
             <div class="course-box"><strong>DCA:</strong> डिप्लोमा (फीस: <b>Rs. 5800/-</b>)</div>
@@ -230,8 +242,8 @@
     </div>
 
     <script>
-        function getSavedPassword() {
-            return localStorage.getItem("drishti_admin_pass") || "drishti@123";
+        function getActivePassword() {
+            return localStorage.getItem("drishti_custom_admin_pass") || "drishti@123";
         }
 
         window.onload = function() {
@@ -243,11 +255,12 @@
             loadNotice();
             loadPdfs();
             loadUserTest();
+            loadBanner();
         }
 
         function openAdminPanel() {
             let passPrompt = prompt("कृपया एडमिन पासवर्ड दर्ज करें:");
-            if(passPrompt === getSavedPassword()) {
+            if(passPrompt === getActivePassword()) {
                 localStorage.setItem("is_admin_logged", "true");
                 document.getElementById("adminDashboard").classList.remove("hidden");
                 loadStudents();
@@ -258,21 +271,38 @@
             }
         }
 
-        function changePassword() {
-            let newPass = document.getElementById("newAdminPass").value;
-            if(!newPass || newPass.length < 4) {
-                alert("पासवर्ड कम से कम 4 अंकों का होना चाहिए!");
+        function changeAdminPassword() {
+            let newPass = document.getElementById("newAdminPassword").value;
+            if(!newPass || newPass.length < 3) {
+                alert("कृपया कम से कम 3 अंकों का मजबूत पासवर्ड दर्ज करें!");
                 return;
             }
-            localStorage.setItem("drishti_admin_pass", newPass);
-            alert("नया स्ट्रोंग पासवर्ड हमेशा के लिए सेव हो गया है!");
-            document.getElementById("newAdminPass").value = "";
+            localStorage.setItem("drishti_custom_admin_pass", newPass);
+            alert("नया पासवर्ड हमेशा के लिए सफलतापूर्वक अपडेट कर दिया गया है!");
+            document.getElementById("newAdminPassword").value = "";
         }
 
         function logoutAdmin() {
             localStorage.removeItem("is_admin_logged");
             document.getElementById("adminDashboard").classList.add("hidden");
             alert("एडमिन पैनल लॉक हो गया है!");
+        }
+
+        function saveBanner() {
+            let bannerUrl = document.getElementById("bannerUrlInput").value;
+            if(!bannerUrl) { alert("कृपया बैनर का लिंक दर्ज करें!"); return; }
+            localStorage.setItem("drishti_banner", bannerUrl);
+            alert("सेंटर का बैनर सफलताપूर्वक अपडेट हो गया है!");
+            loadBanner();
+        }
+
+        function loadBanner() {
+            let savedBanner = localStorage.getItem("drishti_banner");
+            let imgElem = document.getElementById("headerBannerImg");
+            if(savedBanner) {
+                imgElem.src = savedBanner;
+                imgElem.style.display = "block";
+            }
         }
 
         function saveAdminTest() {
@@ -423,7 +453,7 @@
             localStorage.setItem("drishti_notice", notice);
             document.getElementById("noticeDisplay").innerHTML = `<div class="test-item"><strong>अभिषेक ठाकुर सर संदेश:</strong> ${notice}</div>`;
             alert("नोटिस अपडेट हो गया है!");
-            document.getElementById("noticeInput", "").value = "";
+            document.getElementById("noticeInput").value = "";
         }
 
         function loadNotice() {
