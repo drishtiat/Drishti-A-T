@@ -41,10 +41,9 @@
         table, th, td { border: 1px solid #475569; padding: 6px; text-align: center; }
         th { background: var(--primary-dark); }
         
-        /* अत्यंत गुप्त और छोटा एडमिन लिंक */
-        .secret-admin-link { text-align: center; margin-top: 40px; font-size: 10px; }
-        .secret-admin-link a { color: var(--text-muted); text-decoration: none; opacity: 0.05; transition: 0.3s; }
-        .secret-admin-link a:hover { opacity: 0.8; color: var(--accent); }
+        /* एकदम गुप्त चाबी सिंबल - कलर ऐसा है जो बैकग्राउंड में छुप जाता है */
+        .secret-admin-trigger { text-align: center; margin-top: 30px; font-size: 12px; color: #1e293b; cursor: pointer; user-select: none; }
+        .secret-admin-trigger:hover { color: #334155; }
     </style>
 </head>
 <body>
@@ -179,7 +178,7 @@
         <div class="card">
             <h3><i class="fa-solid fa-file-pdf" style="color:#ef4444;"></i> स्टडी मैटेरियल व PDF नोट्स</h3>
             <div id="studentPdfList">
-                <p style="color: var(--text-muted); font-size: 13px;">सर द्वारा अभी कोई PDF अपलोड नहीं کی गई है।</p>
+                <p style="color: var(--text-muted); font-size: 13px;">सर द्वारा अभी कोई PDF अपलोड नहीं की गई है।</p>
             </div>
         </div>
 
@@ -234,21 +233,24 @@
             <a href="https://wa.me/919258533717" target="_blank" class="contact-btn wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp चैट करें</a>
         </div>
 
-        <!-- 🤫 अत्यंत गुप्त एडमिन लिंक (सबसे नीचे, बिल्कुल धुंधला) -->
-        <div class="secret-admin-link">
-            <a href="#" onclick="openAdminPanel(); return false;"><i class="fa-solid fa-lock"></i> Admin</a>
+        <!-- 🔑 गुप्त चाबी सिंबल -->
+        <div class="secret-admin-trigger" onclick="openAdminPanel()">
+            <i class="fa-solid fa-key"></i>
         </div>
 
     </div>
 
     <script>
         function getActivePassword() {
-            return localStorage.getItem("drishti_custom_admin_pass") || "drishti@123";
+            // सुरक्षित रूप से चेक करेगा कि आपने अपना नया पासवर्ड बदला है या नहीं
+            let customPass = localStorage.getItem("drishti_custom_admin_pass");
+            return customPass ? customPass : "abhishek@1234";
         }
 
         window.onload = function() {
             if(localStorage.getItem("is_admin_logged") === "true") {
-                document.getElementById("adminDashboard").classList.remove("hidden");
+                let adminDiv = document.getElementById("adminDashboard");
+                if(adminDiv) adminDiv.classList.remove("hidden");
                 loadStudents();
                 loadAdminTests();
             }
@@ -260,36 +262,49 @@
 
         function openAdminPanel() {
             let passPrompt = prompt("कृपया एडमिन पासवर्ड दर्ज करें:");
-            if(passPrompt === getActivePassword()) {
+            
+            // अगर यूजर ने कैंसिल कर दिया या कुछ नहीं भरा तो कुछ मत करो
+            if(passPrompt === null) return;
+
+            let correctPass = getActivePassword();
+
+            if(passPrompt === correctPass) {
                 localStorage.setItem("is_admin_logged", "true");
-                document.getElementById("adminDashboard").classList.remove("hidden");
+                let adminDiv = document.getElementById("adminDashboard");
+                if(adminDiv) adminDiv.classList.remove("hidden");
                 loadStudents();
                 loadAdminTests();
                 alert("सफलतापूर्वक एडमिन पैनल खुल गया है!");
-            } else if(passPrompt !== null) {
+            } else {
                 alert("गलत पासवर्ड! यह केवल अभिषेक सर के लिए है।");
             }
         }
 
         function changeAdminPassword() {
-            let newPass = document.getElementById("newAdminPassword").value;
+            let newPassInput = document.getElementById("newAdminPassword");
+            if(!newPassInput) return;
+            let newPass = newPassInput.value.trim();
+
             if(!newPass || newPass.length < 3) {
                 alert("कृपया कम से कम 3 अंकों का मजबूत पासवर्ड दर्ज करें!");
                 return;
             }
             localStorage.setItem("drishti_custom_admin_pass", newPass);
-            alert("नया पासवर्ड हमेशा के लिए सफलतापूर्वक अपडेट कर दिया गया है! अब इसी नए पासवर्ड से लॉगिन होगा।");
-            document.getElementById("newAdminPassword").value = "";
+            alert("नया पासवर्ड हमेशा के लिए सफलतापूर्वक अपडेट कर दिया गया है! अब कोई छात्र इसे नहीं खोल पाएगा।");
+            newPassInput.value = "";
         }
 
         function logoutAdmin() {
             localStorage.removeItem("is_admin_logged");
-            document.getElementById("adminDashboard").classList.add("hidden");
+            let adminDiv = document.getElementById("adminDashboard");
+            if(adminDiv) adminDiv.classList.add("hidden");
             alert("एडमिन पैनल लॉक हो गया है!");
         }
 
         function saveBanner() {
-            let bannerUrl = document.getElementById("bannerUrlInput").value;
+            let bannerUrlInput = document.getElementById("bannerUrlInput");
+            if(!bannerUrlInput) return;
+            let bannerUrl = bannerUrlInput.value.trim();
             if(!bannerUrl) { alert("कृपया बैनर का लिंक दर्ज करें!"); return; }
             localStorage.setItem("drishti_banner", bannerUrl);
             alert("सेंटर का बैनर सफलतापूर्वक अपडेट हो गया है!");
@@ -299,7 +314,7 @@
         function loadBanner() {
             let savedBanner = localStorage.getItem("drishti_banner");
             let imgElem = document.getElementById("headerBannerImg");
-            if(savedBanner) {
+            if(savedBanner && imgElem) {
                 imgElem.src = savedBanner;
                 imgElem.style.display = "block";
             }
@@ -307,14 +322,14 @@
 
         function saveAdminTest() {
             let course = document.getElementById("testCourseSelect").value;
-            let question = document.getElementById("testQuestion").value;
-            let optA = document.getElementById("optA").value;
-            let optB = document.getElementById("optB").value;
-            let optC = document.getElementById("optC").value;
-            let optD = document.getElementById("optD").value;
+            let question = document.getElementById("testQuestion").value.trim();
+            let optA = document.getElementById("optA").value.trim();
+            let optB = document.getElementById("optB").value.trim();
+            let optC = document.getElementById("optC").value.trim();
+            let optD = document.getElementById("optD").value.trim();
             let correct = document.getElementById("correctOpt").value;
 
-            if(!question || !optA || !optB) { alert("कृपया प्रश्न और विकल्प भरें!"); return; }
+            if(!question || !optA || !optB) { alert("कृपया प्रश्न और कम से कम दो विकल्प भरें!"); return; }
 
             let tests = JSON.parse(localStorage.getItem("drishti_tests") || "[]");
             tests.push({ id: Date.now(), course, question, optA, optB, optC, optD, correct });
@@ -342,20 +357,4 @@
             tests.forEach(t => {
                 html += `<div style="background:#0f172a; padding:8px; border-radius:6px; margin-bottom:5px; font-size:12px; display:flex; justify-content:space-between; align-items:center;">
                     <span><b>[${t.course}]</b> ${t.question}</span>
-                    <button onclick="deleteTest(${t.id})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
-                </div>`;
-            });
-            listDiv.innerHTML = html;
-        }
-
-        function deleteTest(id) {
-            let tests = JSON.parse(localStorage.getItem("drishti_tests") || "[]");
-            tests = tests.filter(t => t.id !== id);
-            localStorage.setItem("drishti_tests", JSON.stringify(tests));
-            loadAdminTests();
-            loadUserTest();
-            alert("प्रश्न डिलीट हो गया!");
-        }
-
-        function loadUserTest() {
-            let selectedCourse = document.getElementById
+                    <button onclick="deleteTest(${t.id})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-trash"></i></
