@@ -179,7 +179,7 @@
         <div class="card">
             <h3><i class="fa-solid fa-file-pdf" style="color:#ef4444;"></i> स्टडी मैटेरियल व PDF नोट्स</h3>
             <div id="studentPdfList">
-                <p style="color: var(--text-muted); font-size: 13px;">सर द्वारा अभी कोई PDF अपलोड नहीं की गई है।</p>
+                <p style="color: var(--text-muted); font-size: 13px;">सर द्वारा अभी कोई PDF अपलोड नहीं کی गई है।</p>
             </div>
         </div>
 
@@ -242,7 +242,6 @@
     </div>
 
     <script>
-        // एडमिन पासवर्ड प्राप्त करने का तरीका (अगर सेट नहीं है तो डिफ़ॉल्ट 'drishti@123' रहेगा)
         function getActivePassword() {
             return localStorage.getItem("drishti_custom_admin_pass") || "drishti@123";
         }
@@ -267,7 +266,7 @@
                 loadStudents();
                 loadAdminTests();
                 alert("सफलतापूर्वक एडमिन पैनल खुल गया है!");
-            } else {
+            } else if(passPrompt !== null) {
                 alert("गलत पासवर्ड! यह केवल अभिषेक सर के लिए है।");
             }
         }
@@ -358,4 +357,5 @@
             alert("प्रश्न डिलीट हो गया!");
         }
 
-        function
+        function loadUserTest() {
+            let selectedCourse = document.getElementById
