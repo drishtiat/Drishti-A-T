@@ -45,25 +45,25 @@
     <p style="font-size:12px; margin-top:6px;"><i class="fa-solid fa-location-dot"></i> Pusgwan Road, Wazirganj, Badaun</p>
     <p style="font-size:12px;"><i class="fa-solid fa-phone"></i> Helpline: 9258533717</p>
 </header>
+
 <div class="container">
-    
     <!-- Admin Dashboard -->
     <div class="card hidden" id="adminDashboard">
         <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (लाइव)</h3>
-        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">ऑनलाइन डेटाबेस सक्रिय है।</p>
+        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">ऑनलाइन डेटाबेस सक्रिय है। यहाँ से जो जोड़ेंगे वो सभी छात्रों को दिखेगा।</p>
         
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">एडमिन पासवर्ड बदलें</h4>
         <input type="password" id="newAdminPassword" placeholder="नया पासवर्ड (min 4)">
         <button class="btn btn-secondary" onclick="changeAdminPassword()">पासवर्ड अपडेट करें</button>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">बैनर जोड़ें</h4>
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">बैनर जोड़ें (Image URL)</h4>
         <input type="text" id="bannerUrlInput" placeholder="Banner Image URL">
         <button class="btn btn-secondary" onclick="saveBanner()">बैनर अपडेट करें</button>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <!-- डेली एब्सेंट अटेंडेंस एडमिन सेक्शन -->
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📅 दैनिक एब्सेंट (Absent) छात्र दर्ज करें</h4>
+        <!-- दैनिक एब्सेंट अटेंडेंस -->
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📅 दैनिक एब्सेंट छात्र दर्ज करें</h4>
         <select id="absentCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally ERP9</option><option value="BASIC">BASIC</option><option value="O Level">O Level</option></select>
         <input type="text" id="absentStudentName" placeholder="छात्र का नाम (जैसे: राहुल कुमार)">
         <input type="date" id="absentDate">
@@ -71,6 +71,7 @@
         <div id="adminAbsentList" style="margin-top:10px; max-height:150px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
+        <!-- टेस्ट प्रश्न -->
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">टेस्ट प्रश्न जोड़ें</h4>
         <select id="testCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option></select>
         <input type="text" id="testQuestion" placeholder="प्रश्न लिखें">
@@ -80,7 +81,8 @@
         <div id="adminTestList" style="margin-top:15px; max-height:150px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">PDF अपलोड</h4>
+        <!-- PDF नोट्स -->
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">PDF नोट्स अपलोड</h4>
         <input type="text" id="pdfTitle" placeholder="PDF Title">
         <select id="pdfCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="O Level">O Level</option></select>
         <input type="text" id="pdfUrl" placeholder="PDF Link (Google Drive Public Link)">
@@ -88,7 +90,8 @@
         <div id="adminPdfList" style="margin-top:10px; max-height:150px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:13px; color:#38bdf8;">लाइव नोटिस:</h4>
+        <!-- नोटिस बोर्ड -->
+        <h4 style="font-size:13px; color:#38bdf8;">लाइव नोटिस बोर्ड:</h4>
         <textarea id="noticeInput" placeholder="नोटिस लिखें..."></textarea>
         <button class="btn" onclick="publishNotice()">नोटिस अपडेट</button>
         <button class="btn btn-danger" onclick="logoutAdmin()" style="margin-top:20px;">Logout</button>
@@ -135,7 +138,7 @@
     }
     const db = firebase.database();
 
-    let currentAdminPassword = "abhishek@1234"; // Default password jab tak online load na ho
+    let currentAdminPassword = "abhishek@1234"; // Default Password
 
     window.onload = function(){
         document.getElementById("adminDashboard").classList.add("hidden");
@@ -148,12 +151,14 @@
     function openAdminPanel(){
         let p = prompt("एडमिन पासवर्ड दर्ज करें:");
         if(p === null) return;
-        if(p.trim() === currentAdminPassword){
+        
+        // Trim karke match karna taki extra spaces ki problem na ho
+        if(p.trim() === currentAdminPassword.trim()){
             document.getElementById("adminDashboard").classList.remove("hidden");
             alert("Admin Panel खुल गया!");
             window.scrollTo({top:0, behavior:'smooth'});
         } else {
-            alert("गलत पासवर्ड!");
+            alert("गलत पासवर्ड! कृपया सही पासवर्ड दर्ज करें।");
         }
     }
 
@@ -161,8 +166,8 @@
         let n = document.getElementById("newAdminPassword").value.trim();
         if(n.length < 4){ alert("कम से कम 4 अक्षर का पासवर्ड होना चाहिए!"); return; }
         
-        // Firebase me password save karein taaki duniya ke kisi bhi kone me update ho jaye
         db.ref('adminPassword').set(n).then(() => {
+            currentAdminPassword = n;
             alert("पासवर्ड सफलतापूर्वक ऑनलाइन अपडेट हो गया है!");
             document.getElementById("newAdminPassword").value = "";
         }).catch((error) => {
@@ -179,14 +184,14 @@
         let u = document.getElementById("bannerUrlInput").value.trim();
         if(!u) return;
         db.ref('banner').set(u);
-        alert("बैनर अपडेट!");
+        alert("बैनर अपडेट हो गया!");
     }
 
     function publishNotice(){
         let n = document.getElementById("noticeInput").value.trim();
         if(!n) return;
         db.ref('notice').set(n);
-        alert("नोटिस अपडेट!");
+        alert("नोटिस अपडेट हो गया!");
     }
 
     // --- ABSENT ATTENDANCE FUNCTIONS ---
@@ -225,7 +230,7 @@
         document.getElementById("optB").value = "";
         document.getElementById("optC").value = "";
         document.getElementById("optD").value = "";
-        alert("टेस्ट सेव!");
+        alert("टेस्ट सेव हो गया!");
     }
 
     function deleteTest(id){ db.ref('tests/' + id).remove(); }
@@ -249,29 +254,24 @@
         ref.set({ id: ref.key, title: t, course: c, url: u });
         document.getElementById("pdfTitle").value = "";
         document.getElementById("pdfUrl").value = "";
-        alert("PDF पब्लिश!");
+        alert("PDF पब्लिश हो गई!");
     }
 
     function deletePdf(id){ db.ref('pdfs/' + id).remove(); }
 
-    // --- REALTIME LISTENERS (DATA SYNC) ---
+    // --- REALTIME LISTENERS (DATA SYNC FOR EVERYONE) ---
     function loadRealtimeData(){
-        // Sync Admin Password from Firebase
         db.ref('adminPassword').on('value', snap => {
             let pass = snap.val();
-            if(pass) {
-                currentAdminPassword = pass;
-            }
+            if(pass) { currentAdminPassword = pass; }
         });
 
-        // Banner
         db.ref('banner').on('value', snap => {
             let b = snap.val();
             let img = document.getElementById("headerBannerImg");
             if(b){ img.src = b; img.style.display = "block"; }
         });
 
-        // Notice
         db.ref('notice').on('value', snap => {
             let n = snap.val();
             let d = document.getElementById("noticeDisplay");
@@ -283,7 +283,6 @@
             }
         });
 
-        // Absents Live
         db.ref('absents').on('value', snap => {
             window.allAbsents = [];
             snap.forEach(child => { window.allAbsents.push(child.val()); });
@@ -291,7 +290,6 @@
             loadAdminAbsentList();
         });
 
-        // Tests Live
         db.ref('tests').on('value', snap => {
             window.allTests = [];
             snap.forEach(child => { window.allTests.push(child.val()); });
@@ -299,7 +297,6 @@
             loadAdminTestList();
         });
 
-        // PDFs Live
         db.ref('pdfs').on('value', snap => {
             window.allPdfs = [];
             snap.forEach(child => { window.allPdfs.push(child.val()); });
