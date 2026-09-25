@@ -169,7 +169,7 @@
             adminPassword: n
         }).then(() => {
             currentAdminPassword = n;
-            alert("पासवर्ड सफलतापूर्वक ऑनलाइन अपडेट हो गया है! नया पासवर्ड: " + n);
+            alert("पासवर्ड सफलतापूर्वक ऑनलाइन अपडेट हो गया है! अब नया पासवर्ड: " + n);
             document.getElementById("newAdminPassword").value = "";
         }).catch((error) => {
             alert("त्रुटि: " + error.message);
@@ -347,7 +347,7 @@
         let tests = window.allTests || [];
         let f = tests.filter(x => x.course === s);
         let c = document.getElementById("onlineTestContainer");
-        if(f.length == 0){ c.innerHTML = `<p style="color:#94a3b8; font-size:13px;">कोई टेस्ट नहीं है।</p>`; return; }
+        if(f.length == 0){ c.innerHTML = `<p style="color:#94a3b8; font-size:13px;">कोई टेस्ट उपलब्ध नहीं है।</p>`; return; }
         let h = "";
         f.forEach((x, i) => {
-            h += `<div class="test-item
+            h += `<div class=
