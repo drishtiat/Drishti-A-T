@@ -33,6 +33,7 @@
         th, td { border: 1px solid #475569; padding: 6px; text-align: center; } th { background: var(--primary-dark); }
         .secret-admin-trigger { text-align: center; margin-top: 30px; font-size: 14px; color: #64748b; cursor: pointer; }
         .secret-admin-trigger:hover { color: #38bdf8; }
+        .alert-banner { background: #ef4444; color: white; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; display: none; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -47,6 +48,9 @@
 </header>
 
 <div class="container">
+    <!-- इमरजेंसी छुट्टी / टाइम चेंज नोटिफिकेशन डिस्प्ले -->
+    <div id="emergencyAlertBox" class="alert-banner"></div>
+
     <!-- Admin Dashboard -->
     <div class="card hidden" id="adminDashboard">
         <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (लाइव)</h3>
@@ -57,6 +61,19 @@
         <button class="btn btn-secondary" onclick="changeAdminPassword()">पासवर्ड अपडेट करें</button>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
+        <!-- बैनर अपडेट (परमानेंट) -->
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🖼️ बैनर इमेज लिंक जोड़ें (Permanent Banner)</h4>
+        <input type="text" id="bannerUrlInput" placeholder="Banner Image URL">
+        <button class="btn btn-secondary" onclick="saveBanner()">बैनर परमानेंट अपडेट करें</button>
+        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
+        <!-- इमरजेंसी छुट्टी / नोटिफिकेशन ब्रॉडकास्ट -->
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🚨 छुट्टी या समय बदलाव का अलर्ट भेजें</h4>
+        <textarea id="emergencyInput" placeholder="जैसे: आज भारी बारिश के कारण सेंटर बंद रहेगा / क्लास का समय सुबह 8 बजे से होगा..."></textarea>
+        <button class="btn btn-danger" onclick="publishEmergencyAlert()">अलर्ट सभी छात्रों को भेजें</button>
+        <button class="btn btn-secondary" onclick="clearEmergencyAlert()" style="margin-top:5px; background:#475569;">अलर्ट हटाएं</button>
+        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
         <!-- ऑनलाइन एडमिशन डेटा सूची -->
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🎓 नए छात्र एडमिशन लिस्ट & फीस (Online Admissions)</h4>
         <div id="adminAdmissionList" style="margin-top:10px; max-height:200px; overflow-y:auto;"></div>
@@ -65,11 +82,6 @@
         <!-- टेस्ट रिजल्ट सूची -->
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📊 छात्रों के टेस्ट रिजल्ट & नंबर (Test Scores)</h4>
         <div id="adminTestResultsList" style="margin-top:10px; max-height:200px; overflow-y:auto;"></div>
-        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
-
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">बैनर जोड़ें (Image URL)</h4>
-        <input type="text" id="bannerUrlInput" placeholder="Banner Image URL">
-        <button class="btn btn-secondary" onclick="saveBanner()">बैनर अपडेट करें</button>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <!-- दैनिक एब्सेंट अटेंडेंस -->
@@ -169,7 +181,7 @@
 
 <script>
     // --- FIREBASE ONLINE CONFIGURATION ---
-   const firebaseConfig = {
+    const firebaseConfig = {
         databaseURL: "https://drishti-a-t-default-rtdb.firebaseio.com"
     };
 
@@ -223,9 +235,27 @@
 
     function saveBanner(){
         let u = document.getElementById("bannerUrlInput").value.trim();
-        if(!u) return;
-        db.ref('banner').set(u);
-        alert("बैनर अपडेट हो गया!");
+        if(!u) { alert("कृपया बैनर का लिंक (URL) दर्ज करें!"); return; }
+        db.ref('banner').set(u).then(() => {
+            alert("बैनर परमानेंट अपडेट हो गया है!");
+        }).catch(err => {
+            alert("त्रुटि: " + err.message);
+        });
+    }
+
+    function publishEmergencyAlert(){
+        let msg = document.getElementById("emergencyInput").value.trim();
+        if(!msg) { alert("अलर्ट संदेश लिखें!"); return; }
+        db.ref('emergencyAlert').set(msg).then(() => {
+            alert("इमरजेंसी अलर्ट सभी छात्रों के ऐप पर लाइव हो गया है!");
+        });
+    }
+
+    function clearEmergencyAlert(){
+        db.ref('emergencyAlert').remove().then(() => {
+            alert("अलर्ट हटा दिया गया है।");
+            document.getElementById("emergencyInput").value = "";
+        });
     }
 
     function publishNotice(){
@@ -303,7 +333,6 @@
             }
         });
 
-        // Save result to Firebase (Admin tak pahunchega)
         let resRef = db.ref('testResults').push();
         resRef.set({
             id: resRef.key,
@@ -377,7 +406,25 @@
         db.ref('banner').on('value', snap => {
             let b = snap.val();
             let img = document.getElementById("headerBannerImg");
-            if(b){ img.src = b; img.style.display = "block"; }
+            if(b){ 
+                img.src = b; 
+                img.style.display = "block"; 
+                document.getElementById("bannerUrlInput").value = b;
+            } else {
+                img.style.display = "none";
+            }
+        });
+
+        db.ref('emergencyAlert').on('value', snap => {
+            let alertText = snap.val();
+            let alertBox = document.getElementById("emergencyAlertBox");
+            if(alertText){
+                alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <b>विशेष सूचना:</b> ${alertText}`;
+                alertBox.style.display = "block";
+                document.getElementById("emergencyInput").value = alertText;
+            } else {
+                alertBox.style.display = "none";
+            }
         });
 
         db.ref('notice').on('value', snap => {
