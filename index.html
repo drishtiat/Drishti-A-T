@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drishti Computer Centre - Portal</title>
+    <title>Drishti Computer Centre - Management Portal</title>
     <!-- Firebase App (Core) SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <!-- Firebase Realtime Database SDK -->
@@ -12,10 +12,20 @@
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; }
         .header-banner { width: 100%; max-height: 250px; object-fit: cover; display: none; }
         .container { max-width: 1000px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
-        input[type="file"] { margin: 10px 0; }
-        button { background-color: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background: #fff; }
+        input[type="file"], input[type="text"], input[type="number"], input[type="date"], select { width: 100%; padding: 8px; margin: 6px 0 12px 0; display: inline-block; border: 1px solid #ccc; box-sizing: border-box; border-radius: 4px; }
+        button { background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
         button:hover { background-color: #0056b3; }
+        .stats-box { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; }
+        .card { flex: 1; background: #e9ecef; padding: 15px; border-radius: 6px; text-align: center; border-left: 5px solid #007bff; }
+        .card h3 { margin: 0 0 10px 0; color: #333; font-size: 16px; }
+        .card p { margin: 0; font-size: 20px; font-weight: bold; color: #007bff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 14px; }
+        th { background-color: #007bff; color: white; }
+        .alert-row { background-color: #fff3cd; }
+        .whatsapp-btn { background-color: #25d366; padding: 5px 10px; font-size: 12px; }
+        .whatsapp-btn:hover { background-color: #128c7e; }
     </style>
 </head>
 <body>
@@ -27,6 +37,84 @@
 
     <div class="container">
         <h2>Drishti Computer Centre - Management Panel</h2>
+
+        <!-- DASHBOARD STATS -->
+        <div class="stats-box">
+            <div class="card">
+                <h3>Kul Bachhe (Total Students)</h3>
+                <p id="totalStudentsCount">0</p>
+            </div>
+            <div class="card">
+                <h3>Kul Fees Aayi (Total Collection)</h3>
+                <p id="totalFeesCollected">₹0</p>
+            </div>
+            <div class="card" style="border-left-color: #dc3545;">
+                <h3>Fees Baaki (Total Dues)</h3>
+                <p id="totalFeesDue" style="color: #dc3545;">₹0</p>
+            </div>
+        </div>
+
+        <!-- NOTIFICATION / ALERTS SECTION -->
+        <div class="section" style="border-color: #ffc107; background-color: #fff9db;">
+            <h3 style="margin-top:0; color: #856404;">⚠️ Course Pura Hone Wale & Pending Fees Alerts</h3>
+            <div id="alertBox">Koi naya alert nahi hai.</div>
+        </div>
+
+        <!-- NEW STUDENT REGISTRATION SECTION -->
+        <div class="section">
+            <h3>Naye Student Ka Admission / Record Jodein</h3>
+            <label>Student Ka Naam:</label>
+            <input type="text" id="stdName" placeholder="Pura naam likhein">
+            
+            <label>Mobile Number (WhatsApp ke liye):</label>
+            <input type="text" id="stdMobile" placeholder="10 digit mobile number">
+
+            <label>Course Chunein:</label>
+            <select id="stdCourse">
+                <option value="CCC">CCC</option>
+                <option value="ADCA">ADCA</option>
+                <option value="DCA">DCA</option>
+                <option value="TALLY">Tally</option>
+                <option value="BASIC">Basic</option>
+                <option value="O LEVEL">O' Level</option>
+                <option value="MDCA">MDCA</option>
+            </select>
+
+            <label>Kul Fees (Total Fees - ₹):</label>
+            <input type="number" id="stdTotalFees" placeholder="Jaise: 4000">
+
+            <label>Jama Fees (Paid Fees - ₹):</label>
+            <input type="number" id="stdPaidFees" placeholder="Jaise: 2000">
+
+            <label>Course Pura Hone Ki Tareekh (Completion Date):</label>
+            <input type="date" id="stdEndDate">
+
+            <button onclick="registerStudent()">Student Record Save Karein</button>
+        </div>
+
+        <!-- STUDENTS LIST TABLE -->
+        <div class="section">
+            <h3>Sabhi Students Ki List & Status</h3>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Naam</th>
+                            <th>Mobile</th>
+                            <th>Course</th>
+                            <th>Total Fees</th>
+                            <th>Jama</th>
+                            <th>Baaki (Due)</th>
+                            <th>Course End Date</th>
+                            <th>Action / WhatsApp Message</th>
+                        </tr>
+                    <th id="studentTableBody">
+                        <!-- Data Firebase se yahan load hoga -->
+                    </th>
+                    </thead>
+                </table>
+            </div>
+        </div>
 
         <!-- Banner Upload Section -->
         <div class="section">
@@ -49,7 +137,6 @@
 
     <script>
         // --- 1. FIREBASE CONFIGURATION ---
-        // Apna Firebase configuration yahan dalein
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_AUTH_DOMAIN",
@@ -60,7 +147,6 @@
             appId: "YOUR_APP_ID"
         };
 
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -72,11 +158,8 @@
             if (fileInput.files && fileInput.files[0]) {
                 let reader = new FileReader();
                 reader.onload = function(e) {
-                    let base64Image = e.target.result;
-                    db.ref('settings/banner').set(base64Image).then(() => {
+                    db.ref('settings/banner').set(e.target.result).then(() => {
                         alert("Banner safaltapoorvak save ho gaya hai!");
-                    }).catch(err => {
-                        alert("Truti: " + err.message);
                     });
                 };
                 reader.readAsDataURL(fileInput.files[0]);
@@ -85,48 +168,152 @@
             }
         }
 
-        // Realtime listener for Banner
         db.ref('settings/banner').on('value', snap => {
             let b = snap.val();
             let img = document.getElementById("headerBannerImg");
-            if (b) {
-                img.src = b;
-                img.style.display = "block";
-            } else {
-                img.style.display = "none";
-            }
+            if (b) { img.src = b; img.style.display = "block"; } 
+            else { img.style.display = "none"; }
         });
 
-        // --- 3. DIRECTOR PHOTO UPLOAD & REALTIME SYNC ---
+        // --- 3. DIRECTOR PHOTO UPLOAD ---
         function uploadDirectorImage() {
             let fileInput = document.getElementById("directorFileInput");
             if (fileInput.files && fileInput.files[0]) {
                 let reader = new FileReader();
                 reader.onload = function(e) {
-                    let base64Image = e.target.result;
-                    db.ref('settings/directorPhoto').set(base64Image).then(() => {
-                        alert("Director photo safaltapoorvak save ho gayi hai!");
-                    }).catch(err => {
-                        alert("Truti: " + err.message);
+                    db.ref('settings/directorPhoto').set(e.target.result).then(() => {
+                        alert("Director photo save ho gayi hai!");
                     });
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
-                alert("Kripya pehle director ki photo chunein!");
+                alert("Kripya photo chunein!");
             }
         }
 
-        // Realtime listener for Director Photo
         db.ref('settings/directorPhoto').on('value', snap => {
             let p = snap.val();
             let img = document.getElementById("directorPhotoImg");
-            if (p) {
-                img.src = p;
-                img.style.display = "block";
+            if (p) { img.src = p; img.style.display = "block"; } 
+            else { img.style.display = "none"; }
+        });
+
+        // --- 4. STUDENT REGISTRATION SYSTEM ---
+        function registerStudent() {
+            let name = document.getElementById("stdName").value.trim();
+            let mobile = document.getElementById("stdMobile").value.trim();
+            let course = document.getElementById("stdCourse").value;
+            let totalFees = parseFloat(document.getElementById("stdTotalFees").value) || 0;
+            let paidFees = parseFloat(document.getElementById("stdPaidFees").value) || 0;
+            let endDate = document.getElementById("stdEndDate").value;
+
+            if(!name || !mobile || !endDate) {
+                alert("Kripya naam, mobile number aur end date zaroor bharein!");
+                return;
+            }
+
+            let studentData = {
+                name: name,
+                mobile: mobile,
+                course: course,
+                totalFees: totalFees,
+                paidFees: paidFees,
+                dueFees: totalFees - paidFees,
+                endDate: endDate
+            };
+
+            // Firebase mein push karenge taki naya unique ID ban jaye
+            db.ref('students').push(studentData).then(() => {
+                alert("Student ka record safaltapoorvak save ho gaya!");
+                document.getElementById("stdName").value = "";
+                document.getElementById("stdMobile").value = "";
+                document.getElementById("stdTotalFees").value = "";
+                document.getElementById("stdPaidFees").value = "";
+                document.getElementById("stdEndDate").value = "";
+            }).catch(err => {
+                alert("Error: " + err.message);
+            });
+        }
+
+        // --- 5. REALTIME STUDENTS LIST, COUNTS & ALERTS SYNC ---
+        db.ref('students').on('value', snap => {
+            let students = snap.val();
+            let tableBody = document.getElementById("studentTableBody");
+            tableBody.innerHTML = "";
+            
+            let totalStudents = 0;
+            let totalCollection = 0;
+            let totalDues = 0;
+            let alertsHtml = "";
+            let todayStr = new Date().toISOString().split('T')[0];
+
+            if (students) {
+                Object.keys(students).forEach(key => {
+                    let s = students[key];
+                    totalStudents++;
+                    let due = s.totalFees - s.paidFees;
+                    totalCollection += Number(s.paidFees);
+                    totalDues += Number(due);
+
+                    // Check if course end date is near or passed
+                    let alertMsg = "";
+                    if(s.endDate <= todayStr) {
+                        alertMsg = `<br><span style="color:red; font-size:11px;">⚠️ Course Pura Ho Chuka Hai!</span>`;
+                    }
+
+                    // Check fees due alert
+                    let feeAlert = "";
+                    if(due > 0) {
+                        feeAlert = `<br><span style="color:orange; font-size:11px;">⚠️ Fees Baaki: ₹${due}</span>`;
+                    }
+
+                    if(s.endDate <= todayStr || due > 0) {
+                        let msgText = `Hello ${s.name}, Drishti Computer Centre se aapko yaad dilana hai ki aapke course/fees ka update pending hai. Kripya samay par dhyan dein.`;
+                        let waLink = `https://wa.me/91${s.mobile}?text=${encodeURIComponent(msgText)}`;
+                        alertsHtml += `<div>• <b>${s.name}</b> (${s.course}) - End Date: ${s.endDate}, Baaki Fees: ₹${due} <a href="${waLink}" target="_blank" style="color:green; text-decoration:none; font-weight:bold;">[ WhatsApp Reminder Bhein ]</a></div>`;
+                    }
+
+                    // Table row render
+                    let row = `<tr>
+                        <td>${s.name}</td>
+                        <td>${s.mobile}</td>
+                        <td>${s.course}</td>
+                        <td>₹${s.totalFees}</td>
+                        <td>₹${s.paidFees}</td>
+                        <td style="color: ${due > 0 ? 'red' : 'green'}; font-weight:bold;">₹${due}</td>
+                        <td>${s.endDate} ${alertMsg}</td>
+                        <td>
+                            <a href="https://wa.me/91${s.mobile}?text=${encodeURIComponent('Hello ' + s.name + ', Drishti Computer Centre mein aapka swagat hai.')}" target="_blank">
+                                <button class="whatsapp-btn">Message Karein</button>
+                            </a>
+                            <button style="background-color:#dc3545; padding:5px 10px; font-size:12px; margin-top:3px;" onclick="deleteStudent('${key}')">Delete</button>
+                        </td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
             } else {
-                img.style.display = "none";
+                tableBody.innerHTML = `<tr><td colspan="8">Abhi koi student registered nahi hai.</td></tr>`;
+                alertsHtml = "Koi alert nahi hai.";
+            }
+
+            // Update Dashboard Cards
+            document.getElementById("totalStudentsCount").innerText = totalStudents;
+            document.getElementById("totalFeesCollected").innerText = "₹" + totalCollection;
+            document.getElementById("totalFeesDue").innerText = "₹" + totalDues;
+            
+            if(alertsHtml !== "") {
+                document.getElementById("alertBox").innerHTML = alertsHtml;
+            } else {
+                document.getElementById("alertBox").innerHTML = "Sabhi students ka course aur fees clear hai!";
             }
         });
+
+        // Delete Student Function
+        function deleteStudent(id) {
+            if(confirm("Kya aap sach mein is student ka record hatana chahte hain?")) {
+                db.ref('students/' + id).remove();
+            }
+        }
     </script>
 </body>
 </html>
