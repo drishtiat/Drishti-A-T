@@ -31,8 +31,8 @@
         .call-btn { background: var(--primary); } .wa-btn { background: #22c55e; }
         table { width: 100%; font-size: 11px; margin-top: 10px; border-collapse: collapse; color: white; }
         th, td { border: 1px solid #475569; padding: 6px; text-align: center; } th { background: var(--primary-dark); }
-        .secret-admin-trigger { text-align: center; margin-top: 30px; font-size: 14px; color: #1e293b; cursor: pointer; }
-        .secret-admin-trigger:hover { color: #64748b; }
+        .secret-admin-trigger { text-align: center; margin-top: 30px; font-size: 14px; color: #64748b; cursor: pointer; }
+        .secret-admin-trigger:hover { color: #38bdf8; }
     </style>
 </head>
 <body>
@@ -260,6 +260,26 @@
 
     function deletePdf(id){ db.ref('pdfs/' + id).remove(); }
 
+    // --- ONLINE ADMISSION FUNCTION ---
+    function submitOnlineAdmission(){
+        let name = document.getElementById("admName").value.trim();
+        let mobile = document.getElementById("admMobile").value.trim();
+        let father = document.getElementById("admFather").value.trim();
+        let course = document.getElementById("admCourseSelect").value;
+        let advance = document.getElementById("admAdvance").value.trim();
+
+        if(!name || !mobile){ alert("कृपया नाम और मोबाइल नंबर दर्ज करें!"); return; }
+
+        let ref = db.ref('admissions').push();
+        ref.set({ id: ref.key, name: name, mobile: mobile, father: father, course: course, advance: advance, date: new Date().toLocaleDateString() });
+        
+        alert("आपका एडमिशन फॉर्म सफलतापूर्वक सबमिट हो गया है!");
+        document.getElementById("admName").value = "";
+        document.getElementById("admMobile").value = "";
+        document.getElementById("admFather").value = "";
+        document.getElementById("admAdvance").value = "";
+    }
+
     // --- REALTIME LISTENERS (DATA SYNC FOR EVERYONE) ---
     function loadRealtimeData(){
         db.ref('adminPassword').on('value', snap => {
@@ -331,23 +351,4 @@
         let absents = window.allAbsents || [];
         let d = document.getElementById("adminAbsentList");
         if(!d) return;
-        if(absents.length == 0){ d.innerHTML = "<p style='font-size:11px; color:#94a3b8;'>कोई एब्सेंट रिकॉर्ड नहीं</p>"; return; }
-        let h = "";
-        absents.slice().reverse().forEach(x => {
-            h += `<div style="background:#0f172a; padding:6px; border-radius:4px; margin-bottom:4px; font-size:11px; display:flex; justify-content:space-between;">
-                    <span><b>[${x.course}]</b> ${x.name} (${x.date})</span>
-                    <button onclick="deleteAbsent('${x.id}')" style="background:#ef4444; color:white; border:none; padding:2px 6px; border-radius:3px;">X</button>
-                  </div>`;
-        });
-        d.innerHTML = h;
-    }
-
-    function loadUserTest(){
-        let s = document.getElementById("userTestSelect").value;
-        let tests = window.allTests || [];
-        let f = tests.filter(x => x.course === s);
-        let c = document.getElementById("onlineTestContainer");
-        if(f.length == 0){ c.innerHTML = `<p style="color:#94a3b8; font-size:13px;">कोई टेस्ट उपलब्ध नहीं है।</p>`; return; }
-        let h = "";
-        f.forEach((x, i) => {
-            h += `<div class=
+        if(absents.length == 0){ d.innerHTML = "<p style='font-size:11px; color:#94a3b8;'>कोई एब्सेंट
