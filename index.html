@@ -350,7 +350,7 @@
                         logoutStudent();
                     } else {
                         document.getElementById("authModal").style.display = "none";
-                        loggedInStudent = stuData; // Sync latest data
+                        loggedInStudent = stuData; 
                         activateStudentSessionUI();
                     }
                 });
@@ -389,7 +389,7 @@
             batchTime: "6 Months",
             feesPaid: "0",
             feesTotal: "2500",
-            canDownload: false, // Default locked until admin approves
+            canDownload: false,
             isBlocked: false
         };
 
@@ -493,7 +493,6 @@
         let students = window.allMasterStudents || [];
         let s = students.find(item => item.id === selId);
         if(s && s.mobile){
-            document.getElementById("waStudentNumber.value") = s.mobile;
             document.getElementById("waStudentNumber").value = s.mobile;
         }
     }
