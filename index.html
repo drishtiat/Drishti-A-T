@@ -27,7 +27,7 @@
         .btn-warning { background: #f59e0b; color: #000; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 8px; font-size: 14px; outline: none; }
         .hidden { display: none !important; }
-        .test-item, .course-box, .faculty-box, .pdf-box, .absent-box { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
+        .test-item, .course-box, .pdf-box, .absent-box { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
         .contact-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px; border-radius: 8px; color: white; font-weight: 500; margin-bottom: 10px; width: 100%; }
         .call-btn { background: var(--primary); } .wa-btn { background: #22c55e; }
         .secret-admin-trigger { text-align: center; margin-top: 30px; font-size: 14px; color: #64748b; cursor: pointer; }
@@ -37,31 +37,21 @@
         #authModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.98); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
         .auth-box { background: #1e293b; padding: 30px; border-radius: 16px; width: 100%; max-width: 420px; border: 1px solid #334155; text-align: center; }
         
+        /* Table sheet styling for admin */
+        .student-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; text-align: left; }
+        .student-table th, .student-table td { border: 1px solid #334155; padding: 8px; }
+        .student-table th { background: #0f172a; color: #38bdf8; }
+
         .cert-preview { 
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); 
-            color: #0f172a; 
-            padding: 30px; 
-            border-radius: 12px; 
-            border: 10px solid #4f46e5; 
-            text-align: center; 
-            margin-top: 15px; 
-            position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            color: #0f172a; padding: 30px; border-radius: 12px; border: 10px solid #4f46e5; text-align: center; margin-top: 15px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
-        .cert-preview h2 { color: #4f46e5; font-size: 22px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+        .cert-preview h2 { color: #4f46e5; font-size: 22px; font-weight: 700; text-transform: uppercase; }
         .cert-preview h3 { color: #f59e0b; font-size: 16px; font-weight: 600; margin-top: 5px; text-transform: uppercase; }
         .cert-student-img { width: 90px; height: 110px; object-fit: cover; border: 3px solid #4f46e5; border-radius: 6px; position: absolute; top: 30px; right: 30px; background: #fff; }
 
         .idcard-box-print {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border: 3px solid #38bdf8;
-            border-radius: 12px;
-            padding: 20px;
-            color: #f8fafc;
-            text-align: left;
-            position: relative;
-            margin-top: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #1e293b, #0f172a); border: 3px solid #38bdf8; border-radius: 12px; padding: 20px; color: #f8fafc; text-align: left; position: relative; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         .idcard-student-img { width: 75px; height: 90px; object-fit: cover; border: 2px solid #38bdf8; border-radius: 6px; position: absolute; top: 20px; right: 20px; background: #fff; }
 
@@ -77,20 +67,23 @@
     <div id="authModal" style="display:none;">
         <div class="auth-box">
             <h2 style="color:#38bdf8; margin-bottom:10px;"><i class="fa-solid fa-graduation-cap"></i> दृष्टि कंप्यूटर सेंटर</h2>
-            <p style="font-size:13px; color:#94a3b8; margin-bottom:15px;">छात्र लॉगिन / नया रजिस्ट्रेशन:</p>
+            <p style="font-size:13px; color:#94a3b8; margin-bottom:15px;">छात्र पोर्टल लॉगिन / रजिस्ट्रेशन:</p>
             
-            <div id="loginModeToggle" style="display:flex; gap:10px; margin-bottom:15px;">
-                <button type="button" class="btn" id="btnTabNew" onclick="switchAuthTab('new')" style="background:#4f46e5; font-size:12px;">नया रजिस्ट्रेशन</button>
-                <button type="button" class="btn" id="btnTabLogin" onclick="switchAuthTab('login')" style="background:#334155; font-size:12px;">पहिले से ID है</button>
+            <div id="authTabBtns" style="display:flex; gap:5px; margin-bottom:15px;">
+                <button type="button" class="btn" id="tabNewBtn" onclick="switchAuthMode('new')" style="background:#4f46e5; font-size:11px;">नया रजिस्ट्रेशन</button>
+                <button type="button" class="btn" id="tabLoginBtn" onclick="switchAuthMode('login')" style="background:#334155; font-size:11px;">लॉगिन करें</button>
+                <button type="button" class="btn" id="tabForgotBtn" onclick="switchAuthMode('forgot')" style="background:#334155; font-size:11px;">पासवर्ड भूल गए?</button>
             </div>
 
-            <div id="newStudentFormBox">
-                <input type="text" id="regStudentName" placeholder="पूरा नाम (Full Name)">
-                <input type="text" id="regStudentFather" placeholder="पिता का नाम (Father's Name)">
-                <input type="text" id="regStudentMother" placeholder="माता का नाम (Mother's Name)">
-                <input type="date" id="regStudentDob" style="color-scheme: dark;">
-                <input type="tel" id="regStudentMobile" placeholder="मोबाइल नंबर (Mobile Number)">
-                <select id="regStudentCourse">
+            <!-- New Registration -->
+            <div id="boxNewReg">
+                <input type="text" id="regName" placeholder="छात्र का पूरा नाम">
+                <input type="text" id="regFather" placeholder="पिता का नाम">
+                <input type="text" id="regMother" placeholder="माता का नाम">
+                <input type="date" id="regDob" style="color-scheme: dark;">
+                <input type="tel" id="regMobile" placeholder="मोबाइल नंबर (Login ID के रूप में इस्तेमाल होगा)">
+                <input type="password" id="regPass" placeholder="अपना मनपसंद पासवर्ड बनाएं">
+                <select id="regCourse">
                     <option value="CCC">CCC</option>
                     <option value="ADCA">ADCA</option>
                     <option value="DCA">DCA</option>
@@ -99,13 +92,23 @@
                     <option value="MS Word & Excel">MS Word & Excel</option>
                     <option value="O Level">O Level</option>
                 </select>
-                <button class="btn btn-secondary" onclick="registerNewStudent()">रजिस्टर करें & ID-Password बनाएं</button>
+                <button class="btn btn-secondary" onclick="registerStudent()">रजिस्टर करें & लॉगिन करें</button>
             </div>
 
-            <div id="oldStudentFormBox" style="display:none;">
-                <input type="text" id="loginStudentIdInput" placeholder="अपनी Login ID दर्ज करें (जैसे: DRISHTI102)">
-                <input type="password" id="loginStudentPassInput" placeholder="अपना Password दर्ज करें">
-                <button class="btn btn-secondary" onclick="loginExistingStudent()">लॉगिन करें</button>
+            <!-- Existing Login -->
+            <div id="boxLogin" style="display:none;">
+                <input type="tel" id="loginMobile" placeholder="अपना मोबाइल नंबर दर्ज करें">
+                <input type="password" id="loginPass" placeholder="अपना पासवर्ड दर्ज करें">
+                <button class="btn btn-secondary" onclick="loginStudent()">लॉगिन करें</button>
+            </div>
+
+            <!-- Forgot Password -->
+            <div id="boxForgot" style="display:none;">
+                <p style="font-size:12px; color:#f59e0b; margin-bottom:10px;">अपना रजिस्टर्ड मोबाइल नंबर और जन्मतिथि (DOB) दर्ज करके नया पासवर्ड बनाएं:</p>
+                <input type="tel" id="forgotMobile" placeholder="रजिस्टर्ड मोबाइल नंबर">
+                <input type="date" id="forgotDob" style="color-scheme: dark;">
+                <input type="password" id="forgotNewPass" placeholder="नया पासवर्ड दर्ज करें">
+                <button class="btn btn-warning" onclick="resetStudentPassword()">पासवर्ड बदलो और लॉगिन करो</button>
             </div>
 
             <p style="font-size:11px; color:#64748b; margin-top:12px;">संचालक: अभिषेक ठाकुर सर (Wazirganj, Badaun)</p>
@@ -127,60 +130,41 @@
 <div class="container">
     <div id="studentWelcomeBanner" class="card" style="background: linear-gradient(135deg, #10b981, #059669); color: white; display: none;">
         <h3 style="color:white;"><i class="fa-solid fa-circle-check"></i> स्वागत है, <span id="welcomeStudentNameText"></span>!</h3>
-        <p style="font-size:13px;" id="welcomeStudentDetailsText">कोर्स: - | Login ID: -</p>
+        <p style="font-size:13px;" id="welcomeStudentDetailsText">कोर्स: - | मोबाइल: -</p>
         <button onclick="logoutStudent()" style="background:rgba(0,0,0,0.3); border:none; color:white; padding:6px 12px; border-radius:6px; margin-top:10px; cursor:pointer; font-size:12px;"><i class="fa-solid fa-right-from-bracket"></i> लॉग आउट / अकाउंट बदलें</button>
     </div>
 
     <div id="emergencyAlertBox" class="alert-banner"></div>
 
     <div class="card hidden" id="adminDashboard">
-        <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (फुल कंट्रोल & मैनेजमेंट)</h3>
-        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र रिकॉर्ड, फीस, और आईडी/सर्टिफिकेट अप्रूवल मैनेज कर सकते हैं।</p>
+        <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (स्टूडेंट डेटा शीट & कंट्रोल)</h3>
+        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ सभी छात्रों का डेटा एक शीट (Table) के रूप में उपलब्ध है। आप किसी का भी डेटा एडिट, अप्रूव या डिलीट कर सकते हैं।</p>
         
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">एडमिन पासवर्ड बदलें</h4>
         <input type="password" id="newAdminPassword" placeholder="नया पासवर्ड (min 4)">
         <button class="btn btn-secondary" onclick="changeAdminPassword()">पासवर्ड अपडेट करें</button>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">👥 छात्र रिकॉर्ड और फीस रजिस्टर करें</h4>
-        <input type="hidden" id="editStudentKey" value="">
-        <input type="text" id="mStudentName" placeholder="छात्र का पूरा नाम">
-        <input type="text" id="mStudentFather" placeholder="पिता का नाम">
-        <input type="text" id="mStudentMother" placeholder="माता का नाम">
-        <input type="date" id="mStudentDob" style="color-scheme: dark;">
-        <input type="text" id="mStudentMobile" placeholder="मोबाइल नंबर">
-        <input type="text" id="mStudentLoginId" placeholder="Login ID (जैसे: DRISHTI101)">
-        <input type="text" id="mStudentPassword" placeholder="Password">
-        <select id="mStudentCourse">
-            <option value="CCC">CCC</option>
-            <option value="ADCA">ADCA</option>
-            <option value="DCA">DCA</option>
-            <option value="Tally ERP9">Tally ERP9</option>
-            <option value="BASIC">BASIC</option>
-            <option value="MS Word & Excel">MS Word & Excel</option>
-            <option value="O Level">O Level</option>
-        </select>
-        <input type="text" id="mStudentBatchTime" placeholder="कोर्स अवधि (जैसे: 6 Months / 1 Year)">
-        <input type="text" id="mStudentFeesPaid" placeholder="जमा फीस">
-        <input type="text" id="mStudentFeesTotal" placeholder="कुल फीस">
-        
-        <div style="background:#0f172a; padding:12px; border-radius:8px; margin-bottom:12px; border:1px solid #475569;">
-            <label style="font-size:13px; color:#38bdf8; cursor:pointer; display:flex; align-items:center; gap:8px;">
-                <input type="checkbox" id="mStudentCanDownload" style="width:auto; margin:0;"> <b>छात्र को ID कार्ड और सर्टिफिकेट डाउनलोड/प्रिंट करने की अनुमति दें (Approve)</b>
-            </label>
-        </div>
-
-        <button class="btn btn-secondary" onclick="saveMasterStudentData()">छात्र रिकॉर्ड सेव / अपडेट करें</button>
-        
-        <div style="margin-top:15px;">
-            <h5 style="font-size:13px; color:#38bdf8; margin-bottom:8px;">छात्र सूची (डिलीट / ब्लॉक / अप्रूव / एडिट करें):</h5>
-            <div id="adminMasterStudentList" style="max-height:220px; overflow-y:auto;"></div>
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📋 छात्र मास्टर शीट (Student Data Sheet)</h4>
+        <div style="max-height:300px; overflow-y:auto; background:#0f172a; border-radius:8px; padding:5px;">
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>नाम & कोर्स</th>
+                        <th>मोबाइल / पास</th>
+                        <th>फीस</th>
+                        <th>एक्शन</th>
+                    </tr>
+                </thead>
+                <tbody id="adminStudentTableBody">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
         </div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🎨 कलरफुल सर्टिफिकेट जेनरेटर (एडमिन के लिए)</h4>
         <select id="certSelectStudent" onchange="fillCertificateFormFromSelect()" style="margin-bottom:10px;"><option value="">या सूची से छात्र चुनें...</option></select>
-        
         <input type="text" id="certName" placeholder="Student Full Name">
         <input type="text" id="certFather" placeholder="Father's Name">
         <input type="text" id="certMother" placeholder="Mother's Name">
@@ -190,19 +174,15 @@
         <input type="text" id="certGrade" placeholder="Grade / Performance">
         <label style="font-size:12px; color:#38bdf8; display:block; margin-bottom:5px;">छात्र की फोटो अपलोड करें:</label>
         <input type="file" id="certStudentPhotoFile" accept="image/*" style="padding:8px;">
-        
         <div style="display:flex; gap:10px; margin-top:10px;">
             <button class="btn btn-secondary" onclick="generateCustomCertificate()">सर्टिफिकेट प्रीव्यू देखें</button>
             <button class="btn btn-warning" onclick="printElement('printableCertContainer')" style="background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> प्रिंट / PDF सेव करें</button>
         </div>
-        <div id="printableCertContainer">
-            <div id="adminGeneratedCertContainer" style="margin-top:15px;"></div>
-        </div>
+        <div id="printableCertContainer"><div id="adminGeneratedCertContainer" style="margin-top:15px;"></div></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🆔 डिजिटल ID कार्ड जेनरेटर (एडमिन के लिए)</h4>
         <select id="cardSelectStudent" onchange="fillIdCardFormFromSelect()" style="margin-bottom:10px;"><option value="">या सूची से छात्र चुनें...</option></select>
-        
         <input type="text" id="idName" placeholder="Student Full Name">
         <input type="text" id="idFather" placeholder="Father's Name">
         <input type="text" id="idMother" placeholder="Mother's Name">
@@ -212,14 +192,11 @@
         <input type="text" id="idFees" placeholder="Fees Status">
         <label style="font-size:12px; color:#38bdf8; display:block; margin-bottom:5px;">आईडी कार्ड के लिए छात्र की फोटो अपलोड करें:</label>
         <input type="file" id="idStudentPhotoFile" accept="image/*" style="padding:8px;">
-
         <div style="display:flex; gap:10px; margin-top:10px;">
             <button class="btn btn-secondary" onclick="generateCustomIdCard()">ID कार्ड प्रीव्यू देखें</button>
             <button class="btn btn-warning" onclick="printElement('printableIdContainer')" style="background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> प्रिंट ID कार्ड</button>
         </div>
-        <div id="printableIdContainer">
-            <div id="adminGeneratedIdContainer" style="margin-top:15px;"></div>
-        </div>
+        <div id="printableIdContainer"><div id="adminGeneratedIdContainer" style="margin-top:15px;"></div></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📊 छात्रों के ऑनलाइन टेस्ट स्कोर</h4>
@@ -347,14 +324,14 @@
         let today = new Date().toISOString().split('T')[0];
         if(document.getElementById("absentDate")) document.getElementById("absentDate").value = today;
 
-        let savedStudent = localStorage.getItem("drishti_student_session_v10");
+        let savedStudent = localStorage.getItem("drishti_student_session_v11");
         if(savedStudent){
             try {
                 loggedInStudent = JSON.parse(savedStudent);
                 db.ref('masterStudents/' + loggedInStudent.id).once('value', snap => {
                     let stuData = snap.val();
                     if(!stuData || stuData.isBlocked){
-                        alert("आपका अकाउंट एडमिन द्वारा ब्लॉक या डिलीट कर दिया गया है!");
+                        alert("आपका अकाउंट एडमिन द्वारा हटा दिया गया है!");
                         logoutStudent();
                     } else {
                         document.getElementById("authModal").style.display = "none";
@@ -363,7 +340,7 @@
                     }
                 });
             } catch(e){
-                localStorage.removeItem("drishti_student_session_v10");
+                localStorage.removeItem("drishti_student_session_v11");
                 document.getElementById("authModal").style.display = "flex";
             }
         } else {
@@ -372,46 +349,38 @@
         loadRealtimeData();
     };
 
-    function switchAuthTab(mode){
-        if(mode === 'new'){
-            document.getElementById("newStudentFormBox").style.display = "block";
-            document.getElementById("oldStudentFormBox").style.display = "none";
-            document.getElementById("btnTabNew").style.background = "#4f46e5";
-            document.getElementById("btnTabLogin").style.background = "#334155";
-        } else {
-            document.getElementById("newStudentFormBox").style.display = "none";
-            document.getElementById("oldStudentFormBox").style.display = "block";
-            document.getElementById("btnTabLogin").style.background = "#4f46e5";
-            document.getElementById("btnTabNew").style.background = "#334155";
-        }
+    function switchAuthMode(mode){
+        document.getElementById("boxNewReg").style.display = (mode === 'new') ? 'block' : 'none';
+        document.getElementById("boxLogin").style.display = (mode === 'login') ? 'block' : 'none';
+        document.getElementById("boxForgot").style.display = (mode === 'forgot') ? 'block' : 'none';
+
+        document.getElementById("tabNewBtn").style.background = (mode === 'new') ? '#4f46e5' : '#334155';
+        document.getElementById("tabLoginBtn").style.background = (mode === 'login') ? '#4f46e5' : '#334155';
+        document.getElementById("tabForgotBtn").style.background = (mode === 'forgot') ? '#4f46e5' : '#334155';
     }
 
-    function registerNewStudent(){
-        let name = document.getElementById("regStudentName").value.trim();
-        let father = document.getElementById("regStudentFather").value.trim();
-        let mother = document.getElementById("regStudentMother").value.trim();
-        let dob = document.getElementById("regStudentDob").value;
-        let mobile = document.getElementById("regStudentMobile").value.trim();
-        let course = document.getElementById("regStudentCourse").value;
+    function registerStudent(){
+        let name = document.getElementById("regName").value.trim();
+        let father = document.getElementById("regFather").value.trim();
+        let mother = document.getElementById("regMother").value.trim();
+        let dob = document.getElementById("regDob").value;
+        let mobile = document.getElementById("regMobile").value.trim();
+        let password = document.getElementById("regPass").value.trim();
+        let course = document.getElementById("regCourse").value;
 
-        if(!name || !mobile || !father){
-            alert("कृपया नाम, पिता का नाम और मोबाइल नंबर अनिवार्य रूप से भरें!");
+        if(!name || !mobile || !password || !father){
+            alert("कृपया नाम, पिता का नाम, मोबाइल नंबर और पासवर्ड भरें!");
             return;
         }
 
-        let randomNum = Math.floor(100 + Math.random() * 900);
-        let loginId = "DRISHTI" + randomNum;
-        let password = "pass" + Math.floor(10 + Math.random() * 90);
         let studentId = "stu_" + Date.now();
-
-        loggedInStudent = {
+        let studentObj = {
             id: studentId,
             name: name,
             father: father,
             mother: mother,
             dob: dob,
             mobile: mobile,
-            loginId: loginId,
             password: password,
             course: course,
             batchTime: "6 Months",
@@ -421,50 +390,86 @@
             isBlocked: false
         };
 
-        db.ref('masterStudents/' + studentId).set(loggedInStudent).then(() => {
-            localStorage.setItem("drishti_student_session_v10", JSON.stringify(loggedInStudent));
+        db.ref('masterStudents/' + studentId).set(studentObj).then(() => {
+            loggedInStudent = studentObj;
+            localStorage.setItem("drishti_student_session_v11", JSON.stringify(loggedInStudent));
             document.getElementById("authModal").style.display = "none";
             activateStudentSessionUI();
-            alert(`रजिस्ट्रेशन सफल!\n\nआपकी Login ID: ${loginId}\nआपका Password: ${password}\n\nइसे याद रखें या नोट कर लें!`);
+            alert("सफलतापूर्वक रजिस्ट्रेशन हो गया!");
+        }).catch(err => {
+            alert("एरर: " + err.message);
         });
     }
 
-    function loginExistingStudent(){
-        let inputId = document.getElementById("loginStudentIdInput").value.trim();
-        let inputPass = document.getElementById("loginStudentPassInput").value.trim();
+    function loginStudent(){
+        let mobile = document.getElementById("loginMobile").value.trim();
+        let pass = document.getElementById("loginPass").value.trim();
 
-        if(!inputId || !inputPass){
-            alert("कृपया Login ID और Password दोनों दर्ज करें!");
+        if(!mobile || !pass){
+            alert("मोबाइल नंबर और पासवर्ड दर्ज करें!");
             return;
         }
 
         db.ref('masterStudents').once('value', snap => {
-            let foundStudent = null;
+            let found = null;
             snap.forEach(child => {
                 let s = child.val();
-                if(s.loginId === inputId && s.password === inputPass){
-                    foundStudent = s;
+                if(s.mobile === mobile && s.password === pass){
+                    found = s;
                 }
             });
 
-            if(foundStudent){
-                if(foundStudent.isBlocked){
-                    alert("आपका अकाउंट एडमिन द्वारा ब्लॉक कर दिया गया है!");
+            if(found){
+                if(found.isBlocked){
+                    alert("आपका अकाउंट ब्लॉक है!");
                     return;
                 }
-                loggedInStudent = foundStudent;
-                localStorage.setItem("drishti_student_session_v10", JSON.stringify(loggedInStudent));
+                loggedInStudent = found;
+                localStorage.setItem("drishti_student_session_v11", JSON.stringify(loggedInStudent));
                 document.getElementById("authModal").style.display = "none";
                 activateStudentSessionUI();
-                alert("सफलतापूर्वक लॉगिन हो गया!");
+                alert("लॉगिन सफल!");
             } else {
-                alert("गलत Login ID या Password! कृपया सही जानकारी दें या नया रजिस्ट्रेशन करें।");
+                alert("गलत मोबाइल नंबर या पासवर्ड!");
+            }
+        });
+    }
+
+    function resetStudentPassword(){
+        let mobile = document.getElementById("forgotMobile").value.trim();
+        let dob = document.getElementById("forgotDob").value;
+        let newPass = document.getElementById("forgotNewPass").value.trim();
+
+        if(!mobile || !dob || !newPass){
+            alert("सभी विवरण भरें!");
+            return;
+        }
+
+        db.ref('masterStudents').once('value', snap => {
+            let targetKey = null;
+            let targetStu = null;
+            snap.forEach(child => {
+                let s = child.val();
+                if(s.mobile === mobile && s.dob === dob){
+                    targetKey = child.key;
+                    targetStu = s;
+                }
+            });
+
+            if(targetKey){
+                db.ref('masterStudents/' + targetKey).update({ password: newPass }).then(() => {
+                    alert("पासवर्ड सफलतापूर्वक बदल गया है! अब नए पासवर्ड से लॉगिन करें।");
+                    switchAuthMode('login');
+                    document.getElementById("loginMobile").value = mobile;
+                });
+            } else {
+                alert("मोबाइल नंबर या जन्मतिथि (DOB) मेल नहीं खाती!");
             }
         });
     }
 
     function logoutStudent(){
-        localStorage.removeItem("drishti_student_session_v10");
+        localStorage.removeItem("drishti_student_session_v11");
         loggedInStudent = null;
         document.getElementById("authModal").style.display = "flex";
         document.getElementById("studentProfileCard").style.display = "none";
@@ -475,7 +480,7 @@
         if(!loggedInStudent) return;
         document.getElementById("studentWelcomeBanner").style.display = "block";
         document.getElementById("welcomeStudentNameText").innerText = loggedInStudent.name;
-        document.getElementById("welcomeStudentDetailsText").innerHTML = `कोर्स: <b>${loggedInStudent.course}</b> | Login ID: <b style="color:#f59e0b;">${loggedInStudent.loginId || 'N/A'}</b> (Pass: ${loggedInStudent.password || 'N/A'})`;
+        document.getElementById("welcomeStudentDetailsText").innerHTML = `कोर्स: <b>${loggedInStudent.course}</b> | मोबाइल: ${loggedInStudent.mobile}`;
 
         let idContainer = document.getElementById("myIdCardContainer");
         idContainer.innerHTML = renderIdCardHTML(loggedInStudent, null);
@@ -508,7 +513,7 @@
                         <p><b>Mother:</b> ${stu.mother || '---'}</p>
                         <p><b>DOB:</b> ${stu.dob || '---'}</p>
                         <p><b>Course:</b> <span style="color:#10b981; font-weight:bold;">${stu.course}</span></p>
-                        <p><b>Login ID:</b> <span style="color:#f59e0b;">${stu.loginId || '---'}</span></p>
+                        <p><b>Mobile:</b> ${stu.mobile}</p>
                         <p><b>Fees:</b> ${stu.feesPaid || '0'} / ${stu.feesTotal || '2500'}</p>
                     </div>
                 </div>`;
@@ -563,108 +568,20 @@
         alert("नोटिस अपडेट हो गया!");
     }
 
-    function saveMasterStudentData(){
-        let editKey = document.getElementById("editStudentKey").value.trim();
-        let name = document.getElementById("mStudentName").value.trim();
-        let father = document.getElementById("mStudentFather").value.trim();
-        let mother = document.getElementById("mStudentMother").value.trim();
-        let dob = document.getElementById("mStudentDob").value;
-        let mobile = document.getElementById("mStudentMobile").value.trim();
-        let loginId = document.getElementById("mStudentLoginId").value.trim();
-        let password = document.getElementById("mStudentPassword").value.trim();
-        let course = document.getElementById("mStudentCourse").value;
-        let batchTime = document.getElementById("mStudentBatchTime").value.trim();
-        let feesPaid = document.getElementById("mStudentFeesPaid").value.trim();
-        let feesTotal = document.getElementById("mStudentFeesTotal").value.trim();
-        let canDownload = document.getElementById("mStudentCanDownload").checked;
-
-        if(!name || !mobile){ alert("छात्र का नाम और मोबाइल नंबर आवश्यक है!"); return; }
-
-        let studentId = editKey ? editKey : ("stu_" + Date.now());
-        if(!loginId) loginId = "DRISHTI" + Math.floor(100 + Math.random() * 900);
-        if(!password) password = "pass" + Math.floor(10 + Math.random() * 90);
-
-        let studentObj = {
-            id: studentId,
-            name: name,
-            father: father,
-            mother: mother,
-            dob: dob,
-            mobile: mobile,
-            loginId: loginId,
-            password: password,
-            course: course,
-            batchTime: batchTime || "6 Months",
-            feesPaid: feesPaid,
-            feesTotal: feesTotal,
-            canDownload: canDownload,
-            isBlocked: false
-        };
-
-        db.ref('masterStudents/' + studentId).set(studentObj).then(() => {
-            alert("छात्र रिकॉर्ड सफलतापूर्वक सेव/अपडेट हो गया!");
-            clearStudentForm();
-        }).catch(err => {
-            alert("एरर: " + err.message);
-        });
-    }
-
-    function editStudent(id){
-        let students = window.allMasterStudents || [];
-        let s = students.find(item => item.id === id);
-        if(!s) return;
-        document.getElementById("editStudentKey").value = s.id;
-        document.getElementById("mStudentName").value = s.name || "";
-        document.getElementById("mStudentFather").value = s.father || "";
-        document.getElementById("mStudentMother").value = s.mother || "";
-        document.getElementById("mStudentDob").value = s.dob || "";
-        document.getElementById("mStudentMobile").value = s.mobile || "";
-        document.getElementById("mStudentLoginId").value = s.loginId || "";
-        document.getElementById("mStudentPassword").value = s.password || "";
-        document.getElementById("mStudentCourse").value = s.course || "CCC";
-        document.getElementById("mStudentBatchTime").value = s.batchTime || "";
-        document.getElementById("mStudentFeesPaid").value = s.feesPaid || "";
-        document.getElementById("mStudentFeesTotal").value = s.feesTotal || "";
-        document.getElementById("mStudentCanDownload").checked = s.canDownload || false;
-        window.scrollTo({top: 250, behavior: 'smooth'});
-    }
-
-    function clearStudentForm(){
-        document.getElementById("editStudentKey").value = "";
-        document.getElementById("mStudentName").value = "";
-        document.getElementById("mStudentFather").value = "";
-        document.getElementById("mStudentMother").value = "";
-        document.getElementById("mStudentDob").value = "";
-        document.getElementById("mStudentMobile").value = "";
-        document.getElementById("mStudentLoginId").value = "";
-        document.getElementById("mStudentPassword").value = "";
-        document.getElementById("mStudentBatchTime").value = "";
-        document.getElementById("mStudentFeesPaid").value = "";
-        document.getElementById("mStudentFeesTotal").value = "";
-        document.getElementById("mStudentCanDownload").checked = false;
-    }
-
     function deleteStudent(id){
-        if(confirm("क्या आप वाकई इस छात्र को हमेशा के लिए डिलीट करना चाहते हैं?")){
+        if(confirm("क्या आप वाकई इस छात्र का डेटा हमेशा के लिए डिलीट करना चाहते हैं?")){
             db.ref('masterStudents/' + id).remove().then(() => {
-                alert("छात्र रिकॉर्ड सफलतापूर्वक डिलीट कर दिया गया!");
+                alert("छात्र का डेटा सफलतापूर्वक डिलीट हो गया!");
             }).catch(err => {
-                alert("डिलीट करने में एरर आया: " + err.message);
+                alert("एरर: " + err.message);
             });
         }
-    }
-
-    function toggleBlockStudent(id, currentStatus){
-        let newStatus = !currentStatus;
-        db.ref('masterStudents/' + id).update({ isBlocked: newStatus }).then(() => {
-            alert(newStatus ? "छात्र को ब्लॉक कर दिया गया है!" : "छात्र का ब्लॉक हटा दिया गया है!");
-        });
     }
 
     function toggleDownloadPermission(id, currentStatus){
         let newStatus = !currentStatus;
         db.ref('masterStudents/' + id).update({ canDownload: newStatus }).then(() => {
-            alert(newStatus ? "छात्र के लिए डाउनलोड परमिशन अप्रूव कर दी गई है!" : "छात्र की डाउनलोड परमिशन हटा दी गई है!");
+            alert(newStatus ? "डाउनलोड अप्रूव कर दिया गया!" : "डाउनलोड रोक दिया गया!");
         });
     }
 
@@ -705,17 +622,14 @@
         let father = document.getElementById("certFather").value.trim() || "FATHER'S NAME";
         let mother = document.getElementById("certMother").value.trim() || "MOTHER'S NAME";
         let dob = document.getElementById("certDob").value.trim() || "DD/MM/YYYY";
-        let course = document.getElementById("certCourse").value.trim() || "DIPLOMA IN COMPUTER APPLICATIONS";
+        let course = document.getElementById("certCourse").value.trim() || "DIPLOMA";
         let duration = document.getElementById("certDuration").value.trim() || "6 Months";
         let grade = document.getElementById("certGrade").value.trim() || "A+";
 
         let photoInput = document.getElementById("certStudentPhotoFile");
-
         if(photoInput.files && photoInput.files[0]){
             let reader = new FileReader();
-            reader.onload = function(e){
-                renderCertDOM(name, father, mother, dob, course, duration, grade, e.target.result);
-            };
+            reader.onload = function(e){ renderCertDOM(name, father, mother, dob, course, duration, grade, e.target.result); };
             reader.readAsDataURL(photoInput.files[0]);
         } else {
             renderCertDOM(name, father, mother, dob, course, duration, grade, null);
@@ -724,30 +638,25 @@
 
     function renderCertDOM(name, father, mother, dob, course, duration, grade, imgSrc){
         let photoTag = imgSrc ? `<img src="${imgSrc}" class="cert-student-img" alt="Student Photo">` : `<div class="cert-student-img" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#666;">Photo</div>`;
-        
         let container = document.getElementById("adminGeneratedCertContainer");
         container.innerHTML = `
             <div class="cert-preview">
                 ${photoTag}
                 <h2>Drishti Computer Centre</h2>
                 <h3>Certificate of Achievement / Completion</h3>
-                <p style="font-size:11px; color:#475569; margin-top:3px;">Pusgwan Road, Wazirganj, Badaun (Regd. Under IT Act)</p>
+                <p style="font-size:11px; color:#475569; margin-top:3px;">Pusgwan Road, Wazirganj, Badaun</p>
                 <hr style="margin:20px 0; border:1px solid #cbd5e1;">
                 <p style="font-size:13px; color:#334155; margin-bottom:10px;">This is proudly presented to:</p>
                 <h1 style="color:#1e293b; font-size:24px; font-weight:700; margin-bottom:10px; text-transform:uppercase;">${name}</h1>
                 <p style="font-size:12px; color:#334155; line-height:1.8; text-align:left; max-width:450px; margin:0 auto;">
                     Son/Daughter of Mr. <b>${father}</b> and Mrs. <b>${mother}</b> (DOB: <b>${dob}</b>). 
-                    He/She has successfully completed the professional course titled <b>${course}</b> with course duration of <b>${duration}</b> and secured grade/performance <b>${grade}</b> at our institute.
+                    Completed course <b>${course}</b> (${duration}) with performance <b>${grade}</b>.
                 </p>
                 <div style="margin-top:40px; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#1e293b; padding:0 20px;">
-                    <div style="text-align:center;">
-                        <p>___________________</p>
-                        <p style="margin-top:5px; font-weight:bold;">Date: ${new Date().toLocaleDateString()}</p>
-                    </div>
+                    <div><p>Date: ${new Date().toLocaleDateString()}</p></div>
                     <div style="text-align:center;">
                         <p style="font-family:'Brush Script MT', cursive; font-size:22px; color:#4f46e5; margin-bottom:-5px;">Abhishek Thakur</p>
-                        <p>___________________</p>
-                        <p style="margin-top:5px; font-weight:bold;">Abhishek Thakur Sir<br>(Founder & Director)</p>
+                        <p><b>Abhishek Thakur Sir</b><br>(Director)</p>
                     </div>
                 </div>
             </div>`;
@@ -755,20 +664,17 @@
 
     function generateCustomIdCard(){
         let name = document.getElementById("idName").value.trim() || "STUDENT NAME";
-        let father = document.getElementById("idFather").value.trim() || "FATHER'S NAME";
-        let mother = document.getElementById("idMother").value.trim() || "MOTHER'S NAME";
-        let dob = document.getElementById("idDob").value.trim() || "DD/MM/YYYY";
+        let father = document.getElementById("idFather").value.trim() || "FATHER";
+        let mother = document.getElementById("idMother").value.trim() || "MOTHER";
+        let dob = document.getElementById("idDob").value.trim() || "DOB";
         let course = document.getElementById("idCourse").value.trim() || "COURSE";
         let mobile = document.getElementById("idMobile").value.trim() || "MOBILE";
         let fees = document.getElementById("idFees").value.trim() || "FEES";
 
         let photoInput = document.getElementById("idStudentPhotoFile");
-
         if(photoInput.files && photoInput.files[0]){
             let reader = new FileReader();
-            reader.onload = function(e){
-                renderIdCardDOM(name, father, mother, dob, course, mobile, fees, e.target.result);
-            };
+            reader.onload = function(e){ renderIdCardDOM(name, father, mother, dob, course, mobile, fees, e.target.result); };
             reader.readAsDataURL(photoInput.files[0]);
         } else {
             renderIdCardDOM(name, father, mother, dob, course, mobile, fees, null);
@@ -776,7 +682,7 @@
     }
 
     function renderIdCardDOM(name, father, mother, dob, course, mobile, fees, imgSrc){
-        let stuObj = { name, father, mother, dob, course, mobile, loginId: "---", feesPaid: fees, feesTotal: "" };
+        let stuObj = { name, father, mother, dob, course, mobile, feesPaid: fees, feesTotal: "" };
         let container = document.getElementById("adminGeneratedIdContainer");
         container.innerHTML = renderIdCardHTML(stuObj, imgSrc);
     }
@@ -784,24 +690,17 @@
     function printElement(containerId) {
         let content = document.getElementById(containerId).innerHTML;
         let printWindow = window.open('', '', 'height=600,width=800');
-        printWindow.document.write('<html><head><title>Print Preview - Drishti Computer Centre</title>');
-        printWindow.document.write('<style>body{font-family:Poppins, sans-serif; padding:20px;} .cert-preview{border:8px double #4f46e5; padding:20px; text-align:center;} .idcard-box-print{border:2px solid #38bdf8; padding:15px; border-radius:10px; background:#1e293b; color:#fff;}</style>');
-        printWindow.document.write('</head><body>');
+        printWindow.document.write('<html><head><title>Print Preview</title></head><body>');
         printWindow.document.write(content);
         printWindow.document.write('</body></html>');
         printWindow.document.close();
         printWindow.focus();
-        setTimeout(() => {
-            printWindow.print();
-            printWindow.close();
-        }, 500);
+        setTimeout(() => { printWindow.print(); printWindow.close(); }, 500);
     }
 
     function deleteGenericRecord(path, id){
-        if(confirm("क्या आप इस डेटा को डिलीट करना चाहते हैं?")){
-            db.ref(path + '/' + id).remove().then(() => {
-                alert("डेटा डिलीट हो गया!");
-            });
+        if(confirm("क्या आप इसे डिलीट करना चाहते हैं?")){
+            db.ref(path + '/' + id).remove().then(() => { alert("डिलीट हो गया!"); });
         }
     }
 
@@ -814,7 +713,7 @@
 
         if(!name || !mobile){ alert("नाम और मोबाइल नंबर भरें!"); return; }
         db.ref('admissions').push({ name, mobile, father, course, advance, time: new Date().toLocaleString() }).then(() => {
-            alert("ऑनलाइन एडमिशन फॉर्म सफलतापूर्वक जमा हो गया!");
+            alert("एडमिशन फॉर्म जमा हो गया!");
             document.getElementById("admName").value = "";
             document.getElementById("admMobile").value = "";
             document.getElementById("admFather").value = "";
@@ -862,7 +761,7 @@
         if(!title || !url){ alert("टाइटल और लिंक भरें!"); return; }
 
         db.ref('pdfs').push({ title, course, url }).then(() => {
-            alert("नोट्स PDF सफलतापूर्वक पब्लिश हो गया!");
+            alert("नोट्स PDF पब्लिश हो गया!");
             document.getElementById("pdfTitle").value = "";
             document.getElementById("pdfUrl").value = "";
         });
@@ -888,11 +787,11 @@
         });
 
         db.ref('masterStudents').on('value', snap => {
-            let list = document.getElementById("adminMasterStudentList");
+            let tableBody = document.getElementById("adminStudentTableBody");
             let cardSelect = document.getElementById("cardSelectStudent");
             let certSelect = document.getElementById("certSelectStudent");
             
-            list.innerHTML = "";
+            tableBody.innerHTML = "";
             cardSelect.innerHTML = `<option value="">या सूची से छात्र चुनें...</option>`;
             certSelect.innerHTML = `<option value="">या सूची से छात्र चुनें...</option>`;
             
@@ -900,27 +799,28 @@
             snap.forEach(child => {
                 let s = child.val();
                 students.push(s);
-                let blockBadge = s.isBlocked ? `<span style="color:#ef4444;">[ब्लॉक]</span>` : `<span style="color:#10b981;">[सक्रिय]</span>`;
-                let downBadge = s.canDownload ? `<span style="color:#38bdf8;">[डाउनलोड: चालू]</span>` : `<span style="color:#f59e0b;">[डाउनलोड: बंद]</span>`;
+                let downText = s.canDownload ? `<span style="color:#38bdf8;">[चालू]</span>` : `<span style="color:#f59e0b;">[बंद]</span>`;
                 
-                list.innerHTML += `<div style="font-size:11px; padding:8px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
-                    <div><b>${s.name}</b> (${s.course}) - ID: <span style="color:#f59e0b;">${s.loginId}</span> ${blockBadge} ${downBadge}</div>
-                    <div style="display:flex; gap:4px;">
-                        <button onclick="editStudent('${s.id}')" style="background:#38bdf8; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">एडिट</button>
-                        <button onclick="toggleDownloadPermission('${s.id}', ${s.canDownload || false})" style="background:${s.canDownload?'#10b981':'#f59e0b'}; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">${s.canDownload?'रोकें':'अप्रूव'}</button>
-                        <button onclick="toggleBlockStudent('${s.id}', ${s.isBlocked || false})" style="background:${s.isBlocked?'#10b981':'#ef4444'}; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">${s.isBlocked?'अनब्लॉक':'ब्लॉक'}</button>
-                        <button onclick="deleteStudent('${s.id}')" style="background:#ef4444; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">डिलीट</button>
-                    </div>
-                </div>`;
-                cardSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.loginId})</option>`;
-                certSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.loginId})</option>`;
+                tableBody.innerHTML += `<tr>
+                    <td><b>${s.name}</b><br><small>${s.course}</small></td>
+                    <td>मो: ${s.mobile}<br>पास: ${s.password}</td>
+                    <td>${s.feesPaid || '0'}/${s.feesTotal || '2500'}</td>
+                    <td>
+                        <div style="display:flex; gap:4px; flex-direction:column;">
+                            <button onclick="toggleDownloadPermission('${s.id}', ${s.canDownload || false})" style="background:${s.canDownload?'#10b981':'#f59e0b'}; border:none; color:#000; padding:2px 4px; border-radius:3px; cursor:pointer; font-size:10px;">${s.canDownload?'डाउनलोड रोकें':'डाउनलोड अप्रूव'}</button>
+                            <button onclick="deleteStudent('${s.id}')" style="background:#ef4444; border:none; color:#fff; padding:2px 4px; border-radius:3px; cursor:pointer; font-size:10px;">डिलीट</button>
+                        </div>
+                    </td>
+                </tr>`;
+                cardSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
+                certSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
             });
             window.allMasterStudents = students;
 
             if(loggedInStudent){
                 let currentStu = students.find(st => st.id === loggedInStudent.id);
                 if(!currentStu || currentStu.isBlocked){
-                    alert("आपका अकाउंट एडमिन द्वारा ब्लॉक या डिलीट कर दिया गया है!");
+                    alert("आपका अकाउंट हटा दिया गया है!");
                     logoutStudent();
                 } else {
                     loggedInStudent = currentStu;
