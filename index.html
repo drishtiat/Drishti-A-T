@@ -16,20 +16,20 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 40px; }
         header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 25px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; position: relative; }
-        .director-profile img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .director-profile img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .banner-preview-img { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-top: 10px; border: 2px solid #38bdf8; }
         .container { padding: 20px; max-width: 600px; margin: auto; }
         .card { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; }
         .card h3 { font-size: 16px; color: #38bdf8; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; margin-top: 5px; }
         .btn-secondary { background: var(--secondary); }
         .btn-danger { background: #ef4444; }
+        .btn-warning { background: #f59e0b; color: #000; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 8px; font-size: 14px; outline: none; }
         .hidden { display: none !important; }
         .test-item, .course-box, .faculty-box, .pdf-box, .absent-box { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
         .contact-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px; border-radius: 8px; color: white; font-weight: 500; margin-bottom: 10px; width: 100%; }
         .call-btn { background: var(--primary); } .wa-btn { background: #22c55e; }
-        table { width: 100%; font-size: 11px; margin-top: 10px; border-collapse: collapse; color: white; }
-        th, td { border: 1px solid #475569; padding: 6px; text-align: center; } th { background: var(--primary-dark); }
         .secret-admin-trigger { text-align: center; margin-top: 30px; font-size: 14px; color: #64748b; cursor: pointer; }
         .secret-admin-trigger:hover { color: #38bdf8; }
         .alert-banner { background: #ef4444; color: white; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; display: none; font-weight: 500; }
@@ -37,7 +37,23 @@
         #authModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.98); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
         .auth-box { background: #1e293b; padding: 30px; border-radius: 16px; width: 100%; max-width: 420px; border: 1px solid #334155; text-align: center; }
         .id-card-preview { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid #38bdf8; border-radius: 12px; padding: 20px; text-align: left; position: relative; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .cert-preview { background: #fff; color: #111; padding: 30px; border-radius: 10px; border: 8px double #1e293b; text-align: center; margin-top: 15px; position: relative; }
+        
+        /* Stunning Color Full Certificate Design */
+        .cert-preview { 
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); 
+            color: #0f172a; 
+            padding: 30px; 
+            border-radius: 12px; 
+            border: 10px solid #4f46e5; 
+            text-align: center; 
+            margin-top: 15px; 
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .cert-preview h2 { color: #4f46e5; font-size: 22px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+        .cert-preview h3 { color: #f59e0b; font-size: 16px; font-weight: 600; margin-top: 5px; text-transform: uppercase; }
+        .cert-student-img { width: 90px; height: 110px; object-fit: cover; border: 3px solid #4f46e5; border-radius: 6px; position: absolute; top: 30px; right: 30px; background: #fff; }
+
         #examCameraFeed { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981; display: block; margin: 0 auto 10px auto; }
     </style>
 </head>
@@ -68,12 +84,15 @@
 
 <header id="mainHeader">
     <div class="director-profile">
-        <!-- Permanent permanent banner image from user drive link -->
-        <img id="headerDirectorImg" src="https://lh3.googleusercontent.com/d/1Pji2HFEkbsxQevKDC5XnCTqv2TJZxad6=s800" alt="Director & Center Banner" onerror="this.src='https://via.placeholder.com/100'">
+        <!-- Abhishek Sir Photo -->
+        <img id="headerDirectorImg" src="abhishek_photo.jpg" alt="Director Abhishek Thakur" onerror="this.src='https://via.placeholder.com/90'">
         <h1 id="headerDirectorName">अभिषेक ठाकुर सर</h1>
         <p id="headerDirectorTitle">Founder & Director | दृष्टि कंप्यूटर सेंटर</p>
     </div>
-    <p style="font-size:12px; margin-top:6px;"><i class="fa-solid fa-location-dot"></i> <span id="headerAddress">Pusgwan Road, Wazirganj, Badaun (243726)</span></p>
+    <!-- Permanent Banner Image from Google Drive -->
+    <img src="https://lh3.googleusercontent.com/d/1Pji2HFEkbsxQevKDC5XnCTqv2TJZxad6=s800" alt="Center Banner" class="banner-preview-img" onerror="this.style.display='none'">
+    
+    <p style="font-size:12px; margin-top:8px;"><i class="fa-solid fa-location-dot"></i> <span id="headerAddress">Pusgwan Road, Wazirganj, Badaun (243726)</span></p>
     <p style="font-size:12px;"><i class="fa-solid fa-phone"></i> Helpline: <span id="headerHelpline">9258533717, 9719350019</span></p>
 </header>
 
@@ -87,8 +106,8 @@
     <div id="emergencyAlertBox" class="alert-banner"></div>
 
     <div class="card hidden" id="adminDashboard">
-        <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (लाइव कंट्रोल)</h3>
-        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">ऑनलाइन डेटाबेस सक्रिय है।</p>
+        <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (फुल कंट्रोल & मैनेजमेंट)</h3>
+        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र रिकॉर्ड, टेस्ट, नोट्स और कलरफुल सर्टिफिकेट कस्टमाइज़ कर सकते हैं।</p>
         
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">एडमिन पासवर्ड बदलें</h4>
         <input type="password" id="newAdminPassword" placeholder="नया पासवर्ड (min 4)">
@@ -96,6 +115,7 @@
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">👥 छात्र रिकॉर्ड और फीस रजिस्टर करें</h4>
+        <input type="hidden" id="editStudentKey" value="">
         <input type="text" id="mStudentName" placeholder="छात्र का पूरा नाम">
         <input type="text" id="mStudentFather" placeholder="पिता का नाम">
         <input type="text" id="mStudentMother" placeholder="माता का नाम">
@@ -110,24 +130,46 @@
             <option value="MS Word & Excel">MS Word & Excel</option>
             <option value="O Level">O Level</option>
         </select>
-        <input type="text" id="mStudentBatchTime" placeholder="बैच समय (जैसे: 8:00 AM)">
+        <input type="text" id="mStudentBatchTime" placeholder="बैच समय / कोर्स अवधि (जैसे: 6 Months - Jan to June)">
         <input type="text" id="mStudentFeesPaid" placeholder="जमा फीस">
         <input type="text" id="mStudentFeesTotal" placeholder="कुल फीस">
-        <button class="btn btn-secondary" onclick="saveMasterStudentData()">छात्र रिकॉर्ड सेव करें</button>
-        <div id="adminMasterStudentList" style="margin-top:10px; max-height:200px; overflow-y:auto;"></div>
+        <button class="btn btn-secondary" onclick="saveMasterStudentData()">छात्र रिकॉर्ड सेव / अपडेट करें</button>
+        
+        <div style="margin-top:15px;">
+            <h5 style="font-size:13px; color:#38bdf8; margin-bottom:8px;">छात्र सूची (डिलीट / ब्लॉक / एडिट करें):</h5>
+            <div id="adminMasterStudentList" style="max-height:220px; overflow-y:auto;"></div>
+        </div>
+        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🎨 कलरफुल सर्टिफिकेट जेनरेटर (फुली एडिटेबल)</h4>
+        <p style="font-size:11px; color:#94a3b8; margin-bottom:10px;">छात्र चुनें या नीचे अपनी पसंद की डिटेल्स बदलकर प्रिंट करें:</p>
+        <select id="certSelectStudent" onchange="fillCertificateFormFromSelect()" style="margin-bottom:10px;"><option value="">या सूची से छात्र चुनें...</option></select>
+        
+        <input type="text" id="certName" placeholder="Student Full Name">
+        <input type="text" id="certFather" placeholder="Father's Name">
+        <input type="text" id="certMother" placeholder="Mother's Name">
+        <input type="text" id="certDob" placeholder="Date of Birth (e.g. 15-Aug-2005)">
+        <input type="text" id="certCourse" placeholder="Course Name (e.g. ADVANCE DIPLOMA IN COMPUTER APPLICATIONS)">
+        <input type="text" id="certDuration" placeholder="Course Duration (e.g. 1 Year / 6 Months)">
+        <input type="text" id="certGrade" placeholder="Grade / Percentage (e.g. 'A' Grade / 88%)">
+        <label style="font-size:12px; color:#38bdf8; display:block; margin-bottom:5px;">छात्र की फोटो अपलोड करें:</label>
+        <input type="file" id="certStudentPhotoFile" accept="image/*" style="padding:8px;">
+        
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button class="btn btn-secondary" onclick="generateCustomCertificate()">सर्टिफिकेट प्रीव्यू देखें</button>
+            <button class="btn btn-warning" onclick="window.print()" style="background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> प्रिंट / PDF सेव करें</button>
+        </div>
+        <div id="adminGeneratedCertContainer" style="margin-top:15px;"></div>
+        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🆔 डिजिटल ID कार्ड बनाएं</h4>
+        <select id="cardSelectStudent" style="margin-bottom:10px;"><option value="">छात्र चुनें...</option></select>
+        <button class="btn btn-secondary" onclick="generateAdminIdCard()">ID कार्ड देखें</button>
+        <div id="adminGeneratedIdContainer" style="margin-top:15px;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📊 छात्रों के ऑनलाइन टेस्ट स्कोर</h4>
-        <div id="adminTestScoresContainer" style="max-height:220px; overflow-y:auto;"></div>
-        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
-
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🆔 छात्र ID कार्ड और सर्टिफिकेट बनाएं</h4>
-        <select id="cardSelectStudent" style="margin-bottom:10px;"><option value="">छात्र चुनें...</option></select>
-        <div style="display:flex; gap:10px;">
-            <button class="btn btn-secondary" onclick="generateAdminIdCard()">ID कार्ड देखें</button>
-            <button class="btn" onclick="generateAdminCertificate()" style="background:#f59e0b;">सर्टिफिकेट बनाएं</button>
-        </div>
-        <div id="adminGeneratedDocContainer" style="margin-top:15px;"></div>
+        <div id="adminTestScoresContainer" style="max-height:180px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🚨 छुट्टी या समय बदलाव का अलर्ट भेजें</h4>
@@ -148,21 +190,21 @@
         <div id="adminAbsentList" style="margin-top:10px; max-height:140px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">टेस्ट प्रश्न जोड़ें</h4>
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">टेस्ट प्रश्न प्रबंधित करें</h4>
         <select id="testCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option></select>
         <input type="text" id="testQuestion" placeholder="प्रश्न लिखें">
         <input type="text" id="optA" placeholder="विकल्प A"><input type="text" id="optB" placeholder="विकल्प B"><input type="text" id="optC" placeholder="विकल्प C"><input type="text" id="optD" placeholder="विकल्प D">
         <select id="correctOpt"><option value="A">सही: A</option><option value="B">सही: B</option><option value="C">सही: C</option><option value="D">सही: D</option></select>
-        <button class="btn btn-secondary" onclick="saveAdminTest()">टेस्ट सेव करें</button>
-        <div id="adminTestList" style="margin-top:15px; max-height:140px; overflow-y:auto;"></div>
+        <button class="btn btn-secondary" onclick="saveAdminTest()">टेस्ट प्रश्न सेव करें</button>
+        <div id="adminTestList" style="margin-top:15px; max-height:160px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">PDF / नोट्स अपलोड लिंक</h4>
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">PDF / नोट्स अपलोड और डिलीट करें</h4>
         <input type="text" id="pdfTitle" placeholder="Title (जैसे: MS Word Notes)">
         <select id="pdfCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option></select>
         <input type="text" id="pdfUrl" placeholder="File Link (Google Drive / Public Link)">
         <button class="btn btn-secondary" onclick="uploadPdf()">नोट्स / PDF पब्लिश करें</button>
-        <div id="adminPdfList" style="margin-top:10px; max-height:140px; overflow-y:auto;"></div>
+        <div id="adminPdfList" style="margin-top:10px; max-height:160px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <textarea id="noticeInput" placeholder="नोटिस लिखें..."></textarea>
@@ -245,21 +287,30 @@
 
     let currentAdminPassword = "Anamthakur@2006";
     let loggedInStudent = null;
+    let tempStudentPhotoBase64 = "";
 
     window.onload = function(){
         document.getElementById("adminDashboard").classList.add("hidden");
         let today = new Date().toISOString().split('T')[0];
         if(document.getElementById("absentDate")) document.getElementById("absentDate").value = today;
 
-        let savedStudent = localStorage.getItem("drishti_student_session_v3");
+        let savedStudent = localStorage.getItem("drishti_student_session_v5");
         if(savedStudent){
             try {
                 loggedInStudent = JSON.parse(savedStudent);
-                document.getElementById("authModal").style.display = "none";
-                activateStudentSessionUI();
-                initExamCamera(); // Auto-initialize camera on session restore
+                db.ref('masterStudents/' + loggedInStudent.id).once('value', snap => {
+                    let stuData = snap.val();
+                    if(!stuData || stuData.isBlocked){
+                        alert("आपका अकाउंट एडमिन द्वारा ब्लॉक या डिलीट कर दिया गया है!");
+                        logoutStudent();
+                    } else {
+                        document.getElementById("authModal").style.display = "none";
+                        activateStudentSessionUI();
+                        initExamCamera();
+                    }
+                });
             } catch(e){
-                localStorage.removeItem("drishti_student_session_v3");
+                localStorage.removeItem("drishti_student_session_v5");
             }
         }
         loadRealtimeData();
@@ -278,29 +329,31 @@
             return;
         }
 
+        let studentId = "stu_" + Date.now();
         loggedInStudent = {
-            id: "stu_" + Date.now(),
+            id: studentId,
             name: name,
             father: father,
             mother: mother,
             dob: dob,
             mobile: mobile,
             course: course,
-            batchTime: "निर्धारित बैच",
+            batchTime: "6 Months",
             feesPaid: "0",
-            feesTotal: "2500"
+            feesTotal: "2500",
+            isBlocked: false
         };
 
-        db.ref('masterStudents/' + loggedInStudent.id).set(loggedInStudent);
-        localStorage.setItem("drishti_student_session_v3", JSON.stringify(loggedInStudent));
+        db.ref('masterStudents/' + studentId).set(loggedInStudent);
+        localStorage.setItem("drishti_student_session_v5", JSON.stringify(loggedInStudent));
         document.getElementById("authModal").style.display = "none";
         activateStudentSessionUI();
         initExamCamera();
-        alert("सफलतापूर्वक लॉगिन हो गया! अब आप हमेशा लॉगिन रहेंगे।");
+        alert("सफलतापूर्वक लॉगिन हो गया!");
     }
 
     function logoutStudent(){
-        localStorage.removeItem("drishti_student_session_v3");
+        localStorage.removeItem("drishti_student_session_v5");
         loggedInStudent = null;
         document.getElementById("authModal").style.display = "flex";
         document.getElementById("studentProfileCard").style.display = "none";
@@ -344,11 +397,10 @@
         .then(stream => {
             let videoElem = document.getElementById("examCameraFeed");
             videoElem.srcObject = stream;
-            document.getElementById("cameraStatusText").innerHTML = '<i class="fa-solid fa-circle-check" style="color:#10b981;"></i> कैमरा सक्रिय है (Proctored Mode Active)';
+            document.getElementById("cameraStatusText").innerHTML = '<i class="fa-solid fa-circle-check" style="color:#10b981;"></i> कैमरा सक्रिय है';
         })
         .catch(err => {
-            console.log("Camera access error or permission denied:", err);
-            document.getElementById("cameraStatusText").innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i> कृपया कैमरा की अनुमति दें';
+            console.log("Camera access error:", err);
         });
     }
 
@@ -402,6 +454,7 @@
     }
 
     function saveMasterStudentData(){
+        let editKey = document.getElementById("editStudentKey").value.trim();
         let name = document.getElementById("mStudentName").value.trim();
         let father = document.getElementById("mStudentFather").value.trim();
         let mother = document.getElementById("mStudentMother").value.trim();
@@ -414,21 +467,139 @@
 
         if(!name || !mobile){ alert("छात्र का नाम और मोबाइल नंबर आवश्यक है!"); return; }
 
-        let ref = db.ref('masterStudents').push();
-        ref.set({
-            id: ref.key,
+        let studentId = editKey ? editKey : ("stu_" + Date.now());
+        let studentObj = {
+            id: studentId,
             name: name,
             father: father,
             mother: mother,
             dob: dob,
             mobile: mobile,
             course: course,
-            batchTime: batchTime,
+            batchTime: batchTime || "6 Months",
             feesPaid: feesPaid,
-            feesTotal: feesTotal
-        }).then(() => {
-            alert("छात्र रिकॉर्ड सफलतापूर्वक सेव हो गया!");
+            feesTotal: feesTotal,
+            isBlocked: false
+        };
+
+        db.ref('masterStudents/' + studentId).set(studentObj).then(() => {
+            alert("छात्र रिकॉर्ड सफलतापूर्वक सेव/अपडेट हो गया!");
+            clearStudentForm();
         });
+    }
+
+    function editStudent(id){
+        let students = window.allMasterStudents || [];
+        let s = students.find(item => item.id === id);
+        if(!s) return;
+        document.getElementById("editStudentKey").value = s.id;
+        document.getElementById("mStudentName").value = s.name || "";
+        document.getElementById("mStudentFather").value = s.father || "";
+        document.getElementById("mStudentMother").value = s.mother || "";
+        document.getElementById("mStudentDob").value = s.dob || "";
+        document.getElementById("mStudentMobile").value = s.mobile || "";
+        document.getElementById("mStudentCourse").value = s.course || "CCC";
+        document.getElementById("mStudentBatchTime").value = s.batchTime || "";
+        document.getElementById("mStudentFeesPaid").value = s.feesPaid || "";
+        document.getElementById("mStudentFeesTotal").value = s.feesTotal || "";
+        window.scrollTo({top: 250, behavior: 'smooth'});
+    }
+
+    function clearStudentForm(){
+        document.getElementById("editStudentKey").value = "";
+        document.getElementById("mStudentName").value = "";
+        document.getElementById("mStudentFather").value = "";
+        document.getElementById("mStudentMother").value = "";
+        document.getElementById("mStudentDob").value = "";
+        document.getElementById("mStudentMobile").value = "";
+        document.getElementById("mStudentBatchTime").value = "";
+        document.getElementById("mStudentFeesPaid").value = "";
+        document.getElementById("mStudentFeesTotal").value = "";
+    }
+
+    function deleteStudent(id){
+        if(confirm("क्या आप वाकई इस छात्र को हमेशा के लिए डिलीट करना चाहते हैं?")){
+            db.ref('masterStudents/' + id).remove().then(() => {
+                alert("छात्र रिकॉर्ड डिलीट कर दिया गया!");
+            });
+        }
+    }
+
+    function toggleBlockStudent(id, currentStatus){
+        let newStatus = !currentStatus;
+        db.ref('masterStudents/' + id).update({ isBlocked: newStatus }).then(() => {
+            alert(newStatus ? "छात्र को ब्लॉक कर दिया गया है!" : "छात्र का ब्लॉक हटा दिया गया है!");
+        });
+    }
+
+    function fillCertificateFormFromSelect(){
+        let selectId = document.getElementById("certSelectStudent").value;
+        if(!selectId) return;
+        let students = window.allMasterStudents || [];
+        let stu = students.find(s => s.id === selectId);
+        if(!stu) return;
+
+        document.getElementById("certName").value = stu.name || "";
+        document.getElementById("certFather").value = stu.father || "";
+        document.getElementById("certMother").value = stu.mother || "";
+        document.getElementById("certDob").value = stu.dob || "";
+        document.getElementById("certCourse").value = stu.course || "";
+        document.getElementById("certDuration").value = stu.batchTime || "6 Months";
+        document.getElementById("certGrade").value = "A+ (Distinction)";
+    }
+
+    function generateCustomCertificate(){
+        let name = document.getElementById("certName").value.trim() || "STUDENT NAME";
+        let father = document.getElementById("certFather").value.trim() || "FATHER'S NAME";
+        let mother = document.getElementById("certMother").value.trim() || "MOTHER'S NAME";
+        let dob = document.getElementById("certDob").value.trim() || "DD/MM/YYYY";
+        let course = document.getElementById("certCourse").value.trim() || "DIPLOMA IN COMPUTER APPLICATIONS";
+        let duration = document.getElementById("certDuration").value.trim() || "6 Months";
+        let grade = document.getElementById("certGrade").value.trim() || "A+";
+
+        let photoInput = document.getElementById("certStudentPhotoFile");
+        let photoHtml = `<div style="width:90px; height:110px; border:3px solid #4f46e5; border-radius:6px; position:absolute; top:30px; right:30px; background:#ddd; display:flex; align-items:center; justify-content:center; font-size:10px; color:#555;">No Photo</div>`;
+
+        if(photoInput.files && photoInput.files[0]){
+            let reader = new FileReader();
+            reader.onload = function(e){
+                renderCertDOM(name, father, mother, dob, course, duration, grade, e.target.result);
+            };
+            reader.readAsDataURL(photoInput.files[0]);
+        } else {
+            renderCertDOM(name, father, mother, dob, course, duration, grade, null);
+        }
+    }
+
+    function renderCertDOM(name, father, mother, dob, course, duration, grade, imgSrc){
+        let photoTag = imgSrc ? `<img src="${imgSrc}" class="cert-student-img" alt="Student Photo">` : `<div class="cert-student-img" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#666;">Photo</div>`;
+        
+        let container = document.getElementById("adminGeneratedCertContainer");
+        container.innerHTML = `
+            <div class="cert-preview">
+                ${photoTag}
+                <h2>Drishti Computer Centre</h2>
+                <h3>Certificate of Achievement / Completion</h3>
+                <p style="font-size:11px; color:#475569; margin-top:3px;">Pusgwan Road, Wazirganj, Badaun (Regd. Under IT Act)</p>
+                <hr style="margin:20px 0; border:1px solid #cbd5e1;">
+                <p style="font-size:13px; color:#334155; margin-bottom:10px;">This is proudly presented to:</p>
+                <h1 style="color:#1e293b; font-size:24px; font-weight:700; margin-bottom:10px; text-transform:uppercase;">${name}</h1>
+                <p style="font-size:12px; color:#334155; line-height:1.8; text-align:left; max-width:450px; margin:0 auto;">
+                    Son/Daughter of Mr. <b>${father}</b> and Mrs. <b>${mother}</b> (DOB: <b>${dob}</b>). 
+                    He/She has successfully completed the professional course titled <b>${course}</b> with course duration of <b>${duration}</b> and secured grade/performance <b>${grade}</b> at our institute.
+                </p>
+                <div style="margin-top:40px; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#1e293b; padding:0 20px;">
+                    <div style="text-align:center;">
+                        <p>___________________</p>
+                        <p style="margin-top:5px; font-weight:bold;">Date: ${new Date().toLocaleDateString()}</p>
+                    </div>
+                    <div style="text-align:center;">
+                        <p style="font-family:'Brush Script MT', cursive; font-size:22px; color:#4f46e5; margin-bottom:-5px;">Abhishek Thakur</p>
+                        <p>___________________</p>
+                        <p style="margin-top:5px; font-weight:bold;">Abhishek Thakur Sir<br>(Founder & Director)</p>
+                    </div>
+                </div>
+            </div>`;
     }
 
     function generateAdminIdCard(){
@@ -438,29 +609,16 @@
         let stu = students.find(s => s.id === selectId);
         if(!stu) return;
 
-        let container = document.getElementById("adminGeneratedDocContainer");
+        let container = document.getElementById("adminGeneratedIdContainer");
         container.innerHTML = `<h4 style="color:#38bdf8; font-size:13px; margin-bottom:5px;">जनरेटेड ID कार्ड:</h4>` + renderIdCardHTML(stu);
     }
 
-    function generateAdminCertificate(){
-        let selectId = document.getElementById("cardSelectStudent").value;
-        if(!selectId){ alert("कृपया सूची से छात्र चुनें!"); return; }
-        let students = window.allMasterStudents || [];
-        let stu = students.find(s => s.id === selectId);
-        if(!stu) return;
-
-        let container = document.getElementById("adminGeneratedDocContainer");
-        container.innerHTML = `<h4 style="color:#38bdf8; font-size:13px; margin-bottom:5px;">जनरेटेड बेसिक सर्टिफिकेट:</h4>
-            <div class="cert-preview">
-                <h2 style="color:#1e293b; margin-bottom:5px; font-size:18px;">DRISHTI COMPUTER CENTRE</h2>
-                <p style="font-size:11px; color:#555;">Wazirganj, Badaun | Certificate of Completion</p>
-                <hr style="margin:15px 0; border-color:#ddd;">
-                <p style="font-size:12px; color:#333;">यह प्रमाणित किया जाता है कि श्री/सुश्री <b>${stu.name}</b>, पुत्र/पुत्री <b>${stu.father || '---'}</b> ने हमारे संस्थान से <b>${stu.course}</b> कोर्स सफलतापूर्वक पूरा किया है।</p>
-                <div style="margin-top:20px; display:flex; justify-content:space-between; font-size:11px; color:#444;">
-                    <span>दिनांक: ${new Date().toLocaleDateString()}</span>
-                    <span><b>अभिषेक ठाकुर सर</b><br>संपादक / डायरेक्टर</span>
-                </div>
-            </div>`;
+    function deleteGenericRecord(path, id){
+        if(confirm("क्या आप इस डेटा को डिलीट करना चाहते हैं?")){
+            db.ref(path + '/' + id).remove().then(() => {
+                alert("डेटा डिलीट हो गया!");
+            });
+        }
     }
 
     function submitOnlineAdmission(){
@@ -548,24 +706,47 @@
         db.ref('masterStudents').on('value', snap => {
             let list = document.getElementById("adminMasterStudentList");
             let cardSelect = document.getElementById("cardSelectStudent");
+            let certSelect = document.getElementById("certSelectStudent");
             list.innerHTML = "";
             cardSelect.innerHTML = `<option value="">छात्र चुनें...</option>`;
+            certSelect.innerHTML = `<option value="">या सूची से छात्र चुनें...</option>`;
             let students = [];
             snap.forEach(child => {
                 let s = child.val();
                 students.push(s);
-                list.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155;"><b>${s.name}</b> (${s.course}) - मो: ${s.mobile}</div>`;
+                let blockBadge = s.isBlocked ? `<span style="color:#ef4444;">[ब्लॉक]</span>` : `<span style="color:#10b981;">[सक्रिय]</span>`;
+                list.innerHTML += `<div style="font-size:11px; padding:8px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
+                    <div><b>${s.name}</b> (${s.course}) - मो: ${s.mobile} ${blockBadge}</div>
+                    <div style="display:flex; gap:5px;">
+                        <button onclick="editStudent('${s.id}')" style="background:#38bdf8; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">एडिट</button>
+                        <button onclick="toggleBlockStudent('${s.id}', ${s.isBlocked || false})" style="background:${s.isBlocked?'#10b981':'#f59e0b'}; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">${s.isBlocked?'अनब्लॉक':'ब्लॉक'}</button>
+                        <button onclick="deleteStudent('${s.id}')" style="background:#ef4444; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">डिटेल</button>
+                    </div>
+                </div>`;
                 cardSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
+                certSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
             });
             window.allMasterStudents = students;
+
+            if(loggedInStudent){
+                let currentStu = students.find(st => st.id === loggedInStudent.id);
+                if(!currentStu || currentStu.isBlocked){
+                    alert("आपका अकाउंट एडमिन द्वारा ब्लॉक या डिलीट कर दिया गया है!");
+                    logoutStudent();
+                }
+            }
         });
 
         db.ref('admissions').on('value', snap => {
             let admList = document.getElementById("adminAdmissionList");
             admList.innerHTML = "";
             snap.forEach(child => {
+                let aKey = child.key;
                 let a = child.val();
-                admList.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155;"><b>${a.name}</b> - ${a.course} (मो: ${a.mobile})</div>`;
+                admList.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
+                    <div><b>${a.name}</b> - ${a.course} (मो: ${a.mobile})</div>
+                    <button onclick="deleteGenericRecord('admissions', '${aKey}')" style="background:#ef4444; border:none; color:#fff; padding:2px 6px; border-radius:4px; cursor:pointer; font-size:10px;">हटाएं</button>
+                </div>`;
             });
         });
 
@@ -573,8 +754,39 @@
             let scoreContainer = document.getElementById("adminTestScoresContainer");
             scoreContainer.innerHTML = "";
             snap.forEach(child => {
+                let scKey = child.key;
                 let sc = child.val();
-                scoreContainer.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155;"><b>${sc.studentName}</b> (${sc.course}): स्कोर = <b>${sc.score} / ${sc.total}</b></div>`;
+                scoreContainer.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
+                    <div><b>${sc.studentName}</b> (${sc.course}): स्कोर = <b>${sc.score} / ${sc.total}</b></div>
+                    <button onclick="deleteGenericRecord('testScores', '${scKey}')" style="background:#ef4444; border:none; color:#fff; padding:2px 6px; border-radius:4px; cursor:pointer; font-size:10px;">हटाएं</button>
+                </div>`;
+            });
+        });
+
+        let testCourse = document.getElementById("testCourseSelect").value;
+        db.ref('tests/' + testCourse).on('value', snap => {
+            let tList = document.getElementById("adminTestList");
+            tList.innerHTML = "";
+            snap.forEach(child => {
+                let tKey = child.key;
+                let t = child.val();
+                tList.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
+                    <div>Q: ${t.question}</div>
+                    <button onclick="db.ref('tests/${testCourse}/${tKey}').remove(); alert('प्रश्न हटा दिया गया!');" style="background:#ef4444; border:none; color:#fff; padding:2px 6px; border-radius:4px; cursor:pointer; font-size:10px;">हटाएं</button>
+                </div>`;
+            });
+        });
+
+        db.ref('pdfs').on('value', snap => {
+            let pList = document.getElementById("adminPdfList");
+            pList.innerHTML = "";
+            snap.forEach(child => {
+                let pKey = child.key;
+                let p = child.val();
+                pList.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
+                    <div>${p.title} (${p.course})</div>
+                    <button onclick="deleteGenericRecord('pdfs', '${pKey}')" style="background:#ef4444; border:none; color:#fff; padding:2px 6px; border-radius:4px; cursor:pointer; font-size:10px;">हटाएं</button>
+                </div>`;
             });
         });
 
