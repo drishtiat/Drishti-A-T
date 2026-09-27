@@ -25,6 +25,7 @@
         .btn-secondary { background: var(--secondary); }
         .btn-danger { background: #ef4444; }
         .btn-warning { background: #f59e0b; color: #000; }
+        .btn-wa { background: #22c55e; color: #fff; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 8px; font-size: 14px; outline: none; }
         .hidden { display: none !important; }
         .test-item, .course-box, .faculty-box, .pdf-box, .absent-box { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
@@ -75,10 +76,10 @@
 </head>
 <body>
 
-    <div id="authModal">
+    <div id="authModal" style="display:none;">
         <div class="auth-box">
             <h2 style="color:#38bdf8; margin-bottom:10px;"><i class="fa-solid fa-graduation-cap"></i> दृष्टि कंप्यूटर सेंटर</h2>
-            <p style="font-size:13px; color:#94a3b8; margin-bottom:15px;">सुरक्षित परीक्षा और ऐप एक्सेस के लिए अपनी पूरी जानकारी भरें:</p>
+            <p style="font-size:13px; color:#94a3b8; margin-bottom:15px;">सुरक्षित परीक्षा और ऐप एक्सेस के लिए अपनी जानकारी से लॉगिन करें:</p>
             <input type="text" id="regStudentName" placeholder="पूरा नाम (Full Name)">
             <input type="text" id="regStudentFather" placeholder="पिता का नाम (Father's Name)">
             <input type="text" id="regStudentMother" placeholder="माता का नाम (Mother's Name)">
@@ -121,11 +122,18 @@
 
     <div class="card hidden" id="adminDashboard">
         <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (फुल कंट्रोल & मैनेजमेंट)</h3>
-        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र रिकॉर्ड, टेस्ट, नोट्स और कलरफुल सर्टिफिकेट/आईडी कार्ड मैनेज कर सकते हैं।</p>
+        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र रिकॉर्ड, फीस व्हाट्सएप मैसेज, और आईडी/सर्टिफिकेट अप्रूवल मैनेज कर सकते हैं।</p>
         
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">एडमिन पासवर्ड बदलें</h4>
         <input type="password" id="newAdminPassword" placeholder="नया पासवर्ड (min 4)">
         <button class="btn btn-secondary" onclick="changeAdminPassword()">पासवर्ड अपडेट करें</button>
+        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">💬 छात्र को व्हाट्सएप नोटिफिकेशन / फीस मैसेज भेजें</h4>
+        <select id="waStudentSelect" style="margin-bottom:8px;"><option value="">व्हाट्सएप के लिए छात्र चुनें...</option></select>
+        <input type="text" id="waStudentNumber" placeholder="छात्र का व्हाट्सएप मोबाइल नंबर (जैसे: 919258533717)">
+        <textarea id="waMessageText" placeholder="संदेश लिखें (जैसे: प्रिय छात्र, आपकी इस महीने की फीस बकाया है, कृपया जमा करें। - दृष्टि कंप्यूटर सेंटर)"></textarea>
+        <button class="btn btn-wa" onclick="sendWhatsAppNotification()"><i class="fa-brands fa-whatsapp"></i> व्हाट्सएप पर भेजें</button>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">👥 छात्र रिकॉर्ड और फीस रजिस्टर करें</h4>
@@ -147,25 +155,31 @@
         <input type="text" id="mStudentBatchTime" placeholder="कोर्स अवधि (जैसे: 6 Months / 1 Year)">
         <input type="text" id="mStudentFeesPaid" placeholder="जमा फीस">
         <input type="text" id="mStudentFeesTotal" placeholder="कुल फीस">
+        
+        <div style="background:#0f172a; padding:12px; border-radius:8px; margin-bottom:12px; border:1px solid #475569;">
+            <label style="font-size:13px; color:#38bdf8; cursor:pointer; display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="mStudentCanDownload" style="width:auto; margin:0;"> <b>छात्र को ID कार्ड और सर्टिफिकेट डाउनलोड/प्रिंट करने की अनुमति दें (Approve)</b>
+            </label>
+        </div>
+
         <button class="btn btn-secondary" onclick="saveMasterStudentData()">छात्र रिकॉर्ड सेव / अपडेट करें</button>
         
         <div style="margin-top:15px;">
-            <h5 style="font-size:13px; color:#38bdf8; margin-bottom:8px;">छात्र सूची (डिलीट / ब्लॉक / एडिट करें):</h5>
+            <h5 style="font-size:13px; color:#38bdf8; margin-bottom:8px;">छात्र सूची (डिलीट / ब्लॉक / अप्रूव / एडिट करें):</h5>
             <div id="adminMasterStudentList" style="max-height:220px; overflow-y:auto;"></div>
         </div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🎨 कलरफुल सर्टिफिकेट जेनरेटर (फुली एडिटेबल)</h4>
-        <p style="font-size:11px; color:#94a3b8; margin-bottom:10px;">छात्र चुनें या नीचे कुछ भी एडिट करके प्रिंट करें:</p>
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🎨 कलरफुल सर्टिफिकेट जेनरेटर (एडमिन के लिए)</h4>
         <select id="certSelectStudent" onchange="fillCertificateFormFromSelect()" style="margin-bottom:10px;"><option value="">या सूची से छात्र चुनें...</option></select>
         
         <input type="text" id="certName" placeholder="Student Full Name">
         <input type="text" id="certFather" placeholder="Father's Name">
         <input type="text" id="certMother" placeholder="Mother's Name">
-        <input type="text" id="certDob" placeholder="Date of Birth (e.g. 15-Aug-2005)">
-        <input type="text" id="certCourse" placeholder="Course Name (e.g. ADVANCE DIPLOMA IN COMPUTER APPLICATIONS)">
-        <input type="text" id="certDuration" placeholder="Course Duration (e.g. 6 Months)">
-        <input type="text" id="certGrade" placeholder="Grade / Performance (e.g. A+ Grade)">
+        <input type="text" id="certDob" placeholder="Date of Birth">
+        <input type="text" id="certCourse" placeholder="Course Name">
+        <input type="text" id="certDuration" placeholder="Course Duration">
+        <input type="text" id="certGrade" placeholder="Grade / Performance">
         <label style="font-size:12px; color:#38bdf8; display:block; margin-bottom:5px;">छात्र की फोटो अपलोड करें:</label>
         <input type="file" id="certStudentPhotoFile" accept="image/*" style="padding:8px;">
         
@@ -178,7 +192,7 @@
         </div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🆔 डिजिटल ID कार्ड जेनरेटर (फुली एडिटेबल)</h4>
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🆔 डिजिटल ID कार्ड जेनरेटर (एडमिन के लिए)</h4>
         <select id="cardSelectStudent" onchange="fillIdCardFormFromSelect()" style="margin-bottom:10px;"><option value="">या सूची से छात्र चुनें...</option></select>
         
         <input type="text" id="idName" placeholder="Student Full Name">
@@ -187,7 +201,7 @@
         <input type="text" id="idDob" placeholder="Date of Birth">
         <input type="text" id="idCourse" placeholder="Course Name">
         <input type="text" id="idMobile" placeholder="Mobile Number">
-        <input type="text" id="idFees" placeholder="Fees Status (e.g. Paid 2500 / 2500)">
+        <input type="text" id="idFees" placeholder="Fees Status">
         <label style="font-size:12px; color:#38bdf8; display:block; margin-bottom:5px;">आईडी कार्ड के लिए छात्र की फोटो अपलोड करें:</label>
         <input type="file" id="idStudentPhotoFile" accept="image/*" style="padding:8px;">
 
@@ -244,9 +258,14 @@
         <button class="btn btn-danger" onclick="logoutAdmin()" style="margin-top:20px;">Logout Admin</button>
     </div>
 
+    <!-- Student View Card with Approval Check -->
     <div class="card" id="studentProfileCard" style="display:none;">
-        <h3><span style="color:#38bdf8;"><i class="fa-solid fa-id-card"></i> मेरा डिजिटल परिचय पत्र (ID Card)</span></h3>
+        <h3><span style="color:#38bdf8;"><i class="fa-solid fa-id-card"></i> मेरा डिजिटल परिचय पत्र & सर्टिफिकेट</span></h3>
+        <div id="studentApprovalMsgBox" style="margin-bottom:12px;"></div>
         <div id="myIdCardContainer"></div>
+        <div id="studentDownloadActionBox" style="margin-top:15px; display:none;">
+            <button class="btn btn-warning" onclick="printElement('myIdCardContainer')"><i class="fa-solid fa-print"></i> ID कार्ड / सर्टिफिकेट प्रिंट करें</button>
+        </div>
     </div>
 
     <div class="card">
@@ -320,7 +339,7 @@
         let today = new Date().toISOString().split('T')[0];
         if(document.getElementById("absentDate")) document.getElementById("absentDate").value = today;
 
-        let savedStudent = localStorage.getItem("drishti_student_session_v7");
+        let savedStudent = localStorage.getItem("drishti_student_session_v9");
         if(savedStudent){
             try {
                 loggedInStudent = JSON.parse(savedStudent);
@@ -331,12 +350,16 @@
                         logoutStudent();
                     } else {
                         document.getElementById("authModal").style.display = "none";
+                        loggedInStudent = stuData; // Sync latest data
                         activateStudentSessionUI();
                     }
                 });
             } catch(e){
-                localStorage.removeItem("drishti_student_session_v7");
+                localStorage.removeItem("drishti_student_session_v9");
+                document.getElementById("authModal").style.display = "flex";
             }
+        } else {
+            document.getElementById("authModal").style.display = "flex";
         }
         loadRealtimeData();
     };
@@ -366,18 +389,19 @@
             batchTime: "6 Months",
             feesPaid: "0",
             feesTotal: "2500",
+            canDownload: false, // Default locked until admin approves
             isBlocked: false
         };
 
         db.ref('masterStudents/' + studentId).set(loggedInStudent);
-        localStorage.setItem("drishti_student_session_v7", JSON.stringify(loggedInStudent));
+        localStorage.setItem("drishti_student_session_v9", JSON.stringify(loggedInStudent));
         document.getElementById("authModal").style.display = "none";
         activateStudentSessionUI();
         alert("सफलतापूर्वक लॉगिन हो गया!");
     }
 
     function logoutStudent(){
-        localStorage.removeItem("drishti_student_session_v7");
+        localStorage.removeItem("drishti_student_session_v9");
         loggedInStudent = null;
         document.getElementById("authModal").style.display = "flex";
         document.getElementById("studentProfileCard").style.display = "none";
@@ -392,6 +416,18 @@
 
         let idContainer = document.getElementById("myIdCardContainer");
         idContainer.innerHTML = renderIdCardHTML(loggedInStudent, null);
+
+        let msgBox = document.getElementById("studentApprovalMsgBox");
+        let actionBox = document.getElementById("studentDownloadActionBox");
+
+        if(loggedInStudent.canDownload){
+            msgBox.innerHTML = `<div style="background:#065f46; color:#a7f3d0; padding:10px; border-radius:8px; font-size:12px;"><i class="fa-solid fa-circle-check"></i> एडमिन द्वारा आपका ID कार्ड और सर्टिफिकेट अप्रूव कर दिया गया है। आप नीचे से प्रिंट/डाउनलोड कर सकते हैं।</div>`;
+            actionBox.style.display = "block";
+        } else {
+            msgBox.innerHTML = `<div style="background:#7f1d1d; color:#fecaca; padding:10px; border-radius:8px; font-size:12px;"><i class="fa-solid fa-triangle-exclamation"></i> आपका ID कार्ड / सर्टिफिकेट अभी एडमिन द्वारा अप्रूव नहीं किया गया है। फीस जमा करने या अप्रूवल के बाद ही डाउनलोड बटन दिखाई देगा।</div>`;
+            actionBox.style.display = "none";
+        }
+
         document.getElementById("studentProfileCard").style.display = "block";
     }
 
@@ -442,6 +478,28 @@
         alert("लॉग आउट हो गया!");
     }
 
+    function sendWhatsAppNotification(){
+        let number = document.getElementById("waStudentNumber").value.trim();
+        let message = document.getElementById("waMessageText").value.trim();
+        if(!number || !message){ alert("कृपया व्हाट्सएप नंबर और संदेश दोनों भरें!"); return; }
+        let cleanNum = number.replace(/[^0-9]/g, '');
+        let waUrl = `https://wa.me/${cleanNum}?text=${encodeURIComponent(message)}`;
+        window.open(waUrl, '_blank');
+    }
+
+    function fillWaNumberFromSelect(){
+        let selId = document.getElementById("waStudentSelect").value;
+        if(!selId) return;
+        let students = window.allMasterStudents || [];
+        let s = students.find(item => item.id === selId);
+        if(s && s.mobile){
+            document.getElementById("waStudentNumber.value") = s.mobile;
+            document.getElementById("waStudentNumber").value = s.mobile;
+        }
+    }
+
+    document.getElementById("waStudentSelect").onchange = fillWaNumberFromSelect;
+
     function publishEmergencyAlert(){
         let msg = document.getElementById("emergencyInput").value.trim();
         if(!msg) { alert("अलर्ट संदेश लिखें!"); return; }
@@ -475,6 +533,7 @@
         let batchTime = document.getElementById("mStudentBatchTime").value.trim();
         let feesPaid = document.getElementById("mStudentFeesPaid").value.trim();
         let feesTotal = document.getElementById("mStudentFeesTotal").value.trim();
+        let canDownload = document.getElementById("mStudentCanDownload").checked;
 
         if(!name || !mobile){ alert("छात्र का नाम और मोबाइल नंबर आवश्यक है!"); return; }
 
@@ -490,6 +549,7 @@
             batchTime: batchTime || "6 Months",
             feesPaid: feesPaid,
             feesTotal: feesTotal,
+            canDownload: canDownload,
             isBlocked: false
         };
 
@@ -515,6 +575,7 @@
         document.getElementById("mStudentBatchTime").value = s.batchTime || "";
         document.getElementById("mStudentFeesPaid").value = s.feesPaid || "";
         document.getElementById("mStudentFeesTotal").value = s.feesTotal || "";
+        document.getElementById("mStudentCanDownload").checked = s.canDownload || false;
         window.scrollTo({top: 250, behavior: 'smooth'});
     }
 
@@ -528,6 +589,7 @@
         document.getElementById("mStudentBatchTime").value = "";
         document.getElementById("mStudentFeesPaid").value = "";
         document.getElementById("mStudentFeesTotal").value = "";
+        document.getElementById("mStudentCanDownload").checked = false;
     }
 
     function deleteStudent(id){
@@ -544,6 +606,13 @@
         let newStatus = !currentStatus;
         db.ref('masterStudents/' + id).update({ isBlocked: newStatus }).then(() => {
             alert(newStatus ? "छात्र को ब्लॉक कर दिया गया है!" : "छात्र का ब्लॉक हटा दिया गया है!");
+        });
+    }
+
+    function toggleDownloadPermission(id, currentStatus){
+        let newStatus = !currentStatus;
+        db.ref('masterStudents/' + id).update({ canDownload: newStatus }).then(() => {
+            alert(newStatus ? "छात्र के लिए डाउनलोड परमिशन अप्रूव कर दी गई है!" : "छात्र की डाउनलोड परमिशन हटा दी गई है!");
         });
     }
 
@@ -770,24 +839,32 @@
             let list = document.getElementById("adminMasterStudentList");
             let cardSelect = document.getElementById("cardSelectStudent");
             let certSelect = document.getElementById("certSelectStudent");
+            let waSelect = document.getElementById("waStudentSelect");
+            
             list.innerHTML = "";
             cardSelect.innerHTML = `<option value="">या सूची से छात्र चुनें...</option>`;
             certSelect.innerHTML = `<option value="">या सूची से छात्र चुनें...</option>`;
+            waSelect.innerHTML = `<option value="">व्हाट्सएप के लिए छात्र चुनें...</option>`;
+            
             let students = [];
             snap.forEach(child => {
                 let s = child.val();
                 students.push(s);
                 let blockBadge = s.isBlocked ? `<span style="color:#ef4444;">[ब्लॉक]</span>` : `<span style="color:#10b981;">[सक्रिय]</span>`;
+                let downBadge = s.canDownload ? `<span style="color:#38bdf8;">[डाउनलोड: चालू]</span>` : `<span style="color:#f59e0b;">[डाउनलोड: बंद]</span>`;
+                
                 list.innerHTML += `<div style="font-size:11px; padding:8px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
-                    <div><b>${s.name}</b> (${s.course}) - मो: ${s.mobile} ${blockBadge}</div>
-                    <div style="display:flex; gap:5px;">
+                    <div><b>${s.name}</b> (${s.course}) - मो: ${s.mobile} ${blockBadge} ${downBadge}</div>
+                    <div style="display:flex; gap:4px;">
                         <button onclick="editStudent('${s.id}')" style="background:#38bdf8; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">एडिट</button>
-                        <button onclick="toggleBlockStudent('${s.id}', ${s.isBlocked || false})" style="background:${s.isBlocked?'#10b981':'#f59e0b'}; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">${s.isBlocked?'अनब्लॉक':'ब्लॉक'}</button>
+                        <button onclick="toggleDownloadPermission('${s.id}', ${s.canDownload || false})" style="background:${s.canDownload?'#10b981':'#f59e0b'}; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">${s.canDownload?'डाउनलोड रोकें':'अप्रूव करें'}</button>
+                        <button onclick="toggleBlockStudent('${s.id}', ${s.isBlocked || false})" style="background:${s.isBlocked?'#10b981':'#ef4444'}; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">${s.isBlocked?'अनब्लॉक':'ब्लॉक'}</button>
                         <button onclick="deleteStudent('${s.id}')" style="background:#ef4444; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">डिलीट</button>
                     </div>
                 </div>`;
                 cardSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
                 certSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
+                waSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.mobile})</option>`;
             });
             window.allMasterStudents = students;
 
@@ -796,6 +873,9 @@
                 if(!currentStu || currentStu.isBlocked){
                     alert("आपका अकाउंट एडमिन द्वारा ब्लॉक या डिलीट कर दिया गया है!");
                     logoutStudent();
+                } else {
+                    loggedInStudent = currentStu;
+                    activateStudentSessionUI();
                 }
             }
         });
