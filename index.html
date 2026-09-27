@@ -25,7 +25,6 @@
         .btn-secondary { background: var(--secondary); }
         .btn-danger { background: #ef4444; }
         .btn-warning { background: #f59e0b; color: #000; }
-        .btn-wa { background: #22c55e; color: #fff; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 8px; font-size: 14px; outline: none; }
         .hidden { display: none !important; }
         .test-item, .course-box, .faculty-box, .pdf-box, .absent-box { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
@@ -38,7 +37,6 @@
         #authModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.98); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
         .auth-box { background: #1e293b; padding: 30px; border-radius: 16px; width: 100%; max-width: 420px; border: 1px solid #334155; text-align: center; }
         
-        /* Stunning Color Full Certificate & ID Card Design */
         .cert-preview { 
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); 
             color: #0f172a; 
@@ -79,22 +77,37 @@
     <div id="authModal" style="display:none;">
         <div class="auth-box">
             <h2 style="color:#38bdf8; margin-bottom:10px;"><i class="fa-solid fa-graduation-cap"></i> दृष्टि कंप्यूटर सेंटर</h2>
-            <p style="font-size:13px; color:#94a3b8; margin-bottom:15px;">सुरक्षित परीक्षा और ऐप एक्सेस के लिए अपनी जानकारी से लॉगिन करें:</p>
-            <input type="text" id="regStudentName" placeholder="पूरा नाम (Full Name)">
-            <input type="text" id="regStudentFather" placeholder="पिता का नाम (Father's Name)">
-            <input type="text" id="regStudentMother" placeholder="माता का नाम (Mother's Name)">
-            <input type="date" id="regStudentDob" style="color-scheme: dark;">
-            <input type="tel" id="regStudentMobile" placeholder="मोबाइल नंबर (Mobile Number - Login ID)">
-            <select id="regStudentCourse">
-                <option value="CCC">CCC</option>
-                <option value="ADCA">ADCA</option>
-                <option value="DCA">DCA</option>
-                <option value="Tally ERP9">Tally ERP9</option>
-                <option value="BASIC">BASIC</option>
-                <option value="MS Word & Excel">MS Word & Excel</option>
-                <option value="O Level">O Level</option>
-            </select>
-            <button class="btn btn-secondary" onclick="registerAndLoginStudent()">डेटा सुरक्षित करें & प्रवेश करें</button>
+            <p style="font-size:13px; color:#94a3b8; margin-bottom:15px;">छात्र लॉगिन / नया रजिस्ट्रेशन:</p>
+            
+            <div id="loginModeToggle" style="display:flex; gap:10px; margin-bottom:15px;">
+                <button type="button" class="btn" id="btnTabNew" onclick="switchAuthTab('new')" style="background:#4f46e5; font-size:12px;">नया रजिस्ट्रेशन</button>
+                <button type="button" class="btn" id="btnTabLogin" onclick="switchAuthTab('login')" style="background:#334155; font-size:12px;">पहिले से ID है</button>
+            </div>
+
+            <div id="newStudentFormBox">
+                <input type="text" id="regStudentName" placeholder="पूरा नाम (Full Name)">
+                <input type="text" id="regStudentFather" placeholder="पिता का नाम (Father's Name)">
+                <input type="text" id="regStudentMother" placeholder="माता का नाम (Mother's Name)">
+                <input type="date" id="regStudentDob" style="color-scheme: dark;">
+                <input type="tel" id="regStudentMobile" placeholder="मोबाइल नंबर (Mobile Number)">
+                <select id="regStudentCourse">
+                    <option value="CCC">CCC</option>
+                    <option value="ADCA">ADCA</option>
+                    <option value="DCA">DCA</option>
+                    <option value="Tally ERP9">Tally ERP9</option>
+                    <option value="BASIC">BASIC</option>
+                    <option value="MS Word & Excel">MS Word & Excel</option>
+                    <option value="O Level">O Level</option>
+                </select>
+                <button class="btn btn-secondary" onclick="registerNewStudent()">रजिस्टर करें & ID-Password बनाएं</button>
+            </div>
+
+            <div id="oldStudentFormBox" style="display:none;">
+                <input type="text" id="loginStudentIdInput" placeholder="अपनी Login ID दर्ज करें (जैसे: DRISHTI102)">
+                <input type="password" id="loginStudentPassInput" placeholder="अपना Password दर्ज करें">
+                <button class="btn btn-secondary" onclick="loginExistingStudent()">लॉगिन करें</button>
+            </div>
+
             <p style="font-size:11px; color:#64748b; margin-top:12px;">संचालक: अभिषेक ठाकुर सर (Wazirganj, Badaun)</p>
         </div>
     </div>
@@ -114,7 +127,7 @@
 <div class="container">
     <div id="studentWelcomeBanner" class="card" style="background: linear-gradient(135deg, #10b981, #059669); color: white; display: none;">
         <h3 style="color:white;"><i class="fa-solid fa-circle-check"></i> स्वागत है, <span id="welcomeStudentNameText"></span>!</h3>
-        <p style="font-size:13px;" id="welcomeStudentDetailsText">कोर्स: - | मोबाइल: -</p>
+        <p style="font-size:13px;" id="welcomeStudentDetailsText">कोर्स: - | Login ID: -</p>
         <button onclick="logoutStudent()" style="background:rgba(0,0,0,0.3); border:none; color:white; padding:6px 12px; border-radius:6px; margin-top:10px; cursor:pointer; font-size:12px;"><i class="fa-solid fa-right-from-bracket"></i> लॉग आउट / अकाउंट बदलें</button>
     </div>
 
@@ -122,18 +135,11 @@
 
     <div class="card hidden" id="adminDashboard">
         <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (फुल कंट्रोल & मैनेजमेंट)</h3>
-        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र रिकॉर्ड, फीस व्हाट्सएप मैसेज, और आईडी/सर्टिफिकेट अप्रूवल मैनेज कर सकते हैं।</p>
+        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र रिकॉर्ड, फीस, और आईडी/सर्टिफिकेट अप्रूवल मैनेज कर सकते हैं।</p>
         
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">एडमिन पासवर्ड बदलें</h4>
         <input type="password" id="newAdminPassword" placeholder="नया पासवर्ड (min 4)">
         <button class="btn btn-secondary" onclick="changeAdminPassword()">पासवर्ड अपडेट करें</button>
-        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
-
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">💬 छात्र को व्हाट्सएप नोटिफिकेशन / फीस मैसेज भेजें</h4>
-        <select id="waStudentSelect" style="margin-bottom:8px;"><option value="">व्हाट्सएप के लिए छात्र चुनें...</option></select>
-        <input type="text" id="waStudentNumber" placeholder="छात्र का व्हाट्सएप मोबाइल नंबर (जैसे: 919258533717)">
-        <textarea id="waMessageText" placeholder="संदेश लिखें (जैसे: प्रिय छात्र, आपकी इस महीने की फीस बकाया है, कृपया जमा करें। - दृष्टि कंप्यूटर सेंटर)"></textarea>
-        <button class="btn btn-wa" onclick="sendWhatsAppNotification()"><i class="fa-brands fa-whatsapp"></i> व्हाट्सएप पर भेजें</button>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">👥 छात्र रिकॉर्ड और फीस रजिस्टर करें</h4>
@@ -142,7 +148,9 @@
         <input type="text" id="mStudentFather" placeholder="पिता का नाम">
         <input type="text" id="mStudentMother" placeholder="माता का नाम">
         <input type="date" id="mStudentDob" style="color-scheme: dark;">
-        <input type="text" id="mStudentMobile" placeholder="मोबाइल नंबर (Login ID)">
+        <input type="text" id="mStudentMobile" placeholder="मोबाइल नंबर">
+        <input type="text" id="mStudentLoginId" placeholder="Login ID (जैसे: DRISHTI101)">
+        <input type="text" id="mStudentPassword" placeholder="Password">
         <select id="mStudentCourse">
             <option value="CCC">CCC</option>
             <option value="ADCA">ADCA</option>
@@ -339,7 +347,7 @@
         let today = new Date().toISOString().split('T')[0];
         if(document.getElementById("absentDate")) document.getElementById("absentDate").value = today;
 
-        let savedStudent = localStorage.getItem("drishti_student_session_v9");
+        let savedStudent = localStorage.getItem("drishti_student_session_v10");
         if(savedStudent){
             try {
                 loggedInStudent = JSON.parse(savedStudent);
@@ -355,7 +363,7 @@
                     }
                 });
             } catch(e){
-                localStorage.removeItem("drishti_student_session_v9");
+                localStorage.removeItem("drishti_student_session_v10");
                 document.getElementById("authModal").style.display = "flex";
             }
         } else {
@@ -364,7 +372,21 @@
         loadRealtimeData();
     };
 
-    function registerAndLoginStudent(){
+    function switchAuthTab(mode){
+        if(mode === 'new'){
+            document.getElementById("newStudentFormBox").style.display = "block";
+            document.getElementById("oldStudentFormBox").style.display = "none";
+            document.getElementById("btnTabNew").style.background = "#4f46e5";
+            document.getElementById("btnTabLogin").style.background = "#334155";
+        } else {
+            document.getElementById("newStudentFormBox").style.display = "none";
+            document.getElementById("oldStudentFormBox").style.display = "block";
+            document.getElementById("btnTabLogin").style.background = "#4f46e5";
+            document.getElementById("btnTabNew").style.background = "#334155";
+        }
+    }
+
+    function registerNewStudent(){
         let name = document.getElementById("regStudentName").value.trim();
         let father = document.getElementById("regStudentFather").value.trim();
         let mother = document.getElementById("regStudentMother").value.trim();
@@ -377,7 +399,11 @@
             return;
         }
 
+        let randomNum = Math.floor(100 + Math.random() * 900);
+        let loginId = "DRISHTI" + randomNum;
+        let password = "pass" + Math.floor(10 + Math.random() * 90);
         let studentId = "stu_" + Date.now();
+
         loggedInStudent = {
             id: studentId,
             name: name,
@@ -385,6 +411,8 @@
             mother: mother,
             dob: dob,
             mobile: mobile,
+            loginId: loginId,
+            password: password,
             course: course,
             batchTime: "6 Months",
             feesPaid: "0",
@@ -393,15 +421,50 @@
             isBlocked: false
         };
 
-        db.ref('masterStudents/' + studentId).set(loggedInStudent);
-        localStorage.setItem("drishti_student_session_v9", JSON.stringify(loggedInStudent));
-        document.getElementById("authModal").style.display = "none";
-        activateStudentSessionUI();
-        alert("सफलतापूर्वक लॉगिन हो गया!");
+        db.ref('masterStudents/' + studentId).set(loggedInStudent).then(() => {
+            localStorage.setItem("drishti_student_session_v10", JSON.stringify(loggedInStudent));
+            document.getElementById("authModal").style.display = "none";
+            activateStudentSessionUI();
+            alert(`रजिस्ट्रेशन सफल!\n\nआपकी Login ID: ${loginId}\nआपका Password: ${password}\n\nइसे याद रखें या नोट कर लें!`);
+        });
+    }
+
+    function loginExistingStudent(){
+        let inputId = document.getElementById("loginStudentIdInput").value.trim();
+        let inputPass = document.getElementById("loginStudentPassInput").value.trim();
+
+        if(!inputId || !inputPass){
+            alert("कृपया Login ID और Password दोनों दर्ज करें!");
+            return;
+        }
+
+        db.ref('masterStudents').once('value', snap => {
+            let foundStudent = null;
+            snap.forEach(child => {
+                let s = child.val();
+                if(s.loginId === inputId && s.password === inputPass){
+                    foundStudent = s;
+                }
+            });
+
+            if(foundStudent){
+                if(foundStudent.isBlocked){
+                    alert("आपका अकाउंट एडमिन द्वारा ब्लॉक कर दिया गया है!");
+                    return;
+                }
+                loggedInStudent = foundStudent;
+                localStorage.setItem("drishti_student_session_v10", JSON.stringify(loggedInStudent));
+                document.getElementById("authModal").style.display = "none";
+                activateStudentSessionUI();
+                alert("सफलतापूर्वक लॉगिन हो गया!");
+            } else {
+                alert("गलत Login ID या Password! कृपया सही जानकारी दें या नया रजिस्ट्रेशन करें।");
+            }
+        });
     }
 
     function logoutStudent(){
-        localStorage.removeItem("drishti_student_session_v9");
+        localStorage.removeItem("drishti_student_session_v10");
         loggedInStudent = null;
         document.getElementById("authModal").style.display = "flex";
         document.getElementById("studentProfileCard").style.display = "none";
@@ -412,7 +475,7 @@
         if(!loggedInStudent) return;
         document.getElementById("studentWelcomeBanner").style.display = "block";
         document.getElementById("welcomeStudentNameText").innerText = loggedInStudent.name;
-        document.getElementById("welcomeStudentDetailsText").innerHTML = `कोर्स: <b>${loggedInStudent.course}</b> | मोबाइल: ${loggedInStudent.mobile} | पिता: ${loggedInStudent.father}`;
+        document.getElementById("welcomeStudentDetailsText").innerHTML = `कोर्स: <b>${loggedInStudent.course}</b> | Login ID: <b style="color:#f59e0b;">${loggedInStudent.loginId || 'N/A'}</b> (Pass: ${loggedInStudent.password || 'N/A'})`;
 
         let idContainer = document.getElementById("myIdCardContainer");
         idContainer.innerHTML = renderIdCardHTML(loggedInStudent, null);
@@ -445,7 +508,7 @@
                         <p><b>Mother:</b> ${stu.mother || '---'}</p>
                         <p><b>DOB:</b> ${stu.dob || '---'}</p>
                         <p><b>Course:</b> <span style="color:#10b981; font-weight:bold;">${stu.course}</span></p>
-                        <p><b>Mobile:</b> ${stu.mobile}</p>
+                        <p><b>Login ID:</b> <span style="color:#f59e0b;">${stu.loginId || '---'}</span></p>
                         <p><b>Fees:</b> ${stu.feesPaid || '0'} / ${stu.feesTotal || '2500'}</p>
                     </div>
                 </div>`;
@@ -478,27 +541,6 @@
         alert("लॉग आउट हो गया!");
     }
 
-    function sendWhatsAppNotification(){
-        let number = document.getElementById("waStudentNumber").value.trim();
-        let message = document.getElementById("waMessageText").value.trim();
-        if(!number || !message){ alert("कृपया व्हाट्सएप नंबर और संदेश दोनों भरें!"); return; }
-        let cleanNum = number.replace(/[^0-9]/g, '');
-        let waUrl = `https://wa.me/${cleanNum}?text=${encodeURIComponent(message)}`;
-        window.open(waUrl, '_blank');
-    }
-
-    function fillWaNumberFromSelect(){
-        let selId = document.getElementById("waStudentSelect").value;
-        if(!selId) return;
-        let students = window.allMasterStudents || [];
-        let s = students.find(item => item.id === selId);
-        if(s && s.mobile){
-            document.getElementById("waStudentNumber").value = s.mobile;
-        }
-    }
-
-    document.getElementById("waStudentSelect").onchange = fillWaNumberFromSelect;
-
     function publishEmergencyAlert(){
         let msg = document.getElementById("emergencyInput").value.trim();
         if(!msg) { alert("अलर्ट संदेश लिखें!"); return; }
@@ -528,6 +570,8 @@
         let mother = document.getElementById("mStudentMother").value.trim();
         let dob = document.getElementById("mStudentDob").value;
         let mobile = document.getElementById("mStudentMobile").value.trim();
+        let loginId = document.getElementById("mStudentLoginId").value.trim();
+        let password = document.getElementById("mStudentPassword").value.trim();
         let course = document.getElementById("mStudentCourse").value;
         let batchTime = document.getElementById("mStudentBatchTime").value.trim();
         let feesPaid = document.getElementById("mStudentFeesPaid").value.trim();
@@ -537,6 +581,9 @@
         if(!name || !mobile){ alert("छात्र का नाम और मोबाइल नंबर आवश्यक है!"); return; }
 
         let studentId = editKey ? editKey : ("stu_" + Date.now());
+        if(!loginId) loginId = "DRISHTI" + Math.floor(100 + Math.random() * 900);
+        if(!password) password = "pass" + Math.floor(10 + Math.random() * 90);
+
         let studentObj = {
             id: studentId,
             name: name,
@@ -544,6 +591,8 @@
             mother: mother,
             dob: dob,
             mobile: mobile,
+            loginId: loginId,
+            password: password,
             course: course,
             batchTime: batchTime || "6 Months",
             feesPaid: feesPaid,
@@ -570,6 +619,8 @@
         document.getElementById("mStudentMother").value = s.mother || "";
         document.getElementById("mStudentDob").value = s.dob || "";
         document.getElementById("mStudentMobile").value = s.mobile || "";
+        document.getElementById("mStudentLoginId").value = s.loginId || "";
+        document.getElementById("mStudentPassword").value = s.password || "";
         document.getElementById("mStudentCourse").value = s.course || "CCC";
         document.getElementById("mStudentBatchTime").value = s.batchTime || "";
         document.getElementById("mStudentFeesPaid").value = s.feesPaid || "";
@@ -585,6 +636,8 @@
         document.getElementById("mStudentMother").value = "";
         document.getElementById("mStudentDob").value = "";
         document.getElementById("mStudentMobile").value = "";
+        document.getElementById("mStudentLoginId").value = "";
+        document.getElementById("mStudentPassword").value = "";
         document.getElementById("mStudentBatchTime").value = "";
         document.getElementById("mStudentFeesPaid").value = "";
         document.getElementById("mStudentFeesTotal").value = "";
@@ -723,7 +776,7 @@
     }
 
     function renderIdCardDOM(name, father, mother, dob, course, mobile, fees, imgSrc){
-        let stuObj = { name, father, mother, dob, course, mobile, feesPaid: fees, feesTotal: "" };
+        let stuObj = { name, father, mother, dob, course, mobile, loginId: "---", feesPaid: fees, feesTotal: "" };
         let container = document.getElementById("adminGeneratedIdContainer");
         container.innerHTML = renderIdCardHTML(stuObj, imgSrc);
     }
@@ -838,12 +891,10 @@
             let list = document.getElementById("adminMasterStudentList");
             let cardSelect = document.getElementById("cardSelectStudent");
             let certSelect = document.getElementById("certSelectStudent");
-            let waSelect = document.getElementById("waStudentSelect");
             
             list.innerHTML = "";
             cardSelect.innerHTML = `<option value="">या सूची से छात्र चुनें...</option>`;
             certSelect.innerHTML = `<option value="">या सूची से छात्र चुनें...</option>`;
-            waSelect.innerHTML = `<option value="">व्हाट्सएप के लिए छात्र चुनें...</option>`;
             
             let students = [];
             snap.forEach(child => {
@@ -853,17 +904,16 @@
                 let downBadge = s.canDownload ? `<span style="color:#38bdf8;">[डाउनलोड: चालू]</span>` : `<span style="color:#f59e0b;">[डाउनलोड: बंद]</span>`;
                 
                 list.innerHTML += `<div style="font-size:11px; padding:8px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
-                    <div><b>${s.name}</b> (${s.course}) - मो: ${s.mobile} ${blockBadge} ${downBadge}</div>
+                    <div><b>${s.name}</b> (${s.course}) - ID: <span style="color:#f59e0b;">${s.loginId}</span> ${blockBadge} ${downBadge}</div>
                     <div style="display:flex; gap:4px;">
                         <button onclick="editStudent('${s.id}')" style="background:#38bdf8; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">एडिट</button>
-                        <button onclick="toggleDownloadPermission('${s.id}', ${s.canDownload || false})" style="background:${s.canDownload?'#10b981':'#f59e0b'}; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">${s.canDownload?'डाउनलोड रोकें':'अप्रूव करें'}</button>
+                        <button onclick="toggleDownloadPermission('${s.id}', ${s.canDownload || false})" style="background:${s.canDownload?'#10b981':'#f59e0b'}; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">${s.canDownload?'रोकें':'अप्रूव'}</button>
                         <button onclick="toggleBlockStudent('${s.id}', ${s.isBlocked || false})" style="background:${s.isBlocked?'#10b981':'#ef4444'}; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">${s.isBlocked?'अनब्लॉक':'ब्लॉक'}</button>
                         <button onclick="deleteStudent('${s.id}')" style="background:#ef4444; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">डिलीट</button>
                     </div>
                 </div>`;
-                cardSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
-                certSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
-                waSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.mobile})</option>`;
+                cardSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.loginId})</option>`;
+                certSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.loginId})</option>`;
             });
             window.allMasterStudents = students;
 
