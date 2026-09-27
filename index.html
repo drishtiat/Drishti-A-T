@@ -17,6 +17,7 @@
         body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 40px; }
         header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 25px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; position: relative; }
         .director-profile img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 8px; }
+        .center-banner-img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 12px; margin-top: 12px; border: 2px solid #38bdf8; display: none; }
         .container { padding: 20px; max-width: 600px; margin: auto; }
         .card { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; }
         .card h3 { font-size: 16px; color: #38bdf8; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
@@ -51,14 +52,14 @@
             <input type="text" id="regStudentFather" placeholder="पिता का नाम (Father's Name)">
             <input type="text" id="regStudentMother" placeholder="माता का नाम (Mother's Name)">
             <input type="date" id="regStudentDob" style="color-scheme: dark;">
-            <input type="tel" id="regStudentMobile" placeholder="मोबाइल नंबर (Mobile Number)">
+            <input type="tel" id="regStudentMobile" placeholder="मोबाइल नंबर (Mobile Number - Login ID)">
             <select id="regStudentCourse">
                 <option value="CCC">CCC</option>
                 <option value="ADCA">ADCA</option>
                 <option value="DCA">DCA</option>
                 <option value="Tally ERP9">Tally ERP9</option>
                 <option value="BASIC">BASIC</option>
-                <option value="MS Word & Excel">MS Word & Excel</option>
+                <option value="MS Word & Excel">MS Word & Excel Fundamental</option>
                 <option value="O Level">O Level</option>
             </select>
             <button class="btn btn-secondary" onclick="registerAndLoginStudent()">डेटा सुरक्षित करें & प्रवेश करें</button>
@@ -72,7 +73,10 @@
         <h1 id="headerDirectorName">अभिषेक ठाकुर सर</h1>
         <p id="headerDirectorTitle">Founder & Director | दृष्टि कंप्यूटर सेंटर</p>
     </div>
-    <p style="font-size:12px; margin-top:6px;"><i class="fa-solid fa-location-dot"></i> <span id="headerAddress">Pusgwan Road, Wazirganj, Badaun</span></p>
+    <!-- परमानेंट बैनर इमेज यहाँ लोड होगी -->
+    <img id="liveCenterBanner" class="center-banner-img" alt="Center Banner">
+    
+    <p style="font-size:12px; margin-top:10px;"><i class="fa-solid fa-location-dot"></i> <span id="headerAddress">Pusgwan Road, Wazirganj, Badaun</span></p>
     <p style="font-size:12px;"><i class="fa-solid fa-phone"></i> Helpline: <span id="headerHelpline">9258533717</span></p>
 </header>
 
@@ -89,6 +93,11 @@
         <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (लाइव कंट्रोल)</h3>
         <p style="font-size:12px; color:#10b981; margin-bottom:15px;">ऑनलाइन डेटाबेस सक्रिय है।</p>
         
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🖼️ सेंटर का परमानेंट बैनर फोटो लिंक सेट करें</h4>
+        <input type="text" id="adminBannerUrl" placeholder="बैनर इमेज का लिंक (Image URL या Direct Link)">
+        <button class="btn btn-secondary" onclick="updatePermanentBanner()">बैनर हमेशा के लिए सेव करें</button>
+        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📍 सेंटर का पता और हेल्पलाइन अपडेट करें</h4>
         <input type="text" id="adminCenterAddress" placeholder="सेंटर का पूरा पता (Address)">
         <input type="text" id="adminHelplineNo" placeholder="हेल्पलाइन नंबर">
@@ -112,7 +121,7 @@
             <option value="DCA">DCA</option>
             <option value="Tally ERP9">Tally ERP9</option>
             <option value="BASIC">BASIC</option>
-            <option value="MS Word & Excel">MS Word & Excel</option>
+            <option value="MS Word & Excel">MS Word & Excel Fundamental</option>
             <option value="O Level">O Level</option>
         </select>
         <input type="text" id="mStudentBatchTime" placeholder="बैच समय (जैसे: 8:00 AM)">
@@ -122,7 +131,7 @@
         <div id="adminMasterStudentList" style="margin-top:10px; max-height:200px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📊 छात्रों के ऑनलाइन टेस्ट स्कोर</h4>
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📊 छात्रों के ऑनलाइन टेस्ट स्कोर और रिजल्ट</h4>
         <div id="adminTestScoresContainer" style="max-height:220px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
@@ -135,10 +144,10 @@
         <div id="adminGeneratedDocContainer" style="margin-top:15px;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🚨 छुट्टी या समय बदलाव का अलर्ट भेजें</h4>
-        <textarea id="emergencyInput" placeholder="जैसे: आज बारिश के कारण सेंटर बंद रहेगा..."></textarea>
-        <button class="btn btn-danger" onclick="publishEmergencyAlert()">अलर्ट सभी छात्रों को भेजें</button>
-        <button class="btn btn-secondary" onclick="clearEmergencyAlert()" style="margin-top:5px; background:#475569;">अलर्ट हटाएं</button>
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🚨 छुट्टी या समय बदलाव का नोटिफिकेशन भेजें</h4>
+        <textarea id="emergencyInput" placeholder="जैसे: आज बारिश के कारण सेंटर बंद रहेगा या टाइम बदल गया है..."></textarea>
+        <button class="btn btn-danger" onclick="publishEmergencyAlert()">नोटिफिकेशन सभी छात्रों को भेजें</button>
+        <button class="btn btn-secondary" onclick="clearEmergencyAlert()" style="margin-top:5px; background:#475569;">नोटिफिकेशन हटाएं</button>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🎓 ऑनलाइन एडमिशन लिस्ट</h4>
@@ -146,7 +155,7 @@
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📅 दैनिक एब्सेंट छात्र दर्ज करें</h4>
-        <select id="absentCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally ERP9</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option></select>
+        <select id="absentCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally ERP9</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel Fundamental</option></select>
         <input type="text" id="absentStudentName" placeholder="छात्र का नाम">
         <input type="date" id="absentDate">
         <button class="btn btn-secondary" onclick="saveAbsentStudent()">एब्सेंट छात्र पब्लिश करें</button>
@@ -154,7 +163,7 @@
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">टेस्ट प्रश्न जोड़ें</h4>
-        <select id="testCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option></select>
+        <select id="testCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel Fundamental</option></select>
         <input type="text" id="testQuestion" placeholder="प्रश्न लिखें">
         <input type="text" id="optA" placeholder="विकल्प A"><input type="text" id="optB" placeholder="विकल्प B"><input type="text" id="optC" placeholder="विकल्प C"><input type="text" id="optD" placeholder="विकल्प D">
         <select id="correctOpt"><option value="A">सही: A</option><option value="B">सही: B</option><option value="C">सही: C</option><option value="D">सही: D</option></select>
@@ -162,10 +171,18 @@
         <div id="adminTestList" style="margin-top:15px; max-height:140px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">PDF / नोट्स अपलोड लिंक</h4>
-        <input type="text" id="pdfTitle" placeholder="Title (जैसे: MS Word Notes)">
-        <select id="pdfCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option></select>
-        <input type="text" id="pdfUrl" placeholder="File Link (Google Drive / Public Link)">
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">PDF / Excel / Notes अपलोड लिंक (सभी प्रकार के नोट्स)</h4>
+        <input type="text" id="pdfTitle" placeholder="Title (जैसे: Excel Funda Notes या Word PDF)">
+        <select id="pdfCourseSelect">
+            <option value="ALL">सभी कोर्सेज के लिए</option>
+            <option value="CCC">CCC</option>
+            <option value="ADCA">ADCA</option>
+            <option value="DCA">DCA</option>
+            <option value="Tally ERP9">Tally</option>
+            <option value="BASIC">BASIC</option>
+            <option value="MS Word & Excel">MS Word & Excel Fundamental</option>
+        </select>
+        <input type="text" id="pdfUrl" placeholder="File Link (Google Drive / PDF / Excel Direct Link)">
         <button class="btn btn-secondary" onclick="uploadPdf()">नोट्स / PDF पब्लिश करें</button>
         <div id="adminPdfList" style="margin-top:10px; max-height:140px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
@@ -183,7 +200,7 @@
     <div class="card">
         <h3><i class="fa-solid fa-user-xmark" style="color:#ef4444;"></i> आज की एब्सेंट सूची (Daily Absent)</h3>
         <select id="userAbsentCourseSelect" onchange="loadUserAbsent()">
-            <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally ERP9</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option>
+            <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally ERP9</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel Fundamental</option>
         </select>
         <div id="userAbsentContainer" style="margin-top:15px;"></div>
     </div>
@@ -195,7 +212,9 @@
             <p style="font-size:11px; color:#10b981;" id="cameraStatusText"><i class="fa-solid fa-shield-halved"></i> कैमरा प्रॉक्टरिंग सक्रिय (नकल वर्जित)</p>
             <button class="btn btn-secondary" onclick="initExamCamera()" style="padding:6px; font-size:11px; margin-top:5px; width:auto;">कैमरा चालू करें</button>
         </div>
-        <select id="userTestSelect" onchange="loadUserTest()"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option></select>
+        <select id="userTestSelect" onchange="loadUserTest()">
+            <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel Fundamental</option>
+        </select>
         <div id="onlineTestContainer" style="margin-top:15px;"></div>
         <button class="btn btn-secondary" onclick="submitStudentTestSecure()" style="margin-top:15px;">टेस्ट सबमिट करें और स्कोर भेजें</button>
         <div id="testResultMsg" style="margin-top:10px; font-weight:bold; font-size:14px; text-align:center;"></div>
@@ -204,10 +223,10 @@
     <div class="card"><h3><i class="fa-solid fa-bullhorn" style="color:#f59e0b;"></i> लाइव नोटिस बोर्ड</h3><div id="noticeDisplay"></div></div>
     
     <div class="card">
-        <h3><i class="fa-solid fa-file-pdf" style="color:#ef4444;"></i> PDF & Study Notes</h3>
+        <h3><i class="fa-solid fa-file-pdf" style="color:#ef4444;"></i> PDF, Excel & Study Notes</h3>
         <select id="userPdfCourseSelect" onchange="loadUserPdfs()" style="margin-bottom:12px;">
             <option value="ALL">सभी कोर्सेज के नोट्स</option>
-            <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option>
+            <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel Fundamental</option>
         </select>
         <div id="studentPdfList"></div>
     </div>
@@ -232,7 +251,7 @@
         <div class="course-box"><strong>DCA:</strong> Rs. 5800</div>
         <div class="course-box"><strong>Tally:</strong> Rs. 3500</div>
         <div class="course-box"><strong>BASIC:</strong> Rs. 500/month</div>
-        <div class="course-box"><strong>MS Word & Excel:</strong> Rs. 1000</div>
+        <div class="course-box"><strong>MS Word & Excel Fundamental:</strong> Rs. 1000</div>
     </div>
     <div class="card"><h3><i class="fa-solid fa-phone"></i> संपर्क</h3><a href="tel:9258533717" class="contact-btn call-btn">कॉल करें</a><a href="https://wa.me/919258533717" class="contact-btn wa-btn">WhatsApp</a></div>
     <div class="secret-admin-trigger" onclick="openAdminPanel()"><i class="fa-solid fa-key"></i> Admin Login</div>
@@ -295,7 +314,7 @@
             feesTotal: "2500"
         };
 
-        db.ref('masterStudents/' + loggedInStudent.id).set(loggedInStudent);
+        db.ref('masterStudents/' + loggedInStudent.mobile).set(loggedInStudent);
         localStorage.setItem("drishti_student_session_v2", JSON.stringify(loggedInStudent));
         document.getElementById("authModal").style.display = "none";
         activateStudentSessionUI();
@@ -319,6 +338,9 @@
         let idContainer = document.getElementById("myIdCardContainer");
         idContainer.innerHTML = renderIdCardHTML(loggedInStudent);
         document.getElementById("studentProfileCard").style.display = "block";
+        loadUserTest();
+        loadUserAbsent();
+        loadUserPdfs();
     }
 
     function renderIdCardHTML(stu){
@@ -376,15 +398,23 @@
         });
     }
 
-    // केवल एड्रेस और हेल्पलाइन अपडेट करने के लिए (फोटो/बैनर पूरी तरह हटा दिया गया है)
+    function updatePermanentBanner(){
+        let url = document.getElementById("adminBannerUrl").value.trim();
+        if(!url) { alert("कृपया बैनर का लिंक (URL) दर्ज करें!"); return; }
+        db.ref('branding/bannerUrl').set(url).then(() => {
+            alert("बैनर अब ऐप पर हमेशा के लिए सेट हो गया है!");
+        });
+    }
+
     function updateCenterBrandingDirect(){
         let address = document.getElementById("adminCenterAddress").value.trim();
         let helpline = document.getElementById("adminHelplineNo").value.trim();
 
-        db.ref('branding').update({
-            address: address,
-            helpline: helpline
-        }).then(() => {
+        let updates = {};
+        if(address) updates.address = address;
+        if(helpline) updates.helpline = helpline;
+
+        db.ref('branding').update(updates).then(() => {
             alert("सेंटर का विवरण सफलतापूर्वक अपडेट हो गया!");
         });
     }
@@ -396,15 +426,15 @@
 
     function publishEmergencyAlert(){
         let msg = document.getElementById("emergencyInput").value.trim();
-        if(!msg) { alert("अलर्ट संदेश लिखें!"); return; }
+        if(!msg) { alert("नोटिफिकेशन संदेश लिखें!"); return; }
         db.ref('emergencyAlert').set(msg).then(() => {
-            alert("इमरजेंसी अलर्ट सभी छात्रों के ऐप पर लाइव हो गया है!");
+            alert("छुट्टी / समय बदलाव का नोटिफिकेशन सभी छात्रों तक भेज दिया गया है!");
         });
     }
 
     function clearEmergencyAlert(){
         db.ref('emergencyAlert').remove().then(() => {
-            alert("अलर्ट हटा दिया गया है।");
+            alert("नोटिफिकेशन हटा दिया गया है।");
             document.getElementById("emergencyInput").value = "";
         });
     }
@@ -429,9 +459,8 @@
 
         if(!name || !mobile){ alert("छात्र का नाम और मोबाइल नंबर आवश्यक है!"); return; }
 
-        let ref = db.ref('masterStudents').push();
-        ref.set({
-            id: ref.key,
+        db.ref('masterStudents/' + mobile).set({
+            id: mobile,
             name: name,
             father: father,
             mother: mother,
@@ -450,7 +479,7 @@
         let selectId = document.getElementById("cardSelectStudent").value;
         if(!selectId){ alert("कृपया सूची से छात्र चुनें!"); return; }
         let students = window.allMasterStudents || [];
-        let stu = students.find(s => s.id === selectId);
+        let stu = students.find(s => s.mobile === selectId);
         if(!stu) return;
 
         let container = document.getElementById("adminGeneratedDocContainer");
@@ -461,11 +490,11 @@
         let selectId = document.getElementById("cardSelectStudent").value;
         if(!selectId){ alert("कृपया सूची से छात्र चुनें!"); return; }
         let students = window.allMasterStudents || [];
-        let stu = students.find(s => s.id === selectId);
+        let stu = students.find(s => s.mobile === selectId);
         if(!stu) return;
 
         let container = document.getElementById("adminGeneratedDocContainer");
-        container.innerHTML = `<h4 style="color:#38bdf8; font-size:13px; margin-bottom:5px;">जनरेटेड बेसिक सर्टिफिकेट:</h4>
+        container.innerHTML = `<h4 style="color:#38bdf8; font-size:13px; margin-bottom:5px;">जनरेटेड सर्टिफिकेट:</h4>
             <div class="cert-preview">
                 <h2 style="color:#1e293b; margin-bottom:5px; font-size:18px;">DRISHTI COMPUTER CENTRE</h2>
                 <p style="font-size:11px; color:#555;">Wazirganj, Badaun | Certificate of Completion</p>
@@ -478,30 +507,213 @@
             </div>`;
     }
 
+    // --- ऑनलाइन टेस्ट और स्कोर ट्रैकिंग ---
+    function saveAdminTest(){
+        let course = document.getElementById("testCourseSelect").value;
+        let q = document.getElementById("testQuestion").value.trim();
+        let a = document.getElementById("optA").value.trim();
+        let b = document.getElementById("optB").value.trim();
+        let c = document.getElementById("optC").value.trim();
+        let d = document.getElementById("optD").value.trim();
+        let correct = document.getElementById("correctOpt").value;
+
+        if(!q || !a || !b) { alert("प्रश्न और विकल्प भरें!"); return; }
+
+        db.ref('tests/' + course).push({
+            question: q, optA: a, optB: b, optC: c, optD: d, correct: correct
+        }).then(() => {
+            alert("प्रश्न सफलतापूर्वक सेव हो गया!");
+            document.getElementById("testQuestion").value = "";
+            document.getElementById("optA").value = "";
+            document.getElementById("optB").value = "";
+            document.getElementById("optC").value = "";
+            document.getElementById("optD").value = "";
+        });
+    }
+
+    function loadUserTest(){
+        let course = document.getElementById("userTestSelect").value;
+        db.ref('tests/' + course).once('value', (snapshot) => {
+            let container = document.getElementById("onlineTestContainer");
+            container.innerHTML = "";
+            let data = snapshot.val();
+            if(!data){
+                container.innerHTML = "<p style='font-size:12px; color:#94a3b8;'>इस कोर्स के लिए अभी कोई टेस्ट उपलब्ध नहीं है।</p>";
+                return;
+            }
+            window.currentExamQuestions = [];
+            let index = 0;
+            for(let key in data){
+                let item = data[key];
+                item.id = key;
+                window.currentExamQuestions.push(item);
+                let html = `<div class="test-item" id="q_box_${index}">
+                    <p style="font-size:13px; font-weight:600; margin-bottom:8px;">Q${index+1}. ${item.question}</p>
+                    <label style="display:block; font-size:12px; margin-bottom:4px;"><input type="radio" name="ans_${index}" value="A"> A) ${item.optA}</label>
+                    <label style="display:block; font-size:12px; margin-bottom:4px;"><input type="radio" name="ans_${index}" value="B"> B) ${item.optB}</label>
+                    <label style="display:block; font-size:12px; margin-bottom:4px;"><input type="radio" name="ans_${index}" value="C"> C) ${item.optC}</label>
+                    <label style="display:block; font-size:12px; margin-bottom:4px;"><input type="radio" name="ans_${index}" value="D"> D) ${item.optD}</label>
+                </div>`;
+                container.innerHTML += html;
+                index++;
+            }
+        });
+    }
+
+    function submitStudentTestSecure(){
+        if(!loggedInStudent){ alert("कृपया पहले लॉगिन करें!"); return; }
+        let questions = window.currentExamQuestions || [];
+        if(questions.length === 0){ alert("कोई प्रश्न हल करने के लिए नहीं है!"); return; }
+
+        let score = 0;
+        let total = questions.length;
+
+        questions.forEach((q, index) => {
+            let radios = document.getElementsByName(`ans_${index}`);
+            let selected = "";
+            for(let r of radios){
+                if(r.checked){ selected = r.value; break; }
+            }
+            if(selected === q.correct){
+                score++;
+            }
+        });
+
+        let course = document.getElementById("userTestSelect").value;
+        let resultObj = {
+            studentName: loggedInStudent.name,
+            mobile: loggedInStudent.mobile,
+            course: course,
+            score: score,
+            total: total,
+            date: new Date().toLocaleString()
+        };
+
+        // एडमिन के लिए स्कोर डेटाबेस में सुरक्षित भेजना
+        db.ref('testScores/' + loggedInStudent.mobile).set(resultObj).then(() => {
+            document.getElementById("testResultMsg.innerHTML").innerText = `टेस्ट सबमिट हो गया! आपके अंक हैं: ${score} / ${total}`;
+            alert(`टेस्ट सफलताપूर्वक सबमिट हो गया!\nआपका स्कोर: ${score} / ${total}\nयह डेटा एडमिन को भेज दिया गया है।`);
+        });
+    }
+
+    // --- PDF, Excel और नोट्स अपलोड ---
+    function uploadPdf(){
+        let title = document.getElementById("pdfTitle").value.trim();
+        let course = document.getElementById("pdfCourseSelect").value;
+        let url = document.getElementById("pdfUrl").value.trim();
+
+        if(!title || !url){ alert("टाइटल और फाइल लिंक दोनों भरें!"); return; }
+
+        db.ref('studyPdfs').push({
+            title: title, course: course, url: url
+        }).then(() => {
+            alert("नोट्स / PDF / Excel फाइल सफलताપूर्वक पब्लिश हो गई!");
+            document.getElementById("pdfTitle").value = "";
+            document.getElementById("pdfUrl").value = "";
+        });
+    }
+
+    function loadUserPdfs(){
+        let selectedCourse = document.getElementById("userPdfCourseSelect").value;
+        db.ref('studyPdfs').on('value', (snapshot) => {
+            let container = document.getElementById("studentPdfList");
+            container.innerHTML = "";
+            let data = snapshot.val();
+            if(!data){
+                container.innerHTML = "<p style='font-size:12px; color:#94a3b8;'>अभी कोई नोट्स उपलब्ध नहीं हैं।</p>";
+                return;
+            }
+            for(let key in data){
+                let p = data[key];
+                if(selectedCourse === "ALL" || p.course === selectedCourse || p.course === "ALL"){
+                    container.innerHTML += `<div class="pdf-box">
+                        <p style="font-size:13px; font-weight:600; color:#38bdf8;">${p.title} <span style="font-size:10px; color:#10b981;">(${p.course})</span></p>
+                        <a href="${p.url}" target="_blank" class="btn btn-secondary" style="display:inline-block; text-align:center; text-decoration:none; margin-top:8px; padding:6px 12px; font-size:12px;"><i class="fa-solid fa-download"></i> फाइल खोलें / डाउनलोड करें</a>
+                    </div>`;
+                }
+            }
+        });
+    }
+
+    function saveAbsentStudent(){
+        let course = document.getElementById("absentCourseSelect").value;
+        let name = document.getElementById("absentStudentName").value.trim();
+        let date = document.getElementById("absentDate").value;
+
+        if(!name || !date){ alert("छात्र का नाम और दिनांक भरें!"); return; }
+
+        db.ref('absentList/' + course).push({
+            name: name, date: date
+        }).then(() => {
+            alert("एब्सेंट छात्र दर्ज हो गया!");
+            document.getElementById("absentStudentName").value = "";
+        });
+    }
+
+    function loadUserAbsent(){
+        let course = document.getElementById("userAbsentCourseSelect").value;
+        db.ref('absentList/' + course).on('value', (snapshot) => {
+            let container = document.getElementById("userAbsentContainer");
+            container.innerHTML = "";
+            let data = snapshot.val();
+            if(!data){
+                container.innerHTML = "<p style='font-size:12px; color:#94a3b8;'>आज कोई छात्र एब्सेंट नहीं है।</p>";
+                return;
+            }
+            let html = "";
+            for(let key in data){
+                let item = data[key];
+                html += `<div style="font-size:12px; padding:6px 0; border-bottom:1px solid #334155;"><i class="fa-solid fa-user-xmark" style="color:#ef4444;"></i> <b>${item.name}</b> (दिनांक: ${item.date})</div>`;
+            }
+            container.innerHTML = html;
+        });
+    }
+
+    function submitOnlineAdmission(){
+        let name = document.getElementById("admName").value.trim();
+        let mobile = document.getElementById("admMobile").value.trim();
+        let father = document.getElementById("admFather").value.trim();
+        let course = document.getElementById("admCourseSelect").value;
+        let advance = document.getElementById("admAdvance").value.trim();
+
+        if(!name || !mobile){ alert("नाम और मोबाइल नंबर आवश्यक है!"); return; }
+
+        db.ref('admissions').push({
+            name: name, mobile: mobile, father: father, course: course, advance: advance, date: new Date().toLocaleDateString()
+        }).then(() => {
+            alert("आपका ऑनलाइन एडमिशन फॉर्म सफलतापूर्वक सबमिट हो गया है!");
+            document.getElementById("admName").value = "";
+            document.getElementById("admMobile").value = "";
+            document.getElementById("admFather").value = "";
+            document.getElementById("admAdvance").value = "";
+        });
+    }
+
     function loadRealtimeData(){
         db.ref('branding').on('value', (snapshot) => {
             let data = snapshot.val();
             if(data){
-                if(data.address){
-                    document.getElementById("headerAddress").innerText = data.address;
-                }
-                if(data.helpline){
-                    document.getElementById("headerHelpline").innerText = data.helpline;
+                if(data.address) document.getElementById("headerAddress").innerText = data.address;
+                if(data.helpline) document.getElementById("headerHelpline").innerText = data.helpline;
+                let bannerImg = document.getElementById("liveCenterBanner");
+                if(data.bannerUrl){
+                    bannerImg.src = data.bannerUrl;
+                    bannerImg.style.display = "block";
+                } else {
+                    bannerImg.style.display = "none";
                 }
             }
         });
 
         db.ref('adminPassword').on('value', (snapshot) => {
-            if(snapshot.val()){
-                currentAdminPassword = snapshot.val();
-            }
+            if(snapshot.val()){ currentAdminPassword = snapshot.val(); }
         });
 
         db.ref('emergencyAlert').on('value', (snapshot) => {
             let alertBox = document.getElementById("emergencyAlertBox");
             let msg = snapshot.val();
             if(msg){
-                alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <b>विशेष सूचना:</b> ${msg}`;
+                alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <b>सेंटर नोटिफिकेशन / छुट्टी सूचना:</b> ${msg}`;
                 alertBox.style.display = "block";
             } else {
                 alertBox.style.display = "none";
@@ -513,6 +725,7 @@
             document.getElementById("noticeDisplay").innerHTML = `<p style="font-size:13px; color:#38bdf8;">${n || 'कोई नया नोटिस नहीं है।'}</p>`;
         });
 
+        // एडमिन पैनल में छात्रों की लिस्ट और उनके टेस्ट स्कोर देखने का डेटा
         db.ref('masterStudents').on('value', (snapshot) => {
             let data = snapshot.val();
             let listContainer = document.getElementById("adminMasterStudentList");
@@ -523,70 +736,49 @@
 
             if(data){
                 let html = "<table><tr><th>नाम</th><th>कोर्स</th><th>मोबाइल</th><th>जमा फीस</th></tr>";
-                Object.values(data).forEach(stu => {
+                for(let key in data){
+                    let stu = data[key];
                     window.allMasterStudents.push(stu);
-                    html += `<tr><td>${stu.name}</td><td>${stu.course}</td><td>${stu.mobile}</td><td>${stu.feesPaid || 0}</td></tr>`;
-                    cardSelect.innerHTML += `<option value="${stu.id}">${stu.name} (${stu.course})</option>`;
-                });
+                    html += `<tr><td>${stu.name}</td><td>${stu.course}</td><td>${stu.mobile}</td><td>₹${stu.feesPaid || 0}</td></tr>`;
+                    cardSelect.innerHTML += `<option value="${stu.mobile}">${stu.name} (${stu.course} - ${stu.mobile})</option>`;
+                }
                 html += "</table>";
                 listContainer.innerHTML = html;
-            } else {
-                listContainer.innerHTML = "<p style='font-size:12px; color:#94a3b8;'>कोई छात्र रिकॉर्ड नहीं है।</p>";
             }
         });
-    }
 
-    function uploadPdf(){
-        let title = document.getElementById("pdfTitle").value.trim();
-        let course = document.getElementById("pdfCourseSelect").value;
-        let url = document.getElementById("pdfUrl").value.trim();
-        if(!title || !url){ alert("कृपया टाइटल और फाइल लिंक दोनों भरें!"); return; }
+        // छात्रों के टेस्ट स्कोर एडमिन पैनल में देखना
+        db.ref('testScores').on('value', (snapshot) => {
+            let data = snapshot.val();
+            let container = document.getElementById("adminTestScoresContainer");
+            container.innerHTML = "";
+            if(!data){
+                container.innerHTML = "<p style='font-size:12px; color:#94a3b8;'>अभी किसी छात्र ने टेस्ट नहीं दिया है।</p>";
+                return;
+            }
+            let html = "<table><tr><th>छात्र का नाम</th><th>कोर्स</th><th>मोबाइल</th><th>स्कोर</th><th>दिनांक</th></tr>";
+            for(let key in data){
+                let sc = data[key];
+                html += `<tr><td><b>${sc.studentName}</b></td><td>${sc.course}</td><td>${sc.mobile}</td><td style="color:#10b981; font-weight:bold;">${sc.score} / ${sc.total}</td><td>${sc.date}</td></tr>`;
+            }
+            html += "</table>";
+            container.innerHTML = html;
+        });
 
-        let ref = db.ref('pdfs').push();
-        ref.set({ id: ref.key, title: title, course: course, url: url }).then(() => {
-            alert("PDF/नोट्स सफलतापूर्वक पब्लिश हो गया!");
-            document.getElementById("pdfTitle").value = "";
-            document.getElementById("pdfUrl").value = "";
+        db.ref('admissions').on('value', (snapshot) => {
+            let data = snapshot.val();
+            let container = document.getElementById("adminAdmissionList");
+            container.innerHTML = "";
+            if(!data) return;
+            let html = "<table><tr><th>नाम</th><th>पिता</th><th>कोर्स</th><th>मोबाइल</th><th>एडवांस</th></tr>";
+            for(let key in data){
+                let adm = data[key];
+                html += `<tr><td>${adm.name}</td><td>${adm.father}</td><td>${adm.course}</td><td>${adm.mobile}</td><td>₹${adm.advance}</td></tr>`;
+            }
+            html += "</table>";
+            container.innerHTML = html;
         });
     }
-
-    function submitOnlineAdmission(){
-        let name = document.getElementById("admName").value.trim();
-        let mobile = document.getElementById("admMobile").value.trim();
-        let father = document.getElementById("admFather").value.trim();
-        let course = document.getElementById("admCourseSelect").value;
-        let advance = document.getElementById("admAdvance").value.trim();
-
-        if(!name || !mobile){ alert("नाम और मोबाइल नंबर भरना अनिवार्य है!"); return; }
-
-        let ref = db.ref('admissions').push();
-        ref.set({ name, mobile, father, course, advance, date: new Date().toLocaleDateString() }).then(() => {
-            alert("आपका ऑनलाइन एडमिशन फॉर्म सफलतापूर्वक सबमिट हो गया है!");
-            document.getElementById("admName").value = "";
-            document.getElementById("admMobile").value = "";
-            document.getElementById("admFather").value = "";
-            document.getElementById("admAdvance").value = "";
-        });
-    }
-
-    function saveAbsentStudent(){
-        let course = document.getElementById("absentCourseSelect").value;
-        let name = document.getElementById("absentStudentName").value.trim();
-        let date = document.getElementById("absentDate").value;
-        if(!name){ alert("छात्र का नाम दर्ज करें!"); return; }
-
-        let ref = db.ref('absents').push();
-        ref.set({ course, name, date }).then(() => {
-            alert("एब्सेंट छात्र दर्ज कर दिया गया है!");
-            document.getElementById("absentStudentName").value = "";
-        });
-    }
-
-    function loadUserAbsent(){}
-    function loadUserTest(){}
-    function submitStudentTestSecure(){}
-    function saveAdminTest(){}
-    function loadUserPdfs(){}
 </script>
 </body>
 </html>
