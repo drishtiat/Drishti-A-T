@@ -36,9 +36,8 @@
         
         #authModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.98); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
         .auth-box { background: #1e293b; padding: 30px; border-radius: 16px; width: 100%; max-width: 420px; border: 1px solid #334155; text-align: center; }
-        .id-card-preview { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid #38bdf8; border-radius: 12px; padding: 20px; text-align: left; position: relative; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         
-        /* Stunning Color Full Certificate Design */
+        /* Stunning Color Full Certificate & ID Card Design */
         .cert-preview { 
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); 
             color: #0f172a; 
@@ -54,10 +53,23 @@
         .cert-preview h3 { color: #f59e0b; font-size: 16px; font-weight: 600; margin-top: 5px; text-transform: uppercase; }
         .cert-student-img { width: 90px; height: 110px; object-fit: cover; border: 3px solid #4f46e5; border-radius: 6px; position: absolute; top: 30px; right: 30px; background: #fff; }
 
+        .idcard-box-print {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 3px solid #38bdf8;
+            border-radius: 12px;
+            padding: 20px;
+            color: #f8fafc;
+            text-align: left;
+            position: relative;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .idcard-student-img { width: 75px; height: 90px; object-fit: cover; border: 2px solid #38bdf8; border-radius: 6px; position: absolute; top: 20px; right: 20px; background: #fff; }
+
         @media print {
             body * { visibility: hidden; }
-            #adminGeneratedCertContainer, #adminGeneratedCertContainer *, #adminGeneratedIdContainer, #adminGeneratedIdContainer * { visibility: visible; }
-            #adminGeneratedCertContainer, #adminGeneratedIdContainer { position: absolute; left: 0; top: 0; width: 100%; }
+            #printableArea, #printableArea * { visibility: visible; }
+            #printableArea { position: absolute; left: 0; top: 0; width: 100%; background: white !important; color: black !important; }
         }
     </style>
 </head>
@@ -88,12 +100,10 @@
 
 <header id="mainHeader">
     <div class="director-profile">
-        <!-- Abhishek Sir Photo -->
         <img id="headerDirectorImg" src="abhishek_photo.jpg" alt="Director Abhishek Thakur" onerror="this.src='https://via.placeholder.com/90'">
         <h1 id="headerDirectorName">अभिषेक ठाकुर सर</h1>
         <p id="headerDirectorTitle">Founder & Director | दृष्टि कंप्यूटर सेंटर</p>
     </div>
-    <!-- Permanent Banner Image from Google Drive -->
     <img src="https://lh3.googleusercontent.com/d/1Pji2HFEkbsxQevKDC5XnCTqv2TJZxad6=s800" alt="Center Banner" class="banner-preview-img" onerror="this.style.display='none'">
     
     <p style="font-size:12px; margin-top:8px;"><i class="fa-solid fa-location-dot"></i> <span id="headerAddress">Pusgwan Road, Wazirganj, Badaun (243726)</span></p>
@@ -111,7 +121,7 @@
 
     <div class="card hidden" id="adminDashboard">
         <h3><i class="fa-solid fa-user-shield"></i> एडमिन पैनल (फुल कंट्रोल & मैनेजमेंट)</h3>
-        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र रिकॉर्ड, टेस्ट, नोट्स और कलरफुल सर्टिफिकेट कस्टमाइज़ कर सकते हैं।</p>
+        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र रिकॉर्ड, टेस्ट, नोट्स और कलरफुल सर्टिफिकेट/आईडी कार्ड मैनेज कर सकते हैं।</p>
         
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">एडमिन पासवर्ड बदलें</h4>
         <input type="password" id="newAdminPassword" placeholder="नया पासवर्ड (min 4)">
@@ -134,7 +144,7 @@
             <option value="MS Word & Excel">MS Word & Excel</option>
             <option value="O Level">O Level</option>
         </select>
-        <input type="text" id="mStudentBatchTime" placeholder="बैच समय / कोर्स अवधि (जैसे: 6 Months - Jan to June)">
+        <input type="text" id="mStudentBatchTime" placeholder="कोर्स अवधि (जैसे: 6 Months / 1 Year)">
         <input type="text" id="mStudentFeesPaid" placeholder="जमा फीस">
         <input type="text" id="mStudentFeesTotal" placeholder="कुल फीस">
         <button class="btn btn-secondary" onclick="saveMasterStudentData()">छात्र रिकॉर्ड सेव / अपडेट करें</button>
@@ -146,7 +156,7 @@
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🎨 कलरफुल सर्टिफिकेट जेनरेटर (फुली एडिटेबल)</h4>
-        <p style="font-size:11px; color:#94a3b8; margin-bottom:10px;">छात्र चुनें या नीचे अपनी पसंद की डिटेल्स बदलकर प्रिंट करें:</p>
+        <p style="font-size:11px; color:#94a3b8; margin-bottom:10px;">छात्र चुनें या नीचे कुछ भी एडिट करके प्रिंट करें:</p>
         <select id="certSelectStudent" onchange="fillCertificateFormFromSelect()" style="margin-bottom:10px;"><option value="">या सूची से छात्र चुनें...</option></select>
         
         <input type="text" id="certName" placeholder="Student Full Name">
@@ -154,25 +164,40 @@
         <input type="text" id="certMother" placeholder="Mother's Name">
         <input type="text" id="certDob" placeholder="Date of Birth (e.g. 15-Aug-2005)">
         <input type="text" id="certCourse" placeholder="Course Name (e.g. ADVANCE DIPLOMA IN COMPUTER APPLICATIONS)">
-        <input type="text" id="certDuration" placeholder="Course Duration (e.g. 1 Year / 6 Months)">
-        <input type="text" id="certGrade" placeholder="Grade / Percentage (e.g. 'A' Grade / 88%)">
+        <input type="text" id="certDuration" placeholder="Course Duration (e.g. 6 Months)">
+        <input type="text" id="certGrade" placeholder="Grade / Performance (e.g. A+ Grade)">
         <label style="font-size:12px; color:#38bdf8; display:block; margin-bottom:5px;">छात्र की फोटो अपलोड करें:</label>
         <input type="file" id="certStudentPhotoFile" accept="image/*" style="padding:8px;">
         
         <div style="display:flex; gap:10px; margin-top:10px;">
             <button class="btn btn-secondary" onclick="generateCustomCertificate()">सर्टिफिकेट प्रीव्यू देखें</button>
-            <button class="btn btn-warning" onclick="window.print()" style="background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> प्रिंट / PDF सेव करें</button>
+            <button class="btn btn-warning" onclick="printElement('printableCertContainer')" style="background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> प्रिंट / PDF सेव करें</button>
         </div>
-        <div id="adminGeneratedCertContainer" style="margin-top:15px;"></div>
+        <div id="printableCertContainer">
+            <div id="adminGeneratedCertContainer" style="margin-top:15px;"></div>
+        </div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🆔 डिजिटल ID कार्ड बनाएं</h4>
-        <select id="cardSelectStudent" style="margin-bottom:10px;"><option value="">छात्र चुनें...</option></select>
-        <div style="display:flex; gap:10px;">
-            <button class="btn btn-secondary" onclick="generateAdminIdCard()">ID कार्ड देखें</button>
-            <button class="btn btn-warning" onclick="window.print()" style="background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> प्रिंट ID कार्ड</button>
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🆔 डिजिटल ID कार्ड जेनरेटर (फुली एडिटेबल)</h4>
+        <select id="cardSelectStudent" onchange="fillIdCardFormFromSelect()" style="margin-bottom:10px;"><option value="">या सूची से छात्र चुनें...</option></select>
+        
+        <input type="text" id="idName" placeholder="Student Full Name">
+        <input type="text" id="idFather" placeholder="Father's Name">
+        <input type="text" id="idMother" placeholder="Mother's Name">
+        <input type="text" id="idDob" placeholder="Date of Birth">
+        <input type="text" id="idCourse" placeholder="Course Name">
+        <input type="text" id="idMobile" placeholder="Mobile Number">
+        <input type="text" id="idFees" placeholder="Fees Status (e.g. Paid 2500 / 2500)">
+        <label style="font-size:12px; color:#38bdf8; display:block; margin-bottom:5px;">आईडी कार्ड के लिए छात्र की फोटो अपलोड करें:</label>
+        <input type="file" id="idStudentPhotoFile" accept="image/*" style="padding:8px;">
+
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button class="btn btn-secondary" onclick="generateCustomIdCard()">ID कार्ड प्रीव्यू देखें</button>
+            <button class="btn btn-warning" onclick="printElement('printableIdContainer')" style="background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> प्रिंट ID कार्ड</button>
         </div>
-        <div id="adminGeneratedIdContainer" style="margin-top:15px;"></div>
+        <div id="printableIdContainer">
+            <div id="adminGeneratedIdContainer" style="margin-top:15px;"></div>
+        </div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📊 छात्रों के ऑनलाइन टेस्ट स्कोर</h4>
@@ -295,7 +320,7 @@
         let today = new Date().toISOString().split('T')[0];
         if(document.getElementById("absentDate")) document.getElementById("absentDate").value = today;
 
-        let savedStudent = localStorage.getItem("drishti_student_session_v6");
+        let savedStudent = localStorage.getItem("drishti_student_session_v7");
         if(savedStudent){
             try {
                 loggedInStudent = JSON.parse(savedStudent);
@@ -310,7 +335,7 @@
                     }
                 });
             } catch(e){
-                localStorage.removeItem("drishti_student_session_v6");
+                localStorage.removeItem("drishti_student_session_v7");
             }
         }
         loadRealtimeData();
@@ -345,14 +370,14 @@
         };
 
         db.ref('masterStudents/' + studentId).set(loggedInStudent);
-        localStorage.setItem("drishti_student_session_v6", JSON.stringify(loggedInStudent));
+        localStorage.setItem("drishti_student_session_v7", JSON.stringify(loggedInStudent));
         document.getElementById("authModal").style.display = "none";
         activateStudentSessionUI();
         alert("सफलतापूर्वक लॉगिन हो गया!");
     }
 
     function logoutStudent(){
-        localStorage.removeItem("drishti_student_session_v6");
+        localStorage.removeItem("drishti_student_session_v7");
         loggedInStudent = null;
         document.getElementById("authModal").style.display = "flex";
         document.getElementById("studentProfileCard").style.display = "none";
@@ -366,27 +391,26 @@
         document.getElementById("welcomeStudentDetailsText").innerHTML = `कोर्स: <b>${loggedInStudent.course}</b> | मोबाइल: ${loggedInStudent.mobile} | पिता: ${loggedInStudent.father}`;
 
         let idContainer = document.getElementById("myIdCardContainer");
-        idContainer.innerHTML = renderIdCardHTML(loggedInStudent);
+        idContainer.innerHTML = renderIdCardHTML(loggedInStudent, null);
         document.getElementById("studentProfileCard").style.display = "block";
     }
 
-    function renderIdCardHTML(stu){
-        return `<div class="id-card-preview">
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #475569; padding-bottom:10px; margin-bottom:10px;">
-                        <div>
-                            <h4 style="color:#38bdf8; font-size:14px;">दृष्टि कंप्यूटर सेंटर</h4>
-                            <p style="font-size:10px; color:#94a3b8;">Wazirganj, Badaun (Helpline: 9258533717)</p>
-                        </div>
-                        <i class="fa-solid fa-id-badge" style="font-size:28px; color:#f59e0b;"></i>
+    function renderIdCardHTML(stu, imgSrc){
+        let photoTag = imgSrc ? `<img src="${imgSrc}" class="idcard-student-img" alt="Student Photo">` : `<div class="idcard-student-img" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#aaa;">Photo</div>`;
+        return `<div class="idcard-box-print">
+                    ${photoTag}
+                    <div style="border-bottom:1px solid #475569; padding-bottom:8px; margin-bottom:8px; padding-right:85px;">
+                        <h4 style="color:#38bdf8; font-size:14px;">दृष्टि कंप्यूटर सेंटर</h4>
+                        <p style="font-size:10px; color:#94a3b8;">Wazirganj, Badaun (9258533717)</p>
                     </div>
-                    <div style="font-size:12px; line-height:1.6;">
-                        <p><b>नाम (Name):</b> ${stu.name}</p>
-                        <p><b>पिता का नाम:</b> ${stu.father || '---'}</p>
-                        <p><b>माता का नाम:</b> ${stu.mother || '---'}</p>
-                        <p><b>जन्मतिथि (DOB):</b> ${stu.dob || '---'}</p>
-                        <p><b>कोर्स:</b> <span style="color:#10b981; font-weight:bold;">${stu.course}</span></p>
-                        <p><b>मोबाइल नंबर:</b> ${stu.mobile}</p>
-                        <p><b>फीस स्टेटस:</b> जमा: <span style="color:#22c55e;">${stu.feesPaid || '0'}</span> / कुल: ${stu.feesTotal || '2500'}</p>
+                    <div style="font-size:12px; line-height:1.6; padding-right:85px;">
+                        <p><b>Name:</b> ${stu.name}</p>
+                        <p><b>Father:</b> ${stu.father || '---'}</p>
+                        <p><b>Mother:</b> ${stu.mother || '---'}</p>
+                        <p><b>DOB:</b> ${stu.dob || '---'}</p>
+                        <p><b>Course:</b> <span style="color:#10b981; font-weight:bold;">${stu.course}</span></p>
+                        <p><b>Mobile:</b> ${stu.mobile}</p>
+                        <p><b>Fees:</b> ${stu.feesPaid || '0'} / ${stu.feesTotal || '2500'}</p>
                     </div>
                 </div>`;
     }
@@ -472,6 +496,8 @@
         db.ref('masterStudents/' + studentId).set(studentObj).then(() => {
             alert("छात्र रिकॉर्ड सफलतापूर्वक सेव/अपडेट हो गया!");
             clearStudentForm();
+        }).catch(err => {
+            alert("एरर: " + err.message);
         });
     }
 
@@ -537,6 +563,22 @@
         document.getElementById("certGrade").value = "A+ (Distinction)";
     }
 
+    function fillIdCardFormFromSelect(){
+        let selectId = document.getElementById("cardSelectStudent").value;
+        if(!selectId) return;
+        let students = window.allMasterStudents || [];
+        let stu = students.find(s => s.id === selectId);
+        if(!stu) return;
+
+        document.getElementById("idName").value = stu.name || "";
+        document.getElementById("idFather").value = stu.father || "";
+        document.getElementById("idMother").value = stu.mother || "";
+        document.getElementById("idDob").value = stu.dob || "";
+        document.getElementById("idCourse").value = stu.course || "";
+        document.getElementById("idMobile").value = stu.mobile || "";
+        document.getElementById("idFees").value = `Paid ${stu.feesPaid || '0'} / ${stu.feesTotal || '2500'}`;
+    }
+
     function generateCustomCertificate(){
         let name = document.getElementById("certName").value.trim() || "STUDENT NAME";
         let father = document.getElementById("certFather").value.trim() || "FATHER'S NAME";
@@ -590,15 +632,48 @@
             </div>`;
     }
 
-    function generateAdminIdCard(){
-        let selectId = document.getElementById("cardSelectStudent").value;
-        if(!selectId){ alert("कृपया सूची से छात्र चुनें!"); return; }
-        let students = window.allMasterStudents || [];
-        let stu = students.find(s => s.id === selectId);
-        if(!stu) return;
+    function generateCustomIdCard(){
+        let name = document.getElementById("idName").value.trim() || "STUDENT NAME";
+        let father = document.getElementById("idFather").value.trim() || "FATHER'S NAME";
+        let mother = document.getElementById("idMother").value.trim() || "MOTHER'S NAME";
+        let dob = document.getElementById("idDob").value.trim() || "DD/MM/YYYY";
+        let course = document.getElementById("idCourse").value.trim() || "COURSE";
+        let mobile = document.getElementById("idMobile").value.trim() || "MOBILE";
+        let fees = document.getElementById("idFees").value.trim() || "FEES";
 
+        let photoInput = document.getElementById("idStudentPhotoFile");
+
+        if(photoInput.files && photoInput.files[0]){
+            let reader = new FileReader();
+            reader.onload = function(e){
+                renderIdCardDOM(name, father, mother, dob, course, mobile, fees, e.target.result);
+            };
+            reader.readAsDataURL(photoInput.files[0]);
+        } else {
+            renderIdCardDOM(name, father, mother, dob, course, mobile, fees, null);
+        }
+    }
+
+    function renderIdCardDOM(name, father, mother, dob, course, mobile, fees, imgSrc){
+        let stuObj = { name, father, mother, dob, course, mobile, feesPaid: fees, feesTotal: "" };
         let container = document.getElementById("adminGeneratedIdContainer");
-        container.innerHTML = `<h4 style="color:#38bdf8; font-size:13px; margin-bottom:5px;">जनरेटेड ID कार्ड:</h4>` + renderIdCardHTML(stu);
+        container.innerHTML = renderIdCardHTML(stuObj, imgSrc);
+    }
+
+    function printElement(containerId) {
+        let content = document.getElementById(containerId).innerHTML;
+        let printWindow = window.open('', '', 'height=600,width=800');
+        printWindow.document.write('<html><head><title>Print Preview - Drishti Computer Centre</title>');
+        printWindow.document.write('<style>body{font-family:Poppins, sans-serif; padding:20px;} .cert-preview{border:8px double #4f46e5; padding:20px; text-align:center;} .idcard-box-print{border:2px solid #38bdf8; padding:15px; border-radius:10px; background:#1e293b; color:#fff;}</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(content);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
     }
 
     function deleteGenericRecord(path, id){
@@ -696,7 +771,7 @@
             let cardSelect = document.getElementById("cardSelectStudent");
             let certSelect = document.getElementById("certSelectStudent");
             list.innerHTML = "";
-            cardSelect.innerHTML = `<option value="">छात्र चुनें...</option>`;
+            cardSelect.innerHTML = `<option value="">या सूची से छात्र चुनें...</option>`;
             certSelect.innerHTML = `<option value="">या सूची से छात्र चुनें...</option>`;
             let students = [];
             snap.forEach(child => {
