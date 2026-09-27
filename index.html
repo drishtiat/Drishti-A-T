@@ -54,7 +54,11 @@
         .cert-preview h3 { color: #f59e0b; font-size: 16px; font-weight: 600; margin-top: 5px; text-transform: uppercase; }
         .cert-student-img { width: 90px; height: 110px; object-fit: cover; border: 3px solid #4f46e5; border-radius: 6px; position: absolute; top: 30px; right: 30px; background: #fff; }
 
-        #examCameraFeed { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981; display: block; margin: 0 auto 10px auto; }
+        @media print {
+            body * { visibility: hidden; }
+            #adminGeneratedCertContainer, #adminGeneratedCertContainer *, #adminGeneratedIdContainer, #adminGeneratedIdContainer * { visibility: visible; }
+            #adminGeneratedCertContainer, #adminGeneratedIdContainer { position: absolute; left: 0; top: 0; width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -164,7 +168,10 @@
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🆔 डिजिटल ID कार्ड बनाएं</h4>
         <select id="cardSelectStudent" style="margin-bottom:10px;"><option value="">छात्र चुनें...</option></select>
-        <button class="btn btn-secondary" onclick="generateAdminIdCard()">ID कार्ड देखें</button>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-secondary" onclick="generateAdminIdCard()">ID कार्ड देखें</button>
+            <button class="btn btn-warning" onclick="window.print()" style="background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> प्रिंट ID कार्ड</button>
+        </div>
         <div id="adminGeneratedIdContainer" style="margin-top:15px;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
@@ -226,12 +233,7 @@
     </div>
 
     <div class="card" id="examWrapperCard">
-        <h3><i class="fa-solid fa-laptop-code" style="color:#f59e0b;"></i> ऑनलाइन सुरक्षित टेस्ट (Anti-Cheat Proctoring)</h3>
-        <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:12px; text-align:center;" id="cameraProctorBox">
-            <video id="examCameraFeed" autoplay playsinline muted></video>
-            <p style="font-size:11px; color:#10b981;" id="cameraStatusText"><i class="fa-solid fa-shield-halved"></i> कैमरा प्रॉक्टरिंग सक्रिय (नकल वर्जित)</p>
-            <button class="btn btn-secondary" onclick="initExamCamera()" style="padding:6px; font-size:11px; margin-top:5px; width:auto;">कैमरा चालू करें</button>
-        </div>
+        <h3><i class="fa-solid fa-laptop-code" style="color:#f59e0b;"></i> ऑनलाइन टेस्ट (बिना कैमरा के)</h3>
         <select id="userTestSelect" onchange="loadUserTest()"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option></select>
         <div id="onlineTestContainer" style="margin-top:15px;"></div>
         <button class="btn btn-secondary" onclick="submitStudentTestSecure()" style="margin-top:15px;">टेस्ट सबमिट करें और स्कोर भेजें</button>
@@ -287,14 +289,13 @@
 
     let currentAdminPassword = "Anamthakur@2006";
     let loggedInStudent = null;
-    let tempStudentPhotoBase64 = "";
 
     window.onload = function(){
         document.getElementById("adminDashboard").classList.add("hidden");
         let today = new Date().toISOString().split('T')[0];
         if(document.getElementById("absentDate")) document.getElementById("absentDate").value = today;
 
-        let savedStudent = localStorage.getItem("drishti_student_session_v5");
+        let savedStudent = localStorage.getItem("drishti_student_session_v6");
         if(savedStudent){
             try {
                 loggedInStudent = JSON.parse(savedStudent);
@@ -306,11 +307,10 @@
                     } else {
                         document.getElementById("authModal").style.display = "none";
                         activateStudentSessionUI();
-                        initExamCamera();
                     }
                 });
             } catch(e){
-                localStorage.removeItem("drishti_student_session_v5");
+                localStorage.removeItem("drishti_student_session_v6");
             }
         }
         loadRealtimeData();
@@ -345,15 +345,14 @@
         };
 
         db.ref('masterStudents/' + studentId).set(loggedInStudent);
-        localStorage.setItem("drishti_student_session_v5", JSON.stringify(loggedInStudent));
+        localStorage.setItem("drishti_student_session_v6", JSON.stringify(loggedInStudent));
         document.getElementById("authModal").style.display = "none";
         activateStudentSessionUI();
-        initExamCamera();
         alert("सफलतापूर्वक लॉगिन हो गया!");
     }
 
     function logoutStudent(){
-        localStorage.removeItem("drishti_student_session_v5");
+        localStorage.removeItem("drishti_student_session_v6");
         loggedInStudent = null;
         document.getElementById("authModal").style.display = "flex";
         document.getElementById("studentProfileCard").style.display = "none";
@@ -390,18 +389,6 @@
                         <p><b>फीस स्टेटस:</b> जमा: <span style="color:#22c55e;">${stu.feesPaid || '0'}</span> / कुल: ${stu.feesTotal || '2500'}</p>
                     </div>
                 </div>`;
-    }
-
-    function initExamCamera(){
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-        .then(stream => {
-            let videoElem = document.getElementById("examCameraFeed");
-            videoElem.srcObject = stream;
-            document.getElementById("cameraStatusText").innerHTML = '<i class="fa-solid fa-circle-check" style="color:#10b981;"></i> कैमरा सक्रिय है';
-        })
-        .catch(err => {
-            console.log("Camera access error:", err);
-        });
     }
 
     function openAdminPanel(){
@@ -520,7 +507,9 @@
     function deleteStudent(id){
         if(confirm("क्या आप वाकई इस छात्र को हमेशा के लिए डिलीट करना चाहते हैं?")){
             db.ref('masterStudents/' + id).remove().then(() => {
-                alert("छात्र रिकॉर्ड डिलीट कर दिया गया!");
+                alert("छात्र रिकॉर्ड सफलतापूर्वक डिलीट कर दिया गया!");
+            }).catch(err => {
+                alert("डिलीट करने में एरर आया: " + err.message);
             });
         }
     }
@@ -558,7 +547,6 @@
         let grade = document.getElementById("certGrade").value.trim() || "A+";
 
         let photoInput = document.getElementById("certStudentPhotoFile");
-        let photoHtml = `<div style="width:90px; height:110px; border:3px solid #4f46e5; border-radius:6px; position:absolute; top:30px; right:30px; background:#ddd; display:flex; align-items:center; justify-content:center; font-size:10px; color:#555;">No Photo</div>`;
 
         if(photoInput.files && photoInput.files[0]){
             let reader = new FileReader();
@@ -720,7 +708,7 @@
                     <div style="display:flex; gap:5px;">
                         <button onclick="editStudent('${s.id}')" style="background:#38bdf8; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">एडिट</button>
                         <button onclick="toggleBlockStudent('${s.id}', ${s.isBlocked || false})" style="background:${s.isBlocked?'#10b981':'#f59e0b'}; border:none; color:#000; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">${s.isBlocked?'अनब्लॉक':'ब्लॉक'}</button>
-                        <button onclick="deleteStudent('${s.id}')" style="background:#ef4444; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">डिटेल</button>
+                        <button onclick="deleteStudent('${s.id}')" style="background:#ef4444; border:none; color:#fff; padding:3px 6px; border-radius:4px; cursor:pointer; font-size:10px;">डिलीट</button>
                     </div>
                 </div>`;
                 cardSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
