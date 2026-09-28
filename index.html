@@ -44,11 +44,6 @@
         .bill-receipt-box h2 { color: #4f46e5; font-size: 20px; text-align: center; margin-bottom: 5px; }
         .bill-receipt-box p { font-size: 13px; margin-bottom: 6px; }
 
-        .idcard-box-print {
-            background: linear-gradient(135deg, #1e293b, #0f172a); border: 3px solid #38bdf8; border-radius: 12px; padding: 20px; color: #f8fafc; text-align: left; position: relative; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-        .idcard-student-img { width: 75px; height: 90px; object-fit: cover; border: 2px solid #38bdf8; border-radius: 6px; position: absolute; top: 20px; right: 20px; background: #fff; }
-
         @media print {
             body * { visibility: hidden; }
             #printableArea, #printableArea *, .printable-section, .printable-section * { visibility: visible; }
@@ -73,28 +68,114 @@
 <div class="container">
     <div id="emergencyAlertBox" class="alert-banner"></div>
 
+    <!-- Student Login Gateway Card (Admin Controlled Access) -->
+    <div class="card" id="studentLoginCard">
+        <h3><i class="fa-solid fa-lock" style="color:#38bdf8;"></i> छात्र पोर्टल लॉगिन (Student Portal Login)</h3>
+        <p style="font-size:12px; color:#94a3b8; margin-bottom:12px;">कृपया एडमिन द्वारा दिए गए यूजरनेम (मोबाइल नंबर) और पासवर्ड से लॉगिन करें:</p>
+        <input type="text" id="loginUsername" placeholder="मोबाइल नंबर / यूजरनेम दर्ज करें">
+        <input type="password" id="loginPassword" placeholder="पासवर्ड दर्ज करें">
+        <button class="btn btn-secondary" onclick="loginStudentPortal()">पोर्टल में प्रवेश करें</button>
+    </div>
+
+    <!-- Protected Student Dashboard (Hidden by default until verified) -->
+    <div id="protectedStudentDashboard" class="hidden">
+        <div style="background:#1e293b; padding:15px; border-radius:12px; margin-bottom:20px; border:1px solid #10b981; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h4 style="color:#10b981; font-size:15px;" id="welcomeStudentName">स्वागत है, छात्र</h4>
+                <p style="font-size:12px; color:#94a3b8;" id="welcomeStudentDetails">कोर्स: CCC</p>
+            </div>
+            <button class="btn btn-danger" onclick="logoutStudentPortal()" style="width:auto; padding:8px 12px; font-size:12px;">लॉग आउट</button>
+        </div>
+
+        <!-- Student Benefits & Features Section -->
+        <div class="card">
+            <h3><i class="fa-solid fa-laptop-code" style="color:#f59e0b;"></i> ऑनलाइन मॉक टेस्ट (Online Mock Test)</h3>
+            <div style="background:#0f172a; padding:12px; border-radius:8px; margin-bottom:12px; border:1px solid #334155;">
+                <input type="text" id="testStudentName" placeholder="अपना पूरा नाम दर्ज करें *" style="margin-bottom:8px;">
+                <input type="text" id="testStudentFather" placeholder="पिता का नाम दर्ज करें *" style="margin-bottom:8px;">
+                <select id="userTestSelect" onchange="loadUserTest()" style="margin-bottom:0;">
+                    <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option>
+                </select>
+            </div>
+            <div id="onlineTestContainer" style="margin-top:15px;"></div>
+            <button class="btn btn-secondary" onclick="submitStudentTestSecure()" style="margin-top:15px;">टेस्ट सबमिट करें और स्कोर देखें</button>
+            <div id="testResultMsg" style="margin-top:10px; font-weight:bold; font-size:14px; text-align:center;"></div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fa-solid fa-keyboard" style="color:#38bdf8;"></i> ऑनलाइन टाइपिंग प्रैक्टिस (English & Hindi)</h3>
+            <p style="font-size:12px; color:#94a3b8; margin-bottom:10px;">अपनी टाइपिंग स्पीड (WPM) और एक्यूरेसी जांचें:</p>
+            <select id="typingMode" style="margin-bottom:10px;">
+                <option value="english">English Typing Practice</option>
+                <option value="hindi">Hindi Typing (Kruti Dev / Mangal)</option>
+            </select>
+            <textarea id="typingInputBox" placeholder="यहाँ टाइप करना शुरू करें..." style="height:90px;"></textarea>
+            <button class="btn btn-secondary" onclick="checkTypingSpeed()">स्पीड जांचें (Calculate WPM)</button>
+            <div id="typingResultMsg" style="margin-top:10px; font-size:13px; color:#10b981; font-weight:bold; text-align:center;"></div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fa-solid fa-user-xmark" style="color:#ef4444;"></i> आज की एब्सेंट सूची (Daily Attendance)</h3>
+            <select id="userAbsentCourseSelect" onchange="loadUserAbsent()">
+                <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally ERP9</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option>
+            </select>
+            <div id="userAbsentContainer" style="margin-top:15px;"></div>
+        </div>
+
+        <div class="card"><h3><i class="fa-solid fa-bullhorn" style="color:#f59e0b;"></i> लाइव नोटिस बोर्ड & सूचनाएं</h3><div id="noticeDisplay"></div></div>
+        
+        <div class="card">
+            <h3><i class="fa-solid fa-file-pdf" style="color:#ef4444;"></i> डिजिटल स्टडी नोट्स & PDFs (Secure View)</h3>
+            <select id="userPdfCourseSelect" onchange="loadUserPdfs()" style="margin-bottom:12px;">
+                <option value="ALL">सभी कोर्सेज के नोट्स</option>
+                <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option>
+            </select>
+            <div id="studentPdfList"></div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3><i class="fa-solid fa-user-plus" style="color:#10b981;"></i> ऑनलाइन एडमिशन फॉर्म</h3>
+        <input type="text" id="admName" placeholder="पूरा नाम"><input type="text" id="admMobile" placeholder="मोबाइल"><input type="text" id="admFather" placeholder="पिता का नाम">
+        <select id="admCourseSelect">
+            <option value="CCC - Rs.2500">CCC (2500)</option><option value="ADCA - Rs.11500">ADCA (11500)</option><option value="DCA - Rs.5800">DCA (5800)</option><option value="Tally ERP9 - Rs.3500">Tally (3500)</option><option value="BASIC - Rs.500/month">BASIC (500/m)</option><option value="MS Word & Excel Fundamental - Rs.1000">MS Word & Excel Fundamental (1000)</option>
+        </select>
+        <input type="text" id="admAdvance" placeholder="एडवांस फीस"><button class="btn btn-secondary" onclick="submitOnlineAdmission()">फॉर्म सबमिट</button>
+    </div>
+
+    <div class="card"><h3><i class="fa-solid fa-graduation-cap"></i> हमारे कोर्सेज</h3>
+        <div class="course-box"><b>CCC:</b> Rs. 2500</div>
+        <div class="course-box"><b>ADCA:</b> Rs. 11500</div>
+        <div class="course-box"><b>DCA:</b> Rs. 5800</div>
+        <div class="course-box"><b>Tally:</b> Rs. 3500</div>
+        <div class="course-box"><b>BASIC:</b> Rs. 500/month</div>
+        <div class="course-box"><b>MS Word & Excel:</b> Rs. 1000</div>
+    </div>
+    <div class="card"><h3><i class="fa-solid fa-phone"></i> संपर्क</h3><a href="tel:9258533717" class="contact-btn call-btn">कॉल करें</a><a href="https://wa.me/919258533717" class="contact-btn wa-btn">WhatsApp</a></div>
+    
     <!-- Admin Management Panel -->
     <div class="card hidden" id="adminDashboard">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <h3 style="margin:0;"><i class="fa-solid fa-user-shield"></i> एडमिन मैनेजमेंट पैनल</h3>
             <button class="btn btn-warning" onclick="printElement('printableAdminContainer')" style="width:auto; padding:6px 12px; font-size:11px; background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> पूरा डेटा प्रिंट / सेव PDF</button>
         </div>
-        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र फीस रिकॉर्ड, मास्टर शीट, टेस्ट स्कोर और नोट्स मैनेज कर सकते हैं।</p>
+        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र जोड़ सकते हैं (पासवर्ड सहित), फीस रिकॉर्ड, टेस्ट स्कोर और नोट्स मैनेज कर सकते हैं।</p>
         
         <div id="printableAdminContainer" class="printable-section">
-            <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">👥 छात्र मास्टर शीट & फीस मैनेजमेंट</h4>
+            <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">👥 छात्र जोड़ें & पासवर्ड असाイン करें (App Access)</h4>
             <div style="background:#0f172a; padding:12px; border-radius:8px; margin-bottom:12px; border:1px solid #334155;">
                 <input type="hidden" id="editStudentKey" value="">
                 <input type="text" id="mStudentName" placeholder="छात्र का पूरा नाम *" style="margin-bottom:8px;">
                 <input type="text" id="mStudentFather" placeholder="पिता का नाम *" style="margin-bottom:8px;">
-                <input type="tel" id="mStudentMobile" placeholder="मोबाइल नंबर *" style="margin-bottom:8px;">
+                <input type="tel" id="mStudentMobile" placeholder="मोबाइल नंबर (User ID) *" style="margin-bottom:8px;">
+                <input type="text" id="mStudentPassword" placeholder="ऐप लॉगिन पासवर्ड सेट करें *" style="margin-bottom:8px;">
                 <select id="mStudentCourse" style="margin-bottom:8px;">
                     <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally ERP9</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option><option value="O Level">O Level</option>
                 </select>
                 <input type="text" id="mStudentBatchTime" placeholder="बैच टाइमिंग (जैसे: 8:00 AM)" style="margin-bottom:8px;">
                 <input type="text" id="mStudentFeesPaid" placeholder="जमा फीस (Paid Fees)" style="margin-bottom:8px;">
                 <input type="text" id="mStudentFeesTotal" placeholder="कुल फीस (Total Fees)" style="margin-bottom:8px;">
-                <button class="btn btn-secondary" onclick="saveMasterStudentData()">छात्र डेटा सेव करें</button>
+                <button class="btn btn-secondary" onclick="saveMasterStudentData()">छात्र डेटा & पासवर्ड सेव करें</button>
                 <button class="btn btn-warning" onclick="clearStudentForm()" style="background:#475569; color:#fff; margin-top:5px;">फॉर्म खाली करें</button>
             </div>
             
@@ -102,8 +183,8 @@
                 <table class="student-table">
                     <thead>
                         <tr>
-                            <th>नाम & पिता</th>
-                            <th>कोर्स / फीस</th>
+                            <th>नाम & मोबाइल (ID)</th>
+                            <th>पासवर्ड / कोर्स</th>
                             <th>एक्शन</th>
                         </tr>
                     </thead>
@@ -122,22 +203,6 @@
         <select id="billSelectStudent" onchange="generateStudentBill()" style="margin-bottom:10px;"><option value="">सूची से छात्र चुनें (बिल के लिए)...</option></select>
         <div id="printableBillContainer" class="printable-section"><div id="adminGeneratedBillContainer"></div></div>
         <button class="btn btn-warning" onclick="printElement('printableBillContainer')" style="background:#f59e0b; color:#000; margin-top:10px;"><i class="fa-solid fa-print"></i> फीस बिल / रसीद प्रिंट करें</button>
-        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
-
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🆔 डिजिटल ID कार्ड जेनरेटर</h4>
-        <select id="cardSelectStudent" onchange="fillIdCardFormFromSelect()" style="margin-bottom:10px;"><option value="">सूची से छात्र चुनें...</option></select>
-        <input type="text" id="idName" placeholder="Student Full Name">
-        <input type="text" id="idFather" placeholder="Father's Name">
-        <input type="text" id="idCourse" placeholder="Course Name">
-        <input type="text" id="idMobile" placeholder="Mobile Number">
-        <input type="text" id="idFees" placeholder="Fees Status">
-        <label style="font-size:12px; color:#38bdf8; display:block; margin-bottom:5px;">आईडी कार्ड के लिए छात्र की फोटो अपलोड करें:</label>
-        <input type="file" id="idStudentPhotoFile" accept="image/*" style="padding:8px;">
-        <div style="display:flex; gap:10px; margin-top:10px;">
-            <button class="btn btn-secondary" onclick="generateCustomIdCard()">ID कार्ड प्रीव्यू</button>
-            <button class="btn btn-warning" onclick="printElement('printableIdContainer')" style="background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> प्रिंट ID कार्ड</button>
-        </div>
-        <div id="printableIdContainer" class="printable-section"><div id="adminGeneratedIdContainer" style="margin-top:15px;"></div></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
         <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">एडमिन पासवर्ड बदलें</h4>
@@ -181,70 +246,6 @@
         <button class="btn btn-danger" onclick="logoutAdmin()" style="margin-top:20px;">Logout Admin</button>
     </div>
 
-    <!-- Student Benefits & Features Section -->
-    <div class="card">
-        <h3><i class="fa-solid fa-laptop-code" style="color:#f59e0b;"></i> ऑनलाइन मॉक टेस्ट (Online Mock Test)</h3>
-        <div style="background:#0f172a; padding:12px; border-radius:8px; margin-bottom:12px; border:1px solid #334155;">
-            <input type="text" id="testStudentName" placeholder="अपना पूरा नाम दर्ज करें *" style="margin-bottom:8px;">
-            <input type="text" id="testStudentFather" placeholder="पिता का नाम दर्ज करें *" style="margin-bottom:8px;">
-            <select id="userTestSelect" onchange="loadUserTest()" style="margin-bottom:0;">
-                <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option>
-            </select>
-        </div>
-        <div id="onlineTestContainer" style="margin-top:15px;"></div>
-        <button class="btn btn-secondary" onclick="submitStudentTestSecure()" style="margin-top:15px;">टेस्ट सबमिट करें और स्कोर देखें</button>
-        <div id="testResultMsg" style="margin-top:10px; font-weight:bold; font-size:14px; text-align:center;"></div>
-    </div>
-
-    <div class="card">
-        <h3><i class="fa-solid fa-keyboard" style="color:#38bdf8;"></i> ऑनलाइन टाइपिंग प्रैक्टिस (English & Hindi)</h3>
-        <p style="font-size:12px; color:#94a3b8; margin-bottom:10px;">अपनी टाइपिंग स्पीड (WPM) और एक्यूरेसी जांचें:</p>
-        <select id="typingMode" style="margin-bottom:10px;">
-            <option value="english">English Typing Practice</option>
-            <option value="hindi">Hindi Typing (Kruti Dev / Mangal)</option>
-        </select>
-        <textarea id="typingInputBox" placeholder="यहाँ टाइप करना शुरू करें..." style="height:90px;"></textarea>
-        <button class="btn btn-secondary" onclick="checkTypingSpeed()">स्पीड जांचें (Calculate WPM)</button>
-        <div id="typingResultMsg" style="margin-top:10px; font-size:13px; color:#10b981; font-weight:bold; text-align:center;"></div>
-    </div>
-
-    <div class="card">
-        <h3><i class="fa-solid fa-user-xmark" style="color:#ef4444;"></i> आज की एब्सेंट सूची (Daily Attendance)</h3>
-        <select id="userAbsentCourseSelect" onchange="loadUserAbsent()">
-            <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally ERP9</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option>
-        </select>
-        <div id="userAbsentContainer" style="margin-top:15px;"></div>
-    </div>
-
-    <div class="card"><h3><i class="fa-solid fa-bullhorn" style="color:#f59e0b;"></i> लाइव नोटिस बोर्ड & सूचनाएं</h3><div id="noticeDisplay"></div></div>
-    
-    <div class="card">
-        <h3><i class="fa-solid fa-file-pdf" style="color:#ef4444;"></i> डिजिटल स्टडी नोट्स & PDFs (Secure View)</h3>
-        <select id="userPdfCourseSelect" onchange="loadUserPdfs()" style="margin-bottom:12px;">
-            <option value="ALL">सभी कोर्सेज के नोट्स</option>
-            <option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option>
-        </select>
-        <div id="studentPdfList"></div>
-    </div>
-    
-    <div class="card">
-        <h3><i class="fa-solid fa-user-plus" style="color:#10b981;"></i> ऑनलाइन एडमिशन फॉर्म</h3>
-        <input type="text" id="admName" placeholder="पूरा नाम"><input type="text" id="admMobile" placeholder="मोबाइल"><input type="text" id="admFather" placeholder="पिता का नाम">
-        <select id="admCourseSelect">
-            <option value="CCC - Rs.2500">CCC (2500)</option><option value="ADCA - Rs.11500">ADCA (11500)</option><option value="DCA - Rs.5800">DCA (5800)</option><option value="Tally ERP9 - Rs.3500">Tally (3500)</option><option value="BASIC - Rs.500/month">BASIC (500/m)</option><option value="MS Word & Excel Fundamental - Rs.1000">MS Word & Excel Fundamental (1000)</option>
-        </select>
-        <input type="text" id="admAdvance" placeholder="एडवांस फीस"><button class="btn btn-secondary" onclick="submitOnlineAdmission()">फॉर्म सबमिट</button>
-    </div>
-
-    <div class="card"><h3><i class="fa-solid fa-graduation-cap"></i> हमारे कोर्सेज</h3>
-        <div class="course-box"><b>CCC:</b> Rs. 2500</div>
-        <div class="course-box"><b>ADCA:</b> Rs. 11500</div>
-        <div class="course-box"><b>DCA:</b> Rs. 5800</div>
-        <div class="course-box"><b>Tally:</b> Rs. 3500</div>
-        <div class="course-box"><b>BASIC:</b> Rs. 500/month</div>
-        <div class="course-box"><b>MS Word & Excel:</b> Rs. 1000</div>
-    </div>
-    <div class="card"><h3><i class="fa-solid fa-phone"></i> संपर्क</h3><a href="tel:9258533717" class="contact-btn call-btn">कॉल करें</a><a href="https://wa.me/919258533717" class="contact-btn wa-btn">WhatsApp</a></div>
     <div class="secret-admin-trigger" onclick="openAdminPanel()"><i class="fa-solid fa-key"></i> Admin Login</div>
 </div>
 
@@ -266,6 +267,42 @@
         if(document.getElementById("absentDate")) document.getElementById("absentDate").value = today;
         loadRealtimeData();
     };
+
+    // Student Portal Login Verification
+    function loginStudentPortal(){
+        let username = document.getElementById("loginUsername").value.trim();
+        let password = document.getElementById("loginPassword").value.trim();
+
+        if(!username || !password){
+            alert("कृपया यूजरनेम (मोबाइल नंबर) और पासवर्ड दोनों दर्ज करें!");
+            return;
+        }
+
+        let students = window.allMasterStudents || [];
+        let foundStu = students.find(s => (s.mobile === username || s.id === username) && s.password === password);
+
+        if(foundStu){
+            alert("लॉगिन सफल! स्वागत है " + foundStu.name);
+            document.getElementById("studentLoginCard").classList.add("hidden");
+            document.getElementById("protectedStudentDashboard").classList.remove("hidden");
+            document.getElementById("welcomeStudentName").innerText = "स्वागत है, " + foundStu.name;
+            document.getElementById("welcomeStudentDetails").innerText = "कोर्स: " + foundStu.course + " | बैच: " + (foundStu.batchTime || 'N/A');
+            
+            // Auto fill test inputs if available
+            if(document.getElementById("testStudentName")) document.getElementById("testStudentName").value = foundStu.name;
+            if(document.getElementById("testStudentFather")) document.getElementById("testStudentFather").value = foundStu.father || '';
+        } else {
+            alert("गलत यूजरनेम या पासवर्ड! या फिर एडमिन ने अभी तक आपका डेटा रजिस्टर नहीं किया है।");
+        }
+    }
+
+    function logoutStudentPortal(){
+        document.getElementById("protectedStudentDashboard").classList.add("hidden");
+        document.getElementById("studentLoginCard").classList.remove("hidden");
+        document.getElementById("loginUsername").value = "";
+        document.getElementById("loginPassword").value = "";
+        alert("सफलतापूर्वक लॉग आउट हो गए!");
+    }
 
     function openAdminPanel(){
         let p = prompt("एडमिन पासवर्ड दर्ज करें:");
@@ -321,12 +358,13 @@
         let name = document.getElementById("mStudentName").value.trim();
         let father = document.getElementById("mStudentFather").value.trim();
         let mobile = document.getElementById("mStudentMobile").value.trim();
+        let password = document.getElementById("mStudentPassword").value.trim();
         let course = document.getElementById("mStudentCourse").value;
         let batchTime = document.getElementById("mStudentBatchTime").value.trim();
         let feesPaid = document.getElementById("mStudentFeesPaid").value.trim();
         let feesTotal = document.getElementById("mStudentFeesTotal").value.trim();
 
-        if(!name || !mobile || !father){ alert("नाम, पिता का नाम और मोबाइल नंबर आवश्यक है!"); return; }
+        if(!name || !mobile || !father || !password){ alert("नाम, पिता का नाम, मोबाइल नंबर और पासवर्ड आवश्यक है!"); return; }
 
         let studentId = editKey ? editKey : ("stu_" + Date.now());
         let studentObj = {
@@ -334,6 +372,7 @@
             name: name,
             father: father,
             mobile: mobile,
+            password: password,
             course: course,
             batchTime: batchTime || "6 Months",
             feesPaid: feesPaid || "0",
@@ -341,7 +380,7 @@
         };
 
         db.ref('masterStudents/' + studentId).set(studentObj).then(() => {
-            alert("छात्र डेटा सफलतापूर्वक सेव हो गया!");
+            alert("छात्र डेटा और लॉगिन पासवर्ड सफलतापूर्वक सेव हो गया!");
             clearStudentForm();
         }).catch(err => {
             alert("एरर: " + err.message);
@@ -356,6 +395,7 @@
         document.getElementById("mStudentName").value = s.name || "";
         document.getElementById("mStudentFather").value = s.father || "";
         document.getElementById("mStudentMobile").value = s.mobile || "";
+        document.getElementById("mStudentPassword").value = s.password || "";
         document.getElementById("mStudentCourse").value = s.course || "CCC";
         document.getElementById("mStudentBatchTime").value = s.batchTime || "";
         document.getElementById("mStudentFeesPaid").value = s.feesPaid || "";
@@ -368,6 +408,7 @@
         document.getElementById("mStudentName").value = "";
         document.getElementById("mStudentFather").value = "";
         document.getElementById("mStudentMobile").value = "";
+        document.getElementById("mStudentPassword").value = "";
         document.getElementById("mStudentBatchTime").value = "";
         document.getElementById("mStudentFeesPaid").value = "";
         document.getElementById("mStudentFeesTotal").value = "";
@@ -415,62 +456,11 @@
             </div>`;
     }
 
-    function fillIdCardFormFromSelect(){
-        let selectId = document.getElementById("cardSelectStudent").value;
-        if(!selectId) return;
-        let students = window.allMasterStudents || [];
-        let stu = students.find(s => s.id === selectId);
-        if(!stu) return;
-
-        document.getElementById("idName").value = stu.name || "";
-        document.getElementById("idFather").value = stu.father || "";
-        document.getElementById("idCourse").value = stu.course || "";
-        document.getElementById("idMobile").value = stu.mobile || "";
-        document.getElementById("idFees").value = `Paid ${stu.feesPaid || '0'} / ${stu.feesTotal || '2500'}`;
-    }
-
-    function generateCustomIdCard(){
-        let name = document.getElementById("idName").value.trim() || "STUDENT NAME";
-        let father = document.getElementById("idFather").value.trim() || "FATHER";
-        let course = document.getElementById("idCourse").value.trim() || "COURSE";
-        let mobile = document.getElementById("idMobile").value.trim() || "MOBILE";
-        let fees = document.getElementById("idFees").value.trim() || "FEES";
-
-        let photoInput = document.getElementById("idStudentPhotoFile");
-        if(photoInput.files && photoInput.files[0]){
-            let reader = new FileReader();
-            reader.onload = function(e){ renderIdCardDOM(name, father, course, mobile, fees, e.target.result); };
-            reader.readAsDataURL(photoInput.files[0]);
-        } else {
-            renderIdCardDOM(name, father, course, mobile, fees, null);
-        }
-    }
-
-    function renderIdCardDOM(name, father, course, mobile, fees, imgSrc){
-        let stuObj = { name, father, course, mobile, feesPaid: fees, feesTotal: "" };
-        let container = document.getElementById("adminGeneratedIdContainer");
-        let photoTag = imgSrc ? `<img src="${imgSrc}" class="idcard-student-img" alt="Student Photo">` : `<div class="idcard-student-img" style="display:flex; align-items:center; justify-content:center; font-size:10px; color:#aaa;">Photo</div>`;
-        container.innerHTML = `<div class="idcard-box-print">
-            ${photoTag}
-            <div style="border-bottom:1px solid #475569; padding-bottom:8px; margin-bottom:8px; padding-right:85px;">
-                <h4 style="color:#38bdf8; font-size:14px;">दृष्टि कंप्यूटर सेंटर</h4>
-                <p style="font-size:10px; color:#94a3b8;">Wazirganj, Badaun (9258533717)</p>
-            </div>
-            <div style="font-size:12px; line-height:1.6; padding-right:85px;">
-                <p><b>Name:</b> ${stuObj.name}</p>
-                <p><b>Father:</b> ${stuObj.father}</p>
-                <p><b>Course:</b> <span style="color:#10b981; font-weight:bold;">${stuObj.course}</span></p>
-                <p><b>Mobile:</b> ${stuObj.mobile}</p>
-                <p><b>Fees:</b> ${stuObj.feesPaid}</p>
-            </div>
-        </div>`;
-    }
-
     function checkTypingSpeed(){
         let text = document.getElementById("typingInputBox").value.trim();
         if(!text){ alert("टाइपिंग बॉक्स में कुछ टाइप करें!"); return; }
         let words = text.split(/\s+/).length;
-        let wpm = words; // Approximate 1-minute test simulation
+        let wpm = words; 
         document.getElementById("typingResultMsg").innerText = `अद्भुत प्रयास! आपके कुल शब्द: ${words} | अनुमानित स्पीड: ${wpm} WPM`;
     }
 
@@ -488,12 +478,100 @@
         setTimeout(() => { printWindow.print(); printWindow.close(); }, 500);
     }
 
-    function deleteGenericRecord(path, id){
-        if(confirm("क्या आप वाकई इसे डिलीट करना चाहते हैं?")){
-            db.ref(path + '/' + id).remove().then(() => { alert("सफलतापूर्वक डिलीट हो गया!"); });
-        }
+    // Realtime Database sync
+    function loadRealtimeData() {
+        // Admin Password
+        db.ref('adminPassword').on('value', snap => {
+            if(snap.val()) currentAdminPassword = snap.val();
+        });
+
+        // Emergency Alert
+        db.ref('emergencyAlert').on('value', snap => {
+            let box = document.getElementById("emergencyAlertBox");
+            if(snap.val()){
+                box.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <b>महत्वपूर्ण सूचना:</b> ${snap.val()}`;
+                box.style.display = "block";
+            } else {
+                box.style.display = "none";
+            }
+        });
+
+        // Notice Board
+        db.ref('notice').on('value', snap => {
+            let nd = document.getElementById("noticeDisplay");
+            if(nd) nd.innerHTML = `<p style="font-size:13px; color:#38bdf8;">${snap.val() || 'फिलहाल कोई नया नोटिस नहीं है।'}</p>`;
+        });
+
+        // Master Students List
+        db.ref('masterStudents').on('value', snap => {
+            let tableBody = document.getElementById("adminStudentTableBody");
+            let billSelect = document.getElementById("billSelectStudent");
+            
+            tableBody.innerHTML = "";
+            billSelect.innerHTML = '<option value="">सूची से छात्र चुनें (बिल के लिए)...</option>';
+            window.allMasterStudents = [];
+
+            let data = snap.val();
+            if(data){
+                Object.keys(data).forEach(key => {
+                    let s = data[key];
+                    window.allMasterStudents.push(s);
+
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td><b>${s.name}</b><br><span style="color:#94a3b8;">Mob: ${s.mobile}</span></td>
+                            <td><span style="color:#10b981;">Pass: ${s.password}</span><br><b>${s.course}</b></td>
+                            <td>
+                                <button class="btn btn-warning" onclick="editStudent('${s.id}')" style="padding:4px 8px; font-size:10px;">एडिट</button>
+                                <button class="btn btn-danger" onclick="deleteStudent('${s.id}')" style="padding:4px 8px; font-size:10px; margin-top:3px;">डिलीट</button>
+                            </td>
+                        </tr>`;
+
+                    billSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
+                });
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#94a3b8;">कोई छात्र पंजीकृत नहीं है।</td></tr>`;
+            }
+        });
+
+        // Test Scores
+        db.ref('testScores').on('value', snap => {
+            let container = document.getElementById("adminTestScoresContainer");
+            container.innerHTML = "";
+            let data = snap.val();
+            if(data){
+                Object.keys(data).forEach(key => {
+                    let sc = data[key];
+                    container.innerHTML += `<div style="font-size:12px; background:#0f172a; padding:8px; border-radius:6px; margin-bottom:6px; border-left:3px solid #38bdf8;"><b>${sc.name}</b> (${sc.father}) - ${sc.course}: <b>${sc.score}/${sc.total}</b></div>`;
+                });
+            } else {
+                container.innerHTML = `<p style="font-size:12px; color:#94a3b8;">कोई टेस्ट स्कोर उपलब्ध नहीं है।</p>`;
+            }
+        });
+
+        // Admissions
+        db.ref('admissions').on('value', snap => {
+            let container = document.getElementById("adminAdmissionList");
+            container.innerHTML = "";
+            let data = snap.val();
+            if(data){
+                Object.keys(data).forEach(key => {
+                    let a = data[key];
+                    container.innerHTML += `<div style="font-size:12px; background:#0f172a; padding:8px; border-radius:6px; margin-bottom:6px; border-left:3px solid #10b981;"><b>${a.name}</b> (${a.father}) - ${a.course} | Mob: ${a.mobile}</div>`;
+                });
+            } else {
+                container.innerHTML = `<p style="font-size:12px; color:#94a3b8;">कोई ऑनलाइन एडमिशन नहीं आया है।</p>`;
+            }
+        });
+
+        loadAdminTests();
+        loadUserTest();
+        loadUserAbsent();
+        loadUserPdfs();
+        loadAdminPdfs();
     }
 
+    // Online Admission Submission
     function submitOnlineAdmission(){
         let name = document.getElementById("admName").value.trim();
         let mobile = document.getElementById("admMobile").value.trim();
@@ -501,9 +579,13 @@
         let course = document.getElementById("admCourseSelect").value;
         let advance = document.getElementById("admAdvance").value.trim();
 
-        if(!name || !mobile){ alert("नाम और मोबाइल नंबर भरें!"); return; }
-        db.ref('admissions').push({ name, mobile, father, course, advance, time: new Date().toLocaleString() }).then(() => {
-            alert("एडमिशन फॉर्म जमा हो गया!");
+        if(!name || !mobile){ alert("कृपया नाम और मोबाइल नंबर भरें!"); return; }
+
+        let admissionId = "adm_" + Date.now();
+        db.ref('admissions/' + admissionId).set({
+            name, mobile, father, course, advance: advance || "0", date: new Date().toLocaleDateString()
+        }).then(() => {
+            alert("आपका ऑनलाइन एडमिशन फॉर्म सफलतापूर्वक सबमिट हो गया है!");
             document.getElementById("admName").value = "";
             document.getElementById("admMobile").value = "";
             document.getElementById("admFather").value = "";
@@ -511,18 +593,7 @@
         });
     }
 
-    function saveAbsentStudent(){
-        let course = document.getElementById("absentCourseSelect").value;
-        let name = document.getElementById("absentStudentName").value.trim();
-        let date = document.getElementById("absentDate").value;
-        if(!name || !date){ alert("नाम और दिनांक भरें!"); return; }
-
-        db.ref('absentStudents').push({ course, name, date }).then(() => {
-            alert("एब्सेंट छात्र दर्ज हो गया!");
-            document.getElementById("absentStudentName").value = "";
-        });
-    }
-
+    // Test functions
     function saveAdminTest(){
         let course = document.getElementById("testCourseSelect").value;
         let question = document.getElementById("testQuestion").value.trim();
@@ -532,253 +603,193 @@
         let optD = document.getElementById("optD").value.trim();
         let correct = document.getElementById("correctOpt").value;
 
-        if(!question || !optA){ alert("प्रश्न और विकल्प भरें!"); return; }
+        if(!question || !optA || !optB){ alert("प्रश्न और कम से कम दो विकल्प भरें!"); return; }
 
-        db.ref('tests/' + course).push({ question, optA, optB, optC, optD, correct }).then(() => {
-            alert("टेस्ट प्रश्न सेव हो गया!");
+        let qId = "q_" + Date.now();
+        db.ref('tests/' + course + '/' + qId).set({
+            question, optA, optB, optC, optD, correct
+        }).then(() => {
+            alert("टेस्ट प्रश्न सफलतापूर्वक सेव हो गया!");
             document.getElementById("testQuestion").value = "";
             document.getElementById("optA").value = "";
             document.getElementById("optB").value = "";
             document.getElementById("optC").value = "";
             document.getElementById("optD").value = "";
-            loadAdminTests();
         });
     }
 
     function loadAdminTests(){
-        let testCourse = document.getElementById("testCourseSelect").value;
-        db.ref('tests/' + testCourse).on('value', snap => {
-            let tList = document.getElementById("adminTestList");
-            tList.innerHTML = "";
-            snap.forEach(child => {
-                let tKey = child.key;
-                let t = child.val();
-                tList.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
-                    <div>Q: ${t.question}</div>
-                    <button onclick="db.ref('tests/${testCourse}/${tKey}').remove(); alert('प्रश्न हटा दिया गया!');" style="background:#ef4444; border:none; color:#fff; padding:2px 6px; border-radius:4px; cursor:pointer; font-size:10px;">हटाएं</button>
-                </div>`;
-            });
-        });
-    }
-
-    function uploadPdf(){
-        let title = document.getElementById("pdfTitle").value.trim();
-        let course = document.getElementById("pdfCourseSelect").value;
-        let url = document.getElementById("pdfUrl").value.trim();
-        if(!title || !url){ alert("टाइटल और लिंक भरें!"); return; }
-
-        db.ref('pdfs').push({ title, course, url }).then(() => {
-            alert("नोट्स PDF पब्लिश हो गया!");
-            document.getElementById("pdfTitle").value = "";
-            document.getElementById("pdfUrl").value = "";
-        });
-    }
-
-    function loadRealtimeData(){
-        db.ref('adminPassword').on('value', snap => {
-            if(snap.val()) currentAdminPassword = snap.val();
-        });
-
-        db.ref('emergencyAlert').on('value', snap => {
-            let alertBox = document.getElementById("emergencyAlertBox");
-            if(snap.val()){
-                alertBox.innerText = "🚨 विशेष सूचना: " + snap.val();
-                alertBox.style.display = "block";
+        let course = document.getElementById("testCourseSelect").value;
+        db.ref('tests/' + course).on('value', snap => {
+            let list = document.getElementById("adminTestList");
+            if(!list) return;
+            list.innerHTML = "";
+            let data = snap.val();
+            if(data){
+                Object.keys(data).forEach(key => {
+                    let q = data[key];
+                    list.innerHTML += `<div style="font-size:12px; background:#0f172a; padding:8px; border-radius:6px; margin-bottom:6px; border:1px solid #334155;"><b>Q:</b> ${q.question} <br><span style="color:#10b981;">Correct: ${q.correct}</span> <button class="btn btn-danger" onclick="deleteTestQ('${course}', '${key}')" style="padding:2px 6px; font-size:10px; float:right;">Delete</button></div>`;
+                });
             } else {
-                alertBox.style.display = "none";
+                list.innerHTML = `<p style="font-size:12px; color:#94a3b8;">इस कोर्स में कोई प्रश्न नहीं है।</p>`;
             }
         });
-
-        db.ref('notice').on('value', snap => {
-            document.getElementById("noticeDisplay").innerHTML = `<p style="font-size:13px; color:#f8fafc;">${snap.val() || 'कोई नया नोटिस नहीं है।'}</p>`;
-        });
-
-        db.ref('masterStudents').on('value', snap => {
-            let tableBody = document.getElementById("adminStudentTableBody");
-            let cardSelect = document.getElementById("cardSelectStudent");
-            let billSelect = document.getElementById("billSelectStudent");
-            
-            tableBody.innerHTML = "";
-            cardSelect.innerHTML = `<option value="">सूची से छात्र चुनें...</option>`;
-            billSelect.innerHTML = `<option value="">सूची से छात्र चुनें (बिल के लिए)...</option>`;
-            
-            let students = [];
-            snap.forEach(child => {
-                let s = child.val();
-                students.push(s);
-                
-                tableBody.innerHTML += `<tr>
-                    <td><b>${s.name}</b><br><small>पिता: ${s.father || '---'}</small></td>
-                    <td>${s.course}<br>फीस: ₹${s.feesPaid || '0'}/₹${s.feesTotal || '2500'}</td>
-                    <td>
-                        <div style="display:flex; gap:4px; flex-direction:column;">
-                            <button onclick="editStudent('${s.id}')" style="background:#38bdf8; border:none; color:#000; padding:2px 4px; border-radius:3px; cursor:pointer; font-size:10px;">एडिट</button>
-                            <button onclick="deleteStudent('${s.id}')" style="background:#ef4444; border:none; color:#fff; padding:2px 4px; border-radius:3px; cursor:pointer; font-size:10px;">डिलीट</button>
-                        </div>
-                    </td>
-                </tr>`;
-                cardSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
-                billSelect.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
-            });
-            window.allMasterStudents = students;
-        });
-
-        db.ref('admissions').on('value', snap => {
-            let admList = document.getElementById("adminAdmissionList");
-            admList.innerHTML = "";
-            snap.forEach(child => {
-                let aKey = child.key;
-                let a = child.val();
-                admList.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
-                    <div><b>${a.name}</b> - ${a.course} (मो: ${a.mobile})</div>
-                    <button onclick="deleteGenericRecord('admissions', '${aKey}')" style="background:#ef4444; border:none; color:#fff; padding:2px 6px; border-radius:4px; cursor:pointer; font-size:10px;">हटाएं</button>
-                </div>`;
-            });
-        });
-
-        db.ref('testScores').on('value', snap => {
-            let scoreContainer = document.getElementById("adminTestScoresContainer");
-            scoreContainer.innerHTML = "";
-            snap.forEach(child => {
-                let scKey = child.key;
-                let sc = child.val();
-                scoreContainer.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
-                    <div><b>${sc.studentName}</b> (पिता: ${sc.studentFather}) - ${sc.course}: स्कोर = <b>${sc.score} / ${sc.total}</b></div>
-                    <button onclick="deleteGenericRecord('testScores', '${scKey}')" style="background:#ef4444; border:none; color:#fff; padding:2px 6px; border-radius:4px; cursor:pointer; font-size:10px;">हटाएं</button>
-                </div>`;
-            });
-        });
-
-        db.ref('absentStudents').on('value', snap => {
-            let adminAbsentList = document.getElementById("adminAbsentList");
-            adminAbsentList.innerHTML = "";
-            snap.forEach(child => {
-                let abKey = child.key;
-                let ab = child.val();
-                adminAbsentList.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
-                    <div><b>${ab.name}</b> (${ab.course}) - ${ab.date}</div>
-                    <button onclick="deleteGenericRecord('absentStudents', '${abKey}')" style="background:#ef4444; border:none; color:#fff; padding:2px 6px; border-radius:4px; cursor:pointer; font-size:10px;">हटाएं</button>
-                </div>`;
-            });
-        });
-
-        db.ref('pdfs').on('value', snap => {
-            let pList = document.getElementById("adminPdfList");
-            pList.innerHTML = "";
-            snap.forEach(child => {
-                let pKey = child.key;
-                let p = child.val();
-                pList.innerHTML += `<div style="font-size:11px; padding:6px; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
-                    <div>${p.title} (${p.course})</div>
-                    <button onclick="deleteGenericRecord('pdfs', '${pKey}')" style="background:#ef4444; border:none; color:#fff; padding:2px 6px; border-radius:4px; cursor:pointer; font-size:10px;">हटाएं</button>
-                </div>`;
-            });
-        });
-
-        loadAdminTests();
-        loadUserAbsent();
-        loadUserTest();
-        loadUserPdfs();
     }
 
-    function loadUserAbsent(){
-        let course = document.getElementById("userAbsentCourseSelect").value;
-        db.ref('absentStudents').on('value', snap => {
-            let container = document.getElementById("userAbsentContainer");
-            container.innerHTML = "";
-            let found = false;
-            snap.forEach(child => {
-                let ab = child.val();
-                if(ab.course === course){
-                    found = true;
-                    container.innerHTML += `<div class="absent-box" style="font-size:12px;"><b>${ab.name}</b> - दिनांक: ${ab.date}</div>`;
-                }
-            });
-            if(!found) container.innerHTML = `<p style="font-size:12px; color:#94a3b8;">आज इस कोर्स में कोई एब्सेंट नहीं है।</p>`;
-        });
+    function deleteTestQ(course, key){
+        if(confirm("प्रश्न डिलीट करें?")) db.ref('tests/' + course + '/' + key).remove();
     }
 
     function loadUserTest(){
         let course = document.getElementById("userTestSelect").value;
-        db.ref('tests/' + course).on('value', snap => {
+        db.ref('tests/' + course).once('value', snap => {
             let container = document.getElementById("onlineTestContainer");
             container.innerHTML = "";
-            window.currentTestQuestions = [];
-            let i = 0;
-            snap.forEach(child => {
-                let q = child.val();
-                q.key = child.key;
-                window.currentTestQuestions.push(q);
-                container.innerHTML += `<div class="test-item" style="font-size:13px;">
-                    <p><b>Q${++i}. ${q.question}</b></p>
-                    <label style="display:block; margin-top:5px;"><input type="radio" name="q_${q.key}" value="A"> A) ${q.optA}</label>
-                    <label style="display:block;"><input type="radio" name="q_${q.key}" value="B"> B) ${q.optB}</label>
-                    <label style="display:block;"><input type="radio" name="q_${q.key}" value="C"> C) ${q.optC}</label>
-                    <label style="display:block;"><input type="radio" name="q_${q.key}" value="D"> D) ${q.optD}</label>
-                </div>`;
-            });
-            if(window.currentTestQuestions.length === 0){
+            window.currentTestData = [];
+            let data = snap.val();
+            if(data){
+                let keys = Object.keys(data);
+                keys.forEach((key, index) => {
+                    let q = data[key];
+                    window.currentTestData.push({ id: key, correct: q.correct });
+                    container.innerHTML += `
+                        <div class="test-item">
+                            <p style="font-size:13px; font-weight:600; margin-bottom:8px;">Q${index+1}: ${q.question}</p>
+                            <label style="display:block; font-size:12px; margin-bottom:4px;"><input type="radio" name="q_${key}" value="A"> A) ${q.optA}</label>
+                            <label style="display:block; font-size:12px; margin-bottom:4px;"><input type="radio" name="q_${key}" value="B"> B) ${q.optB}</label>
+                            ${q.optC ? `<label style="display:block; font-size:12px; margin-bottom:4px;"><input type="radio" name="q_${key}" value="C"> C) ${q.optC}</label>` : ''}
+                            ${q.optD ? `<label style="display:block; font-size:12px; margin-bottom:4px;"><input type="radio" name="q_${key}" value="D"> D) ${q.optD}</label>` : ''}
+                        </div>`;
+                });
+            } else {
                 container.innerHTML = `<p style="font-size:12px; color:#94a3b8;">इस कोर्स के लिए अभी कोई टेस्ट उपलब्ध नहीं है।</p>`;
             }
         });
     }
 
     function submitStudentTestSecure(){
-        let studentName = document.getElementById("testStudentName").value.trim();
-        let studentFather = document.getElementById("testStudentFather").value.trim();
+        let name = document.getElementById("testStudentName").value.trim();
+        let father = document.getElementById("testStudentFather").value.trim();
+        let course = document.getElementById("userTestSelect").value;
 
-        if(!studentName || !studentFather){
-            alert("कृपया टेस्ट देने से पहले अपना पूरा नाम और पिता का नाम दर्ज करें!");
-            document.getElementById("testStudentName").focus();
-            return;
-        }
-
-        let questions = window.currentTestQuestions || [];
-        if(questions.length === 0){ alert("कोई प्रश्न उपलब्ध नहीं है!"); return; }
+        if(!name || !father){ alert("कृपया अपना नाम और पिता का नाम दर्ज करें!"); return; }
+        let questions = window.currentTestData || [];
+        if(questions.length === 0){ alert("टेस्ट में कोई प्रश्न नहीं है!"); return; }
 
         let score = 0;
         questions.forEach(q => {
-            let radios = document.getElementsByName('q_' + q.key);
-            for(let r of radios){
-                if(r.checked && r.value === q.correct){
-                    score++;
-                }
+            let selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
+            if(selected && selected.value === q.correct){
+                score++;
             }
         });
 
-        let course = document.getElementById("userTestSelect").value;
-        db.ref('testScores').push({
-            studentName: studentName,
-            studentFather: studentFather,
-            course: course,
-            score: score,
-            total: questions.length,
-            time: new Date().toLocaleString()
-        }).then(() => {
-            document.getElementById("testResultMsg").innerHTML = `<span style="color:#10b981;">टेस्ट सफलतापूर्वक सबमिट हो गया, ${studentName}! आपका स्कोर: ${score} / ${questions.length}</span>`;
-            alert(`टेस्ट सबमिट हो गया! आपका स्कोर: ${score} / ${questions.length}`);
+        let total = questions.length;
+        let scoreObj = { name, father, course, score, total, date: new Date().toLocaleDateString() };
+        db.ref('testScores').push(scoreObj).then(() => {
+            document.getElementById("testResultMsg").innerText = `बधाई हो ${name}! आपका स्कोर: ${score} / ${total}`;
+            alert(`टेस्ट सबमिट हो गया! आपका स्कोर: ${score} / ${total}`);
         });
     }
 
+    // Absent attendance functions
+    function saveAbsentStudent(){
+        let course = document.getElementById("absentCourseSelect").value;
+        let name = document.getElementById("absentStudentName").value.trim();
+        let date = document.getElementById("absentDate").value;
+
+        if(!name || !date){ alert("छात्र का नाम और तारीख दर्ज करें!"); return; }
+        let absId = "abs_" + Date.now();
+        db.ref('attendance/' + course + '/' + absId).set({ name, date }).then(() => {
+            alert("एब्सेंट छात्र दर्ज हो गया!");
+            document.getElementById("absentStudentName").value = "";
+        });
+    }
+
+    function loadUserAbsent(){
+        let course = document.getElementById("userAbsentCourseSelect").value;
+        db.ref('attendance/' + course).on('value', snap => {
+            let container = document.getElementById("userAbsentContainer");
+            if(!container) return;
+            container.innerHTML = "";
+            let data = snap.val();
+            if(data){
+                Object.keys(data).forEach(key => {
+                    let a = data[key];
+                    container.innerHTML += `<div class="absent-box" style="padding:10px; margin-bottom:8px;"><b style="color:#ef4444;">${a.name}</b> - <span style="font-size:11px; color:#94a3b8;">${a.date}</span></div>`;
+                });
+            } else {
+                container.innerHTML = `<p style="font-size:12px; color:#94a3b8;">आज कोई छात्र एब्सेंट नहीं है।</p>`;
+            }
+        });
+    }
+
+    // PDF / Notes functions
+    function uploadPdf(){
+        let title = document.getElementById("pdfTitle").value.trim();
+        let course = document.getElementById("pdfCourseSelect").value;
+        let url = document.getElementById("pdfUrl").value.trim();
+
+        if(!title || !url){ alert("टाइटल और फाइल लिंक दर्ज करें!"); return; }
+        let pdfId = "pdf_" + Date.now();
+        db.ref('pdfs/' + pdfId).set({ title, course, url }).then(() => {
+            alert("नोट्स सफलतापूर्वक पब्लिश हो गया!");
+            document.getElementById("pdfTitle").value = "";
+            document.getElementById("pdfUrl").value = "";
+        });
+    }
+
+    function loadAdminPdfs(){
+        db.ref('pdfs').on('value', snap => {
+            let list = document.getElementById("adminPdfList");
+            if(!list) return;
+            list.innerHTML = "";
+            let data = snap.val();
+            if(data){
+                Object.keys(data).forEach(key => {
+                    let p = data[key];
+                    list.innerHTML += `<div style="font-size:12px; background:#0f172a; padding:8px; border-radius:6px; margin-bottom:6px; border:1px solid #334155;"><b>${p.title}</b> (${p.course}) <button class="btn btn-danger" onclick="deletePdf('${key}')" style="padding:2px 6px; font-size:10px; float:right;">Delete</button></div>`;
+                });
+            } else {
+                list.html = `<p style="font-size:12px; color:#94a3b8;">कोई नोट्स अपलोड नहीं हैं।</p>`;
+            }
+        });
+    }
+
+    function deletePdf(key){
+        if(confirm("नोट्स डिलीट करें?")) db.ref('pdfs/' + key).remove();
+    }
+
     function loadUserPdfs(){
-        let course = document.getElementById("userPdfCourseSelect").value;
+        let selectCourse = document.getElementById("userPdfCourseSelect").value;
         db.ref('pdfs').on('value', snap => {
             let container = document.getElementById("studentPdfList");
+            if(!container) return;
             container.innerHTML = "";
-            let found = false;
-            snap.forEach(child => {
-                let p = child.val();
-                if(course === "ALL" || p.course === course){
-                    found = true;
-                    container.innerHTML += `<div class="pdf-box" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div><h4 style="font-size:13px; color:#38bdf8;">${p.title}</h4><p style="font-size:11px; color:#94a3b8;">कोर्स: ${p.course}</p></div>
-                        <a href="${p.url}" target="_blank" class="btn btn-secondary" style="width:auto; padding:8px 12px; font-size:12px; text-decoration:none;"><i class="fa-solid fa-download"></i> देखें / डाउनलोड</a>
-                    </div>`;
+            let data = snap.val();
+            if(data){
+                let count = 0;
+                Object.keys(data).forEach(key => {
+                    let p = data[key];
+                    if(selectCourse === "ALL" || p.course === selectCourse){
+                        count++;
+                        container.innerHTML += `
+                            <div class="pdf-box">
+                                <b style="font-size:13px; color:#38bdf8;">${p.title}</b><br>
+                                <span style="font-size:11px; color:#10b981;">कोर्स: ${p.course}</span><br>
+                                <a href="${p.url}" target="_blank" class="btn btn-secondary" style="display:inline-block; margin-top:8px; text-decoration:none; padding:6px 12px; font-size:12px;"><i class="fa-solid fa-eye"></i> सुरक्षित नोट्स देखें</a>
+                            </div>`;
+                    }
+                });
+                if(count === 0){
+                    container.innerHTML = `<p style="font-size:12px; color:#94a3b8;">इस कोर्स के लिए कोई नोट्स उपलब्ध नहीं हैं।</p>`;
                 }
-            });
-            if(!found) container.innerHTML = `<p style="font-size:12px; color:#94a3b8;">कोई नोट्स उपलब्ध नहीं हैं।</p>`;
+            } else {
+                container.innerHTML = `<p style="font-size:12px; color:#94a3b8;">फिलहाल कोई नोट्स अपलोड नहीं किए गए हैं।</p>`;
+            }
         });
     }
 </script>
+
 </body>
 </html>
