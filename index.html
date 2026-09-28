@@ -28,6 +28,13 @@
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 8px; font-size: 14px; outline: none; }
         .hidden { display: none !important; }
         .test-item, .course-box, .pdf-box, .absent-box { background: #0f172a; padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
+        
+        /* Faculty / Teacher Cards styling */
+        .faculty-card { background: #0f172a; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #334155; display: flex; gap: 15px; align-items: center; }
+        .faculty-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0; }
+        .faculty-info h4 { color: #38bdf8; font-size: 15px; margin-bottom: 3px; }
+        .faculty-info p { font-size: 12px; color: #94a3b8; line-height: 1.4; }
+
         .contact-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px; border-radius: 8px; color: white; font-weight: 500; margin-bottom: 10px; width: 100%; }
         .call-btn { background: var(--primary); } .wa-btn { background: #22c55e; }
         .secret-admin-trigger { text-align: center; margin-top: 30px; font-size: 14px; color: #64748b; cursor: pointer; }
@@ -49,9 +56,9 @@
 
 <header id="mainHeader">
     <div class="director-profile">
-        <img id="headerDirectorImg" src="abhishek_photo.jpg" alt="Director Abhishek Thakur" onerror="this.src='https://via.placeholder.com/90'">
+        <img id="headerDirectorImg" src="https://lh3.googleusercontent.com/d/1bo38XIYSrcXQiS_yxgwAfWICKebxdFmk=s800" alt="Director Abhishek Thakur" onerror="this.src='https://via.placeholder.com/90'">
         <h1 id="headerDirectorName">अभिषेक ठाकुर सर</h1>
-        <p id="headerDirectorTitle">Founder & Director | दृष्टि कंप्यूटर सेंटर</p>
+        <p id="headerDirectorTitle">संचालक एवं निर्देशक | दृष्टि कंप्यूटर सेंटर</p>
     </div>
     <img src="https://lh3.googleusercontent.com/d/1Pji2HFEkbsxQevKDC5XnCTqv2TJZxad6=s800" alt="Center Banner" class="banner-preview-img" onerror="this.style.display='none'">
     
@@ -61,6 +68,38 @@
 
 <div class="container">
     <div id="emergencyAlertBox" class="alert-banner"></div>
+
+    <!-- Faculty & Director Introduction Section (High Admission Impact) -->
+    <div class="card">
+        <h3><i class="fa-solid fa-award" style="color:#f59e0b;"></i> हमारे मार्गदर्शक एवं कुशल शिक्षक</h3>
+        
+        <!-- Hariom Sir -->
+        <div class="faculty-card">
+            <img src="https://lh3.googleusercontent.com/d/11nsrVbWtqtwbp7yGL7Cym8zoF2gTWlxH=s800" alt="Hariom Sir" class="faculty-img" onerror="this.src='https://via.placeholder.com/80'">
+            <div class="faculty-info">
+                <h4>हरिओम सर (संस्थापक - 2016)</h4>
+                <p>वर्ष 2016 में वज़ीरगंज में इस प्रतिष्ठित संस्थान की नींव रखकर तकनीकी शिक्षा का जो दीप जलाया था, उससे आज हजारों युवाओं का भविष्य रोशन हुआ है। आपके कुशल मार्गदर्शन और दूरदर्शिता से संस्थान ने सफलता के नए मुकाम हासिल किए हैं।</p>
+            </div>
+        </div>
+
+        <!-- Abhishek Thakur Sir -->
+        <div class="faculty-card">
+            <img src="https://lh3.googleusercontent.com/d/1bo38XIYSrcXQiS_yxgwAfWICKebxdFmk=s800" alt="Abhishek Thakur" class="faculty-img" onerror="this.src='https://via.placeholder.com/80'">
+            <div class="faculty-info">
+                <h4>अभिषेक ठाकुर सर (संचालक एवं निदेशक)</h4>
+                <p>वर्तमान में संस्थान के यशस्वी संचालक। छात्रों को आधुनिक कंप्यूटर शिक्षा, स्मार्ट प्रैक्टिकल ट्रेनिंग और रोजगारपरक कोर्सेज के साथ आत्मनिर्भर बनाने में आपका विशेष योगदान है। आपके नेतृत्व में हर छात्र सफलता की ऊंचाइयों को छू रहा है।</p>
+            </div>
+        </div>
+
+        <!-- Arshi Madam -->
+        <div class="faculty-card">
+            <img src="https://lh3.googleusercontent.com/d/1SEyZze4A_ixIdRRIBImAg1r-U0r28-0y=s800" alt="Arshi Madam" class="faculty-img" onerror="this.src='https://via.placeholder.com/80'">
+            <div class="faculty-info">
+                <h4>आर्शी मैडम (मुख्य शिक्षिका)</h4>
+                <p>संस्थान की अत्यंत कुशल, मिलनसार और अनुभवी शिक्षिका। छात्रों को थ्योरी और प्रैक्टिकल बहुत ही सरल, सहज एवं रोचक तरीके से पढ़ाती हैं, जिससे कमजोर से कमजोर छात्र भी कंप्यूटर का एक्सपर्ट बन जाता है।</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Student Login Gateway Card -->
     <div class="card" id="studentLoginCard">
@@ -106,13 +145,18 @@
             <div id="typingResultMsg" style="margin-top:10px; font-size:13px; color:#10b981; font-weight:bold; text-align:center;"></div>
         </div>
 
-        <!-- Student Leave Application Feature -->
+        <!-- Student Leave Application with Approval Status Check -->
         <div class="card">
             <h3><i class="fa-solid fa-calendar-xmark" style="color:#ef4444;"></i> छुट्टी के लिए आवेदन करें (Apply Leave)</h3>
-            <p style="font-size:12px; color:#94a3b8; margin-bottom:10px;">यदि आप आज या आने वाले दिन में अनुपस्थित रहेंगे, तो यहाँ कारण सहित सूचना दें:</p>
+            <p style="font-size:12px; color:#94a3b8; margin-bottom:10px;">जब तक एडमिन आपकी छुट्टी स्वीकृत (Approve) नहीं करता, तब तक छुट्टी मान्य नहीं होगी:</p>
             <input type="date" id="studentLeaveDate" style="margin-bottom:8px;">
-            <textarea id="studentLeaveReason" placeholder="छुट्टी का कारण लिखें (जैसे: तबियत खराब है / शादी में जाना है)..." style="height:70px; margin-bottom:8px;"></textarea>
+            <textarea id="studentLeaveReason" placeholder="छुट्टी का कारण लिखें..." style="height:70px; margin-bottom:8px;"></textarea>
             <button class="btn btn-danger" onclick="submitStudentLeave()">एडमिन को छुट्टी की सूचना भेजें</button>
+            
+            <div style="margin-top:15px;">
+                <h4 style="font-size:13px; color:#38bdf8; margin-bottom:8px;">मेरी छुट्टियों का स्टेटस:</h4>
+                <div id="myLeaveStatusContainer"></div>
+            </div>
         </div>
 
         <div class="card">
@@ -152,7 +196,7 @@
             <h3 style="margin:0;"><i class="fa-solid fa-user-shield"></i> एडमिन मैनेजमेंट पैनल</h3>
             <button class="btn btn-warning" onclick="printElement('printableAdminContainer')" style="width:auto; padding:6px 12px; font-size:11px; background:#f59e0b; color:#000;"><i class="fa-solid fa-print"></i> पूरा डेटा प्रिंट / सेव PDF</button>
         </div>
-        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र जोड़/हटा सकते हैं, पासवर्ड मैनेज कर सकते हैं और छात्रों की छुट्टियां देख सकते हैं।</p>
+        <p style="font-size:12px; color:#10b981; margin-bottom:15px;">यहाँ से आप छात्र डेटा मैनेज, छुट्टी अप्रूव और नोट्स एडिट कर सकते हैं।</p>
         
         <div id="printableAdminContainer" class="printable-section">
             <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">👥 छात्र जोड़ें & पासवर्ड असाइन करें (App Access)</h4>
@@ -185,9 +229,9 @@
                 </table>
             </div>
 
-            <!-- Admin Leave Tracker Section -->
-            <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🏖️ आज कौन-कौन छुट्टी पर है और किस वजह से (Leave Tracker)</h4>
-            <div id="adminLeaveTrackerContainer" style="max-height:160px; overflow-y:auto; margin-bottom:15px;"></div>
+            <!-- Admin Leave Approval & Tracker Section -->
+            <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">🏖️ छात्र छुट्टी के आवेदन & अप्रूवल (Leave Manager)</h4>
+            <div id="adminLeaveTrackerContainer" style="max-height:180px; overflow-y:auto; margin-bottom:15px;"></div>
 
             <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📊 छात्रों के ऑनलाइन टेस्ट स्कोर</h4>
             <div id="adminTestScoresContainer" style="max-height:160px; overflow-y:auto; margin-bottom:15px;"></div>
@@ -222,11 +266,14 @@
         <div id="adminTestList" style="margin-top:15px; max-height:160px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
-        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">PDF / नोट्स अपलोड करें</h4>
-        <input type="text" id="pdfTitle" placeholder="Title (जैसे: MS Word Notes)">
-        <select id="pdfCourseSelect"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option></select>
-        <input type="text" id="pdfUrl" placeholder="File Link (Google Drive / Public Link)">
-        <button class="btn btn-secondary" onclick="uploadPdf()">नोट्स / PDF पब्लिश करें</button>
+        <!-- PDF / Notes Upload & Edit / Rename Section -->
+        <h4 style="font-size:14px; color:#38bdf8; margin-bottom:10px;">📄 PDF / नोट्स अपलोड, एडिट & रिनेम करें</h4>
+        <input type="hidden" id="editPdfKey" value="">
+        <input type="text" id="pdfTitle" placeholder="Title (जैसे: MS Word Notes)" style="margin-bottom:8px;">
+        <select id="pdfCourseSelect" style="margin-bottom:8px;"><option value="CCC">CCC</option><option value="ADCA">ADCA</option><option value="DCA">DCA</option><option value="Tally ERP9">Tally</option><option value="BASIC">BASIC</option><option value="MS Word & Excel">MS Word & Excel</option></select>
+        <input type="text" id="pdfUrl" placeholder="File Link (Google Drive / Public Link)" style="margin-bottom:8px;">
+        <button class="btn btn-secondary" onclick="uploadOrUpdatePdf()">नोट्स / PDF सेव करें</button>
+        <button class="btn btn-warning" onclick="clearPdfForm()" style="background:#475569; color:#fff; margin-top:5px;">फॉर्म खाली करें</button>
         <div id="adminPdfList" style="margin-top:10px; max-height:160px; overflow-y:auto;"></div>
         <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
 
@@ -257,7 +304,6 @@
         if(document.getElementById("absentDate")) document.getElementById("absentDate").value = today;
         if(document.getElementById("studentLeaveDate")) document.getElementById("studentLeaveDate").value = today;
 
-        // Check persistent login
         let savedSession = localStorage.getItem("drishtiLoggedInUser");
         if(savedSession){
             try {
@@ -301,6 +347,7 @@
         
         if(document.getElementById("testStudentName")) document.getElementById("testStudentName").value = stu.name;
         if(document.getElementById("testStudentFather")) document.getElementById("testStudentFather").value = stu.father || '';
+        loadStudentLeaveStatus(stu.name);
     }
 
     function logoutStudentPortal(){
@@ -428,12 +475,12 @@
             db.ref('masterStudents/' + id).remove().then(() => {
                 alert("छात्र सफलतापूर्वक डिलीट कर दिया गया है!");
             }).catch(err => {
-                alert("삭제 error: " + err.message);
+                alert("Delete error: " + err.message);
             });
         }
     }
 
-    // Student Leave Submission
+    // Leave Application & Approval Logic
     function submitStudentLeave(){
         if(!loggedInStudentSession){ alert("कृपया पहले लॉगिन करें!"); return; }
         let date = document.getElementById("studentLeaveDate").value;
@@ -443,20 +490,91 @@
 
         let leaveId = "leave_" + Date.now();
         db.ref('leaves/' + leaveId).set({
+            id: leaveId,
             name: loggedInStudentSession.name,
             course: loggedInStudentSession.course,
             date: date,
-            reason: reason
+            reason: reason,
+            status: "Pending"
         }).then(() => {
-            alert("आपकी छुट्टी की सूचना एडमिन तक सफलतापूर्वक पहुँच गई है!");
+            alert("आपकी छुट्टी का आवेदन एडमिन के पास भेज दिया गया है। स्वीकृति मिलने की प्रतीक्षा करें!");
             document.getElementById("studentLeaveReason").value = "";
         });
     }
 
+    function approveLeave(leaveKey){
+        db.ref('leaves/' + leaveKey).update({ status: "Approved" }).then(() => {
+            alert("छुट्टी सफलतापूर्वक स्वीकृत (Approve) कर दी गई है!");
+        });
+    }
+
     function deleteLeave(leaveKey){
-        if(confirm("इस छुट्टी के रिकॉर्ड को हटाएं?")) {
+        if(confirm("इस छुट्टी के रिकॉर्ड को हटाएं / अस्वीकार करें?")) {
             db.ref('leaves/' + leaveKey).remove();
         }
+    }
+
+    function loadStudentLeaveStatus(studentName){
+        db.ref('leaves').on('value', snap => {
+            let container = document.getElementById("myLeaveStatusContainer");
+            if(!container) return;
+            container.innerHTML = "";
+            let data = snap.val();
+            let found = false;
+            if(data){
+                Object.keys(data).forEach(key => {
+                    let l = data[key];
+                    if(l.name === studentName){
+                        found = true;
+                        let statusColor = l.status === "Approved" ? "#10b981" : "#f59e0b";
+                        let statusText = l.status === "Approved" ? "स्वीकृत (Approved) ✅" : "लंबित (Pending Approval ⏳)";
+                        container.innerHTML += `
+                            <div style="font-size:12px; background:#0f172a; padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid ${statusColor};">
+                                <b>दिनांक: ${l.date}</b><br>
+                                <span style="color:#94a3b8;">कारण: ${l.reason}</span><br>
+                                <b style="color:${statusColor};">स्टेटस: ${statusText}</b>
+                            </div>`;
+                    }
+                });
+            }
+            if(!found){
+                container.innerHTML = `<p style="font-size:11px; color:#94a3b8;">आपने हाल में कोई छुट्टी का आवेदन नहीं किया है।</p>`;
+            }
+        });
+    }
+
+    // PDF / Notes Upload & Edit / Rename Logic
+    function uploadOrUpdatePdf(){
+        let editKey = document.getElementById("editPdfKey").value.trim();
+        let title = document.getElementById("pdfTitle").value.trim();
+        let course = document.getElementById("pdfCourseSelect").value;
+        let url = document.getElementById("pdfUrl").value.trim();
+
+        if(!title || !url){ alert("टाइटल और फाइल लिंक दर्ज करें!"); return; }
+
+        let pdfId = editKey ? editKey : ("pdf_" + Date.now());
+        db.ref('pdfs/' + pdfId).set({ title, course, url }).then(() => {
+            alert(editKey ? "नोट्स सफलतापूर्वक अपडेट/रिनेम हो गया!" : "नोट्स सफलतापूर्वक पब्लिश हो गया!");
+            clearPdfForm();
+        });
+    }
+
+    function editPdf(id, title, course, url){
+        document.getElementById("editPdfKey").value = id;
+        document.getElementById("pdfTitle").value = title;
+        document.getElementById("pdfCourseSelect").value = course;
+        document.getElementById("pdfUrl").value = url;
+        window.scrollTo({top: 500, behavior: 'smooth'});
+    }
+
+    function clearPdfForm(){
+        document.getElementById("editPdfKey").value = "";
+        document.getElementById("pdfTitle").value = "";
+        document.getElementById("pdfUrl").value = "";
+    }
+
+    function deletePdf(key){
+        if(confirm("नोट्स डिलीट करें?")) db.ref('pdfs/' + key).remove();
     }
 
     function checkTypingSpeed(){
@@ -501,7 +619,6 @@
             if(nd) nd.innerHTML = `<p style="font-size:13px; color:#38bdf8;">${snap.val() || 'फिलहाल कोई नया नोटिस नहीं है।'}</p>`;
         });
 
-        // Master Students List & Deletion check
         db.ref('masterStudents').on('value', snap => {
             let tableBody = document.getElementById("adminStudentTableBody");
             tableBody.innerHTML = "";
@@ -528,7 +645,6 @@
             }
         });
 
-        // Admin Leave Tracker Sync
         db.ref('leaves').on('value', snap => {
             let container = document.getElementById("adminLeaveTrackerContainer");
             container.innerHTML = "";
@@ -536,15 +652,20 @@
             if(data){
                 Object.keys(data).forEach(key => {
                     let l = data[key];
+                    let isApproved = l.status === "Approved";
                     container.innerHTML += `
-                        <div style="font-size:12px; background:#0f172a; padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid #ef4444;">
+                        <div style="font-size:12px; background:#0f172a; padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid ${isApproved ? '#10b981' : '#f59e0b'};">
                             <b>${l.name}</b> (${l.course}) - <span style="color:#f59e0b;">दिनांक: ${l.date}</span><br>
-                            <span style="color:#f8fafc;"><b>कारण:</b> ${l.reason}</span>
-                            <button class="btn btn-danger" onclick="deleteLeave('${key}')" style="padding:2px 6px; font-size:10px; float:right;">हटाएं</button>
+                            <span style="color:#f8fafc;"><b>कारण:</b> ${l.reason}</span><br>
+                            <span style="color:${isApproved ? '#10b981' : '#f59e0b'}; font-weight:bold;">Status: ${l.status || 'Pending'}</span>
+                            <div style="margin-top:5px; display:flex; gap:5px;">
+                                ${!isApproved ? `<button class="btn btn-secondary" onclick="approveLeave('${key}')" style="padding:2px 8px; font-size:10px; width:auto;">स्वीकृत (Approve) करें</button>` : ''}
+                                <button class="btn btn-danger" onclick="deleteLeave('${key}')" style="padding:2px 8px; font-size:10px; width:auto;">हटाएं / रिजेक्ट करें</button>
+                            </div>
                         </div>`;
                 });
             } else {
-                container.innerHTML = `<p style="font-size:12px; color:#94a3b8;">आज किसी भी छात्र ने छुट्टी का आवेदन नहीं किया है।</p>`;
+                container.innerHTML = `<p style="font-size:12px; color:#94a3b8;">छुट्टी का कोई नया आवेदन नहीं है।</p>`;
             }
         });
 
@@ -698,20 +819,6 @@
         });
     }
 
-    function uploadPdf(){
-        let title = document.getElementById("pdfTitle").value.trim();
-        let course = document.getElementById("pdfCourseSelect").value;
-        let url = document.getElementById("pdfUrl").value.trim();
-
-        if(!title || !url){ alert("टाइटल और फाइल लिंक दर्ज करें!"); return; }
-        let pdfId = "pdf_" + Date.now();
-        db.ref('pdfs/' + pdfId).set({ title, course, url }).then(() => {
-            alert("नोट्स सफलतापूर्वक पब्लिश हो गया!");
-            document.getElementById("pdfTitle").value = "";
-            document.getElementById("pdfUrl").value = "";
-        });
-    }
-
     function loadAdminPdfs(){
         db.ref('pdfs').on('value', snap => {
             let list = document.getElementById("adminPdfList");
@@ -721,16 +828,19 @@
             if(data){
                 Object.keys(data).forEach(key => {
                     let p = data[key];
-                    list.innerHTML += `<div style="font-size:12px; background:#0f172a; padding:8px; border-radius:6px; margin-bottom:6px; border:1px solid #334155;"><b>${p.title}</b> (${p.course}) <button class="btn btn-danger" onclick="deletePdf('${key}')" style="padding:2px 6px; font-size:10px; float:right;">Delete</button></div>`;
+                    list.innerHTML += `
+                        <div style="font-size:12px; background:#0f172a; padding:8px; border-radius:6px; margin-bottom:6px; border:1px solid #334155;">
+                            <b>${p.title}</b> (${p.course})
+                            <div style="margin-top:5px; display:flex; gap:5px;">
+                                <button class="btn btn-warning" onclick="editPdf('${key}', '${p.title}', '${p.course}', '${p.url}')" style="padding:2px 6px; font-size:10px; width:auto;">एडिट / रिनेम</button>
+                                <button class="btn btn-danger" onclick="deletePdf('${key}')" style="padding:2px 6px; font-size:10px; width:auto;">Delete</button>
+                            </div>
+                        </div>`;
                 });
             } else {
                 list.innerHTML = `<p style="font-size:12px; color:#94a3b8;">कोई नोट्स अपलोड नहीं हैं।</p>`;
             }
         });
-    }
-
-    function deletePdf(key){
-        if(confirm("नोट्स डिलीट करें?")) db.ref('pdfs/' + key).remove();
     }
 
     function loadUserPdfs(){
